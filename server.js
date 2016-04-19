@@ -25,12 +25,13 @@ fs.readFile("config.json", "utf8", (err, data) => {
 app.use("/js", express.static("js"));
 app.use("/maps", express.static("maps"));
 app.use("/img", express.static("img"));
+app.use("/css", express.static("css"));
 
 // Routings
 app.get("/", (req, res) => {
   res.sendFile(path.join( __dirname+ "/index.html"));
 });
 io.on("connection", (data) => {
-  console.log("Client connected");
+  console.log("Client connected" + data);
   io.emit("test", "test");
 });
