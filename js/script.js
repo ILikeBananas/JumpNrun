@@ -1,5 +1,3 @@
-var camera, scene, renderer;
-
 var now = Date.now();
 var lastTime = now;
 var delta = 0;
@@ -11,30 +9,46 @@ var height = window.innerHeight;
 var canvas;
 var ctx;
 
+// Canvas en 2 dimensions
 canvas = document.getElementById('canvas2d');
 canvas.width = width
 canvas.height = height
 ctx = canvas.getContext('2d');
 
-camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
+// Caméra
+var camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
 
-scene = new THREE.Scene();
-var fog = new THREE.Fog('#4080C0', 100, 800);
-scene.fog = fog
+// Scène et brouillard
+var scene = new THREE.Scene();
+var fog = new THREE.Fog('#4080FF', 100, 800);
+scene.fog = fog;
 
-var light = new THREE.AmbientLight('#FFFFFF');
+var ambLight = new THREE.AmbientLight('#C0C0C0');
+scene.add(ambLight);
+
+/*
+var light = new THREE.SpotLight('#0000FF', 1, 0, Math.PI / 2 );
+light.position.set( 0, 1500, 1000 );
+light.target.position.set( 0, 0, 0 );
+light.castShadow = true;
+
 scene.add(light);
-
+*/
 
 // Liste des textures
 var textures = {
     
     road: new THREE.TextureLoader().load('img/textures/road.png'),
+    sand: new THREE.TextureLoader().load('img/textures/sand.png'),
+    fur: new THREE.TextureLoader().load('img/textures/fur.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
     test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
 textures.road.repeat.set(1, 16);
+
+textures.sand.wrapS = textures.sand.wrapT = THREE.RepeatWrapping;
+textures.sand.repeat.set(128, 64);
 
 
 // Liste des reflets
@@ -53,22 +67,40 @@ reflexions.test.mapping = THREE.SphericalReflectionMapping;
 // Liste des matériaux
 var materials = {
     
-    road: new THREE.MeshBasicMaterial({map: textures.road, envMap: reflexions.dull}),
+    road: new THREE.MeshBasicMaterial({map: textures.road}),
+    sand: new THREE.MeshBasicMaterial({map: textures.sand}),
+    fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
     box: new THREE.MeshBasicMaterial({map: textures.road, envMap: reflexions.dull}),
 };
 
-var geometry = new THREE.BoxBufferGeometry(64, 0, 1024);
 
+// Liste des formes géométriques
+var geometries = {
+    
+    cube: new THREE.BoxBufferGeometry(32, 32, 32),
+    road: new THREE.BoxBufferGeometry(64, 0, 1024),
+    floor: new THREE.BoxBufferGeometry(2048, 0, 1024),
+};
+
+
+
+
+
+
+
+
+
+
+
+// Création du personnage
 var wolf;
-
 var loader = new THREE.OBJLoader();
 loader.load( 'obj/wolf.obj', function (object) {
     
     object.traverse(function (child) {
         
         if (child instanceof THREE.Mesh) {
-            child.material.map = textures.test;
-            child.material.envMap = reflexions.dull;
+            child.material = materials.fur;
         }
     });
     
@@ -76,19 +108,34 @@ loader.load( 'obj/wolf.obj', function (object) {
     
     wolf.position.y = -24.7;
     wolf.position.z = -80;
+    wolf.receiveShadow = true;
+    wolf.castShadow = true;
     scene.add(wolf);
 });
 
-var road = new THREE.Mesh(geometry, materials.road);
+
+// Création de la route
+var road = new THREE.Mesh(geometries.road, materials.road);
 road.position.y = -24;
 road.position.z = -512;
+road.receiveShadow = true;
 scene.add(road);
 
-renderer = new THREE.WebGLRenderer();
+// Création du sol
+var floor = new THREE.Mesh(geometries.floor, materials.sand);
+floor.position.y = -24.01;
+floor.position.z = -512;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// Rendu
+var renderer = new THREE.WebGLRenderer({alpha: true});
 renderer.domElement.setAttribute('id', 'canvas3d');
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(width, height);
-renderer.setClearColor('#4080FF'); // Couleur de fond
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+
 document.body.appendChild(renderer.domElement); // Créer le canvas
 
 window.addEventListener('resize', onWindowResize, false);
@@ -121,11 +168,14 @@ function gameLoop() {
     fps = parseInt(1 / delta * 1) / 1;
     delta = delta > .05 ? .05 : delta;
     
-    road.position.z += 50 * delta;
-    wolf.rotation.y += 2 * delta;
+    camera.position.z -= 50 * delta;
+    wolf.position.z -= 50 * delta;
     
-    if (road.position.z > -496) {
-        road.position.z -= 16;
+    //wolf.rotation.y += 2 * delta;
+    
+    if (camera.position.z < road.position.z + 448) {
+        road.position.z -= 64;
+        floor.position.z -= 64;
     }
     
     renderer.render(scene, camera);

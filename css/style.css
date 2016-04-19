@@ -2,10 +2,19 @@
 	box-sizing: border-box;
 }
 
+html {
+    background: linear-gradient(#80A0FF 50%, #4080FF 50%);
+}
+
 body {
 	font-family: 'Arial';
     margin: 0;
     overflow: hidden;
+    background: #FF0000;
+    background: url(../img/other/background.png);
+    background-size: 100% auto;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #canvas2d {
