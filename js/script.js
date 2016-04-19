@@ -16,38 +16,83 @@ canvas.width = width
 canvas.height = height
 ctx = canvas.getContext('2d');
 
-
 camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
-camera.position.z = 400;
 
 scene = new THREE.Scene();
+var fog = new THREE.Fog('#4080C0', 100, 800);
+scene.fog = fog
 
-var texture = new THREE.TextureLoader().load('img/caisse.png');
-var envMap = new THREE.TextureLoader().load('img/truc.png');
-                envMap.mapping = THREE.SphericalReflectionMapping;
+var light = new THREE.AmbientLight('#FFFFFF');
+scene.add(light);
 
-var cube = new THREE.BoxBufferGeometry(64, 64, 64);
-var material = new THREE.MeshBasicMaterial({
-    map: texture, envMap: envMap
+
+// Liste des textures
+var textures = {
+    
+    road: new THREE.TextureLoader().load('img/textures/road.png'),
+    box: new THREE.TextureLoader().load('img/textures/box.png'),
+    test: new THREE.TextureLoader().load('img/textures/test.png'),
+};
+textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
+textures.road.repeat.set(1, 16);
+
+
+// Liste des reflets
+var reflexions = {
+    
+    dull: new THREE.TextureLoader().load('img/env/dull.png'),
+    bright: new THREE.TextureLoader().load('img/env/bright.png'),
+    test: new THREE.TextureLoader().load('img/env/test.png'),
+};
+
+reflexions.dull.mapping = THREE.SphericalReflectionMapping;
+reflexions.bright.mapping = THREE.SphericalReflectionMapping;
+reflexions.test.mapping = THREE.SphericalReflectionMapping;
+
+
+// Liste des matériaux
+var materials = {
+    
+    road: new THREE.MeshBasicMaterial({map: textures.road, envMap: reflexions.dull}),
+    box: new THREE.MeshBasicMaterial({map: textures.road, envMap: reflexions.dull}),
+};
+
+var geometry = new THREE.BoxBufferGeometry(64, 0, 1024);
+
+var wolf;
+
+var loader = new THREE.OBJLoader();
+loader.load( 'obj/wolf.obj', function (object) {
+    
+    object.traverse(function (child) {
+        
+        if (child instanceof THREE.Mesh) {
+            child.material.map = textures.test;
+            child.material.envMap = reflexions.dull;
+        }
+    });
+    
+    wolf = object;
+    
+    wolf.position.y = -24.7;
+    wolf.position.z = -80;
+    scene.add(wolf);
 });
 
-var blocks = [];
-var road = new THREE.Mesh(cube, material);
-
-//loadMap('truc');
-
-// Pour chaque bloc
-for (var i = 0; i < blocks.length; i++) {
-    
-    scene.add(blocks[i]);
-}
+var road = new THREE.Mesh(geometry, materials.road);
+road.position.y = -24;
+road.position.z = -512;
+scene.add(road);
 
 renderer = new THREE.WebGLRenderer();
+renderer.domElement.setAttribute('id', 'canvas3d');
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+renderer.setSize(width, height);
+renderer.setClearColor('#4080FF'); // Couleur de fond
+document.body.appendChild(renderer.domElement); // Créer le canvas
 
 window.addEventListener('resize', onWindowResize, false);
+
 
 // Lorsque l'on change la taille de la fenêtre
 function onWindowResize() {
@@ -76,10 +121,11 @@ function gameLoop() {
     fps = parseInt(1 / delta * 1) / 1;
     delta = delta > .05 ? .05 : delta;
     
-    for (var i = 0; i < blocks.length; i++) {
-        
-        blocks[i].rotation.x += .2 * delta;
-        blocks[i].rotation.y += .5 * delta;
+    road.position.z += 50 * delta;
+    wolf.rotation.y += 2 * delta;
+    
+    if (road.position.z > -496) {
+        road.position.z -= 16;
     }
     
     renderer.render(scene, camera);
