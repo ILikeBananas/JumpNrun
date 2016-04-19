@@ -11,7 +11,7 @@ var path = require("path");
 
   var connects = 0;
 // Read the config file and start the server
-fs.readFile("config.json", "utf8", (err, data) => {
+fs.readFile("config/config.json", "utf8", (err, data) => {
   // Test if the read was succesfull
   if(err){
     console.log("Config file read error" + err);
@@ -38,5 +38,8 @@ io.on("connection", () => {
   process.stdout.clearLine();
   process.stdout.cursorTo(0);
   process.stdout.write(connects + " Client connected");
-  io.emit("test", "test");
+
+  io.on("newScore", (data) => {
+    io.emit("newHighscore", data);
+  });
 });
