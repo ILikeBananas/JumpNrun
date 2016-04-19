@@ -1,2 +1,5 @@
 var socket = io();
-socket.emit("connection", "bonjour");
+//io.emit("connection", "");
+socket.on("test", () => {
+  console.log("a client connected");
+});

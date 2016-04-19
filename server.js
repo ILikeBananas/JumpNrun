@@ -8,6 +8,8 @@ var io = require('socket.io')(server);
 var fs = require("fs");
 var path = require("path");
 
+
+  var connects = 0;
 // Read the config file and start the server
 fs.readFile("config.json", "utf8", (err, data) => {
   // Test if the read was succesfull
@@ -31,7 +33,10 @@ app.use("/css", express.static("css"));
 app.get("/", (req, res) => {
   res.sendFile(path.join( __dirname+ "/index.html"));
 });
-io.on("connection", (data) => {
-  console.log("Client connected" + data);
+io.on("connection", () => {
+  connects++;
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(connects + " Client connected");
   io.emit("test", "test");
 });
