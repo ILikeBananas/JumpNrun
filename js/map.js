@@ -31,7 +31,7 @@ function loadMap(url) {
                 
                 if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255) {
                     
-                    blocks[blockIndex] = new THREE.Mesh(cube, material);
+                    blocks[blockIndex] = new THREE.Mesh(geometries['cube'], materials['box']);
                     blocks[blockIndex].position.x = x * 64;
                     blocks[blockIndex].position.y = y * 64;
                     blockIndex++;
