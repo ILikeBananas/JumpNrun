@@ -10,7 +10,6 @@ body {
 	font-family: 'Arial';
     margin: 0;
     overflow: hidden;
-    background: #FF0000;
     background: url(../img/other/background.png);
     background-size: 100% auto;
     background-position: center;

@@ -2,9 +2,10 @@ var now = Date.now();
 var lastTime = now;
 var delta = 0;
 var fps = 0;
-var a = '';
 var width = window.innerWidth;
 var height = window.innerHeight;
+
+var gameLoaded = false;
 
 var canvas;
 var ctx;
@@ -70,14 +71,14 @@ var materials = {
     road: new THREE.MeshBasicMaterial({map: textures.road}),
     sand: new THREE.MeshBasicMaterial({map: textures.sand}),
     fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
-    box: new THREE.MeshBasicMaterial({map: textures.road, envMap: reflexions.dull}),
+    box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
 };
 
 
 // Liste des formes géométriques
 var geometries = {
     
-    cube: new THREE.BoxBufferGeometry(32, 32, 32),
+    cube: new THREE.BoxBufferGeometry(16, 16, 16),
     road: new THREE.BoxBufferGeometry(64, 0, 1024),
     floor: new THREE.BoxBufferGeometry(2048, 0, 1024),
 };
@@ -111,6 +112,8 @@ loader.load( 'obj/wolf.obj', function (object) {
     wolf.receiveShadow = true;
     wolf.castShadow = true;
     scene.add(wolf);
+    
+    gameLoaded = true;
 });
 
 
@@ -127,6 +130,14 @@ floor.position.y = -24.01;
 floor.position.z = -512;
 floor.receiveShadow = true;
 scene.add(floor);
+
+// Création des obstacles
+var obstacle = new THREE.Mesh(geometries.cube, materials.box);
+obstacle.position.x = 21;
+obstacle.position.y = -16;
+obstacle.position.z = -512;
+obstacle.receiveShadow = true;
+scene.add(obstacle);
 
 // Rendu
 var renderer = new THREE.WebGLRenderer({alpha: true});
@@ -156,7 +167,16 @@ function onWindowResize() {
     renderer.setSize(width, height);
 }
 
-gameLoop();
+
+var interval = setInterval(waiting, 10);
+
+// Tant que le jeu n'est pas chargée, 
+function waiting() {
+    if (gameLoaded) {
+        clearInterval(interval);
+        gameLoop();
+    }
+}
 
 // Boucle du jeu
 function gameLoop() {
@@ -171,7 +191,7 @@ function gameLoop() {
     camera.position.z -= 50 * delta;
     wolf.position.z -= 50 * delta;
     
-    //wolf.rotation.y += 2 * delta;
+    wolf.rotation.y += 2 * delta;
     
     if (camera.position.z < road.position.z + 448) {
         road.position.z -= 64;
