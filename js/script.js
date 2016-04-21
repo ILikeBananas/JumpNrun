@@ -17,7 +17,9 @@ canvas.height = height
 ctx = canvas.getContext('2d');
 
 // Caméra
-var camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
+var camera = new THREE.PerspectiveCamera(70, width / height, 1, 800);
+camera.position.y = 48;
+camera.rotation.x = -Math.PI / 8;
 
 // Scène et brouillard
 var scene = new THREE.Scene();
@@ -27,14 +29,11 @@ scene.fog = fog;
 var ambLight = new THREE.AmbientLight('#C0C0C0');
 scene.add(ambLight);
 
-/*
-var light = new THREE.SpotLight('#0000FF', 1, 0, Math.PI / 2 );
-light.position.set( 0, 1500, 1000 );
+var light = new THREE.SpotLight('#FF0000', 1, 0, Math.PI / 2 );
+light.position.set(0, 1000, -256);
 light.target.position.set( 0, 0, 0 );
 light.castShadow = true;
-
 scene.add(light);
-*/
 
 // Liste des textures
 var textures = {
@@ -43,6 +42,7 @@ var textures = {
     sand: new THREE.TextureLoader().load('img/textures/sand.png'),
     fur: new THREE.TextureLoader().load('img/textures/fur.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
+    iron: new THREE.TextureLoader().load('img/textures/iron.png'),
     test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
@@ -72,6 +72,7 @@ var materials = {
     sand: new THREE.MeshBasicMaterial({map: textures.sand}),
     fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
     box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
+    iron: new THREE.MeshBasicMaterial({map: textures.iron, envMap: reflexions.bright}),
 };
 
 
@@ -85,59 +86,44 @@ var geometries = {
 
 
 
-
-
-
-
-
-
-
-
-// Création du personnage
-var wolf;
-var loader = new THREE.OBJLoader();
-loader.load( 'obj/wolf.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.fur;
-        }
-    });
-    
-    wolf = object;
-    
-    wolf.position.y = -24.7;
-    wolf.position.z = -80;
-    wolf.receiveShadow = true;
-    wolf.castShadow = true;
-    scene.add(wolf);
-    
-    gameLoaded = true;
-});
-
-
 // Création de la route
 var road = new THREE.Mesh(geometries.road, materials.road);
-road.position.y = -24;
 road.position.z = -512;
 road.receiveShadow = true;
 scene.add(road);
 
 // Création du sol
 var floor = new THREE.Mesh(geometries.floor, materials.sand);
-floor.position.y = -24.01;
+floor.position.y = -0.01;
 floor.position.z = -512;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Création des obstacles
-var obstacle = new THREE.Mesh(geometries.cube, materials.box);
-obstacle.position.x = 21;
-obstacle.position.y = -16;
-obstacle.position.z = -512;
-obstacle.receiveShadow = true;
-scene.add(obstacle);
+// Liste des caisses
+var boxes = [];
+// Objet sur lequel les caisses seront créées
+var modelBox = new THREE.Mesh(geometries.cube, materials.box);
+modelBox.receiveShadow = true;
+
+// Liste des piques
+var spikes = [];
+// Objet sur lequel les piques seront créés
+var modelSpike;
+// Chargement du modèle 3D et du matériel des piques
+var loader = new THREE.OBJLoader();
+loader.load( 'obj/spikes.obj', function (object) {
+    
+    object.traverse(function (child) {
+        
+        if (child instanceof THREE.Mesh) {
+            child.material = materials.iron;
+        }
+    });
+    
+    modelSpike = object;
+    
+    gameLoaded = true;
+});
 
 // Rendu
 var renderer = new THREE.WebGLRenderer({alpha: true});
@@ -167,10 +153,12 @@ function onWindowResize() {
     renderer.setSize(width, height);
 }
 
+// Position Z de la fin du dernier niveau chargé
+var positionEndLevel = 0;
 
 var interval = setInterval(waiting, 10);
 
-// Tant que le jeu n'est pas chargée, 
+// Tant que le jeu n'est pas chargée, attend...
 function waiting() {
     if (gameLoaded) {
         clearInterval(interval);
@@ -188,14 +176,29 @@ function gameLoop() {
     fps = parseInt(1 / delta * 1) / 1;
     delta = delta > .05 ? .05 : delta;
     
-    camera.position.z -= 50 * delta;
-    wolf.position.z -= 50 * delta;
-    
-    wolf.rotation.y += 2 * delta;
+    camera.position.z -= 64 * delta;
     
     if (camera.position.z < road.position.z + 448) {
         road.position.z -= 64;
         floor.position.z -= 64;
+    }
+    
+    if (camera.position.z < positionEndLevel + 800) {
+        loadLevel(rand.int());
+    }
+    
+    for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].position.z >= camera.position.z) {
+            scene.remove(boxes[i]);
+            boxes[i].remove();
+        }
+    }
+    
+    for (var i = 0; i < spikes.length; i++) {
+        if (spikes[i].position.z >= camera.position.z) {
+            scene.remove(spikes[i]);
+            spikes[i].remove();
+        }
     }
     
     renderer.render(scene, camera);

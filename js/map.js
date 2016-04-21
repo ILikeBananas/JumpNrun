@@ -1,42 +1,57 @@
-// Charge une carte
-function loadMap(url) {
+// Charge un niveau
+function loadLevel(id) {
     
-	// Chargement de l'image
-	var imgLoad = new Image();
-	imgLoad.src = 'maps/' + url + '.png';
+    var level = '';
     
-    // Losque l'image est chargée
-    imgLoad.onload = function () {
+    switch (id) {
+        case 0:
+            level =
+                'bbb' +
+                '   ' +
+                '   ' +
+                'sss';
+            break;
+        case 1:
+            level =
+                'BBB' +
+                'sss';
+        case 1:
+            level =
+                'BBB' +
+                'sss';
+    }
+    
+    var endZ = camera.position.z - (16 * parseInt((level.length - 1) / 3)) - 896;
+    
+    // Pour chaque caractère composant le niveau
+    for (var i = 0; i < level.length; i++) {
         
-        var img = this;
+        var x = (i % 3 - 1) * 21;
+        var z = endZ + parseInt(i / 3) * 16;
         
-        var w = img.width;
-        var h = img.height;
-        
-        var tCanvas = document.createElement('canvas');
-        var tCtx = tCanvas.getContext('2d');
-        
-        tCtx.width  = w;
-        tCtx.height = h;
-        
-        tCtx.drawImage(img, 0, 0);
-        
-        var blockIndex = 0;
-        
-        for (var y = 0; y < h; y++) {
+        if (level[i] == 'b') {
+            boxes.push(modelBox.clone());
+            var box = boxes[boxes.length-1];
+            box.position.set(x, 8, z);
+            scene.add(box);
             
-            for (var x = 0; x < w; x++) {
-                
-                var pixel = tCtx.getImageData(x, y, 1, 1).data;
-                
-                if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255) {
-                    
-                    blocks[blockIndex] = new THREE.Mesh(geometries['cube'], materials['box']);
-                    blocks[blockIndex].position.x = x * 64;
-                    blocks[blockIndex].position.y = y * 64;
-                    blockIndex++;
-                }
-            }
+        } else if (level[i] == 'B') {
+            boxes.push(modelBox.clone());
+            boxes.push(modelBox.clone());
+            var box1 = boxes[boxes.length-2];
+            var box2 = boxes[boxes.length-1];
+            box1.position.set(x, 8, z);
+            box2.position.set(x, 24, z);
+            scene.add(box1);
+            scene.add(box2);
+            
+        } else if (level[i] == 's') {
+            spikes.push(modelSpike.clone());
+            var spike = spikes[spikes.length-1];
+            spike.position.set(x, 8, z);
+            scene.add(spike);
         }
-    };
+    }
+    
+    positionEndLevel = endZ;
 }
