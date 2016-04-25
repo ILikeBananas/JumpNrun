@@ -31,6 +31,18 @@ function loadLevel(id) {
                 'sCs' +
                 'sbs';
             break;
+        case 3:
+            level =
+                'BbB' +
+                '   ' +
+                '   ' +
+                '   ' +
+                'c c' +
+                ' c ' +
+                'c c' +
+                ' c ' +
+                'c c';
+            break;
     }
     
     var endZ = camera.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
