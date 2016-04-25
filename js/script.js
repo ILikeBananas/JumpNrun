@@ -15,6 +15,12 @@ var gameLoaded = false;
 var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
 var keysOnce = [];
+// Distance parcouru (1 bloc = 1 mètre)
+var distance = 0;
+// Nombre de pièces collectées
+var coinsCollect = 0;
+// Score obtenu
+var score = 0;
 // Chemin sur la route (0 = Gauche, 1 = Millieu, 2 = Droite)
 var roadPath = 1;
 // Vitesse du chute
@@ -86,11 +92,13 @@ var reflexions = {
     
     dull: new THREE.TextureLoader().load('img/env/dull.png'),
     bright: new THREE.TextureLoader().load('img/env/bright.png'),
+    gold: new THREE.TextureLoader().load('img/env/gold.png'),
     test: new THREE.TextureLoader().load('img/env/test.png'),
 };
 
 reflexions.dull.mapping = THREE.SphericalReflectionMapping;
 reflexions.bright.mapping = THREE.SphericalReflectionMapping;
+reflexions.gold.mapping = THREE.SphericalReflectionMapping;
 reflexions.test.mapping = THREE.SphericalReflectionMapping;
 
 
@@ -104,7 +112,8 @@ var materials = {
     cactus: new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
     fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
     box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
-    iron: new THREE.MeshBasicMaterial({map: textures.iron, envMap: reflexions.bright}),
+    iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.bright}),
+    coin: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
 };
 
 
@@ -166,7 +175,7 @@ loader.load( 'obj/coin.obj', function (object) {
     object.traverse(function (child) {
         
         if (child instanceof THREE.Mesh) {
-            child.material = materials.test;
+            child.material = materials.coin;
         }
     });
     
@@ -445,14 +454,19 @@ function gameLoop() {
         if (coins[i].position.z >= camera.position.z + 16) {
             scene.remove(coins[i]);
             coins[i].remove();
-        }
-        
-        // Si il y a une collision
-        if (collision(coins[i], -2, -2, -2, 2, 2, 2)) {
             
-            console.log(true);
-            scene.remove(coins[i]);
-            coins[i].remove();
+        } else {
+            
+            coins[i].rotation.y += 4 * delta;
+            
+            // Si il y a une collision
+            if (collision(coins[i], -2, -2, -2, 2, 2, 2)) {
+                
+                coinsCollect++;
+                coins[i].position.y = -64;
+                scene.remove(coins[i]);
+                coins[i].remove();
+            }
         }
     }
     
@@ -465,6 +479,9 @@ function gameLoop() {
     }
     
     
+    distance = parseInt(caracter.position.z * -1 / 16);
+    score = distance * 10 * coinsCollect;
+    
     // Position de la caméra relative au personnage
     camera.position.set(caracter.position.x,
                         caracter.position.y + 32,
@@ -476,10 +493,15 @@ function gameLoop() {
     // Affiche le nombre d'image par seconde en haut à droite de l'écran
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font="30px Arial";
+    ctx.textBaseline = 'top';
+    
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
-    ctx.textBaseline = 'top';
     ctx.fillText(fps + ' fps', width - 20, 20, 400);
+    
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.fillText('Score : ' + (distance + coinsCollect), 20, 20, 400);
     
     lastTime = now;
 }

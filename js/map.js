@@ -6,49 +6,18 @@ function loadLevel(id) {
     switch (id) {
         case 0:
             level =
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' B ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ' +
-                ' b ';
+                'sss';
             break;
         case 1:
             level =
                 'sSS' +
                 '   ' +
                 '   ' +
+                '   ' +
                 ' c ' +
                 ' c ' +
                 ' c ' +
-                ' c ' +
-                ' c ' +
+                '   ' +
                 '   ' +
                 '   ' +
                 'SSs';
@@ -59,7 +28,7 @@ function loadLevel(id) {
                 'SBS' +
                 'SBS' +
                 'sbs' +
-                'sbs' +
+                'sCs' +
                 'sbs';
             break;
     }
@@ -105,9 +74,19 @@ function loadLevel(id) {
             scene.add(spike);
             
         } else if (level[i] == 'c') {
-            coins.push(modelBox.clone());
+            coins.push(modelCoin.clone());
             var coin = coins[coins.length-1];
             coin.position.set(x, 8, z);
+            scene.add(coin);
+            
+        } else if (level[i] == 'C') {
+            boxes.push(modelBox.clone());
+            coins.push(modelCoin.clone());
+            var box = boxes[boxes.length-1];
+            var coin = coins[coins.length-1];
+            box.position.set(x, 8, z);
+            coin.position.set(x, 24, z);
+            scene.add(box);
             scene.add(coin);
         }
     }
