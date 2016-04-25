@@ -3,17 +3,13 @@
 }
 
 html {
-    background: linear-gradient(#80A0FF 25%, #4080FF 25%);
+    background: black;
 }
 
 body {
 	font-family: 'Arial';
     margin: 0;
     overflow: hidden;
-    background: url(../img/other/background.png);
-    background-size: 100% auto;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 #canvas2d {
