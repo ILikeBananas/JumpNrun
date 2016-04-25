@@ -1,10 +1,7 @@
 {
-  "1":{
-    "name": "Jean",
-    "highscore": 200
-  },
-  "2":{
-    "name":"Jaqueline",
-    "highscore": 666
-  }
+  "scores" : [
+    {"name":"Jean", "score":"300"},
+    {"name":"Jaqueline", "score":"299"},
+    {"name":"Doge", "score":"666"}
+  ]
 }
