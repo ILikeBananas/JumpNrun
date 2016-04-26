@@ -120,13 +120,12 @@ function gameLoop() {
     for (var i = 0; i < boxes.length; i++) {
         if (boxes[i].position.z >= camera.position.z + 16) {
             scene.remove(boxes[i]);
-            boxes[i].remove();
         }
         
         // Si il y a une collision
         if (collision(boxes[i], -8, -8, -8, 8, 2, 8)) {
             
-            caracter.position.z += 96 * delta;
+            reset();
             
         } else if (collision(boxes[i], -8, 2, -8, 8, 8, 8)) {
             
@@ -139,14 +138,11 @@ function gameLoop() {
     for (var i = 0; i < spikes.length; i++) {
         if (spikes[i].position.z >= camera.position.z + 16) {
             scene.remove(spikes[i]);
-            spikes[i].remove();
         }
         
         // Si il y a une collision
         if (collision(spikes[i], -8, -8, -8, 8, -6, 8)) {
-            
-            caracter.position.y = 256;
-            
+            reset();
         }
     }
         
@@ -154,7 +150,6 @@ function gameLoop() {
     for (var i = 0; i < coins.length; i++) {
         if (coins[i].position.z >= camera.position.z + 16) {
             scene.remove(coins[i]);
-            coins[i].remove();
             
         } else {
             
@@ -166,7 +161,6 @@ function gameLoop() {
                 coinsCollect++;
                 coins[i].position.y = -64;
                 scene.remove(coins[i]);
-                coins[i].remove();
             }
         }
     }
@@ -175,7 +169,6 @@ function gameLoop() {
     for (var i = 0; i < decors.length; i++) {
         if (decors[i].position.z >= camera.position.z + 16) {
             scene.remove(decors[i]);
-            decors[i].remove();
         }
     }
     
@@ -200,9 +193,56 @@ function gameLoop() {
     ctx.textAlign = 'right';
     ctx.fillText(fps + ' fps', width - 20, 20, 400);
     
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = 'rgba(0, 0, 0, .5)';
     ctx.textAlign = 'left';
-    ctx.fillText('Score : ' + (distance + coinsCollect), 20, 20, 400);
+    ctx.fillText('Distance : ' + (distance + 'm'), 22, 22, 400);
+    ctx.fillText('Pièces : ' + (coinsCollect), 22, 57, 400);
+    ctx.fillText('Score : ' + (distance + coinsCollect * 10), 22, 92, 400);
     
+    ctx.fillStyle = 'white';
+    ctx.fillText('Distance : ' + (distance + 'm'), 20, 20, 400);
+    ctx.fillText('Pièces : ' + (coinsCollect), 20, 55, 400);
+    ctx.fillText('Score : ' + (distance + coinsCollect * 10), 20, 90, 400);
+    document.body.style.zoom = "100%";
     lastTime = now;
+}
+
+// Réinitialise la partie
+function reset() {
+    
+    alert('Vous êtes mort.\n\n' +
+          'Distance parcouru : ' + distance + ' mètres\n' +
+          'Nombre de pièces collectées : ' + coinsCollect + '\n\n' +
+          'Score final : ' + score);
+    
+    coinsCollect = 0;
+    
+    for (var i = 0; i < boxes.length; i++) {
+        scene.remove(boxes[i]);
+    }
+    boxes = [];
+    
+    for (var i = 0; i < spikes.length; i++) {
+        scene.remove(spikes[i]);
+    }
+    spikes = [];
+    
+    for (var i = 0; i < coins.length; i++) {
+        scene.remove(coins[i]);
+    }
+    coins = [];
+    
+    for (var i = 0; i < decors.length; i++) {
+        scene.remove(decors[i]);
+    }
+    decors = [];
+    
+    caracter.position.set(0, 8, 0);
+    roadPath = 1;
+    fallSpeed = 0;
+    
+    road.position.z = floor.position.z = 512;
+    
+    positionEndLevel = 0;
+    distanceNextDecor = rand.int(0, 64);
 }
