@@ -155,7 +155,7 @@ var spikes = [];
 var modelSpike;
 // Chargement du modèle 3D et du matériel des piques
 var loader = new THREE.OBJLoader();
-loader.load( 'obj/spikes.obj', function (object) {
+loader.load('obj/spikes.obj', function (object) {
     
     object.traverse(function (child) {
         
@@ -174,7 +174,7 @@ var coins = [];
 var modelCoin;
 // Chargement du modèle 3D et du matériel des pièces
 var loader = new THREE.OBJLoader();
-loader.load( 'obj/coin.obj', function (object) {
+loader.load('obj/coin.obj', function (object) {
     
     object.traverse(function (child) {
         
@@ -193,7 +193,7 @@ var spikes = [];
 var modelSpike;
 // Chargement du modèle 3D et du matériel des piques
 var loader = new THREE.OBJLoader();
-loader.load( 'obj/spikes.obj', function (object) {
+loader.load('obj/spikes.obj', function (object) {
     
     object.traverse(function (child) {
         
@@ -212,7 +212,7 @@ var decors = [];
 var modelCactus;
 // Chargement du modèle 3D et du matériel des piques
 var loader = new THREE.OBJLoader();
-loader.load( 'obj/cactus.obj', function (object) {
+loader.load('obj/cactus.obj', function (object) {
     
     object.traverse(function (child) {
         
@@ -222,13 +222,14 @@ loader.load( 'obj/cactus.obj', function (object) {
     });
     
     modelCactus = object;
+    modelCactus.add(modelSpike);
     gameLoaded = true;
 });
 // Objet sur lequel les décors de type pierre seront créés
 var modelRock;
 // Chargement du modèle 3D et du matériel des piques
 var loader = new THREE.OBJLoader();
-loader.load( 'obj/rock.obj', function (object) {
+loader.load('obj/rock.obj', function (object) {
     
     object.traverse(function (child) {
         
@@ -244,9 +245,15 @@ loader.load( 'obj/rock.obj', function (object) {
 // Personnage jouable
 var caracter = new THREE.Mesh(geometries.cube, materials.iron);
 caracter.position.set(0, 8, -40);
-THREE.GeometryUtils.merge(geometries.road, caracter);
 scene.add(caracter);
 
+var wolf = loadModel('wolf', materials.fur);
+alert();
+var yolo1 = createObject(-20, 16, -200, [modelBox]);
+var yolo2 = createObject(-10, 8, -250, [modelBox]);
+var yolo3 = createObject(0, 0, -300, [modelCactus]);
+var yolo4 = createObject(10, 8, -350, [modelBox]);
+var yolo5 = createObject(20, 16, -400, [modelBox]);
 
 // Rendu
 var renderer = new THREE.WebGLRenderer();
@@ -260,9 +267,6 @@ renderer.shadowMap.type = THREE.PCFShadowMap;
 document.body.appendChild(renderer.domElement); // Créer le canvas
 
 window.addEventListener('resize', onWindowResize, false);
-
-var yolo = new Obj(0, 16, -800, 0,0,0, 0,0,0, [geometries.cube, materials.sand, geometries.sphere, materials.cactus]);
-yolo.addPosition(0, -16, 0);
 
 // Lorsque l'on change la taille de la fenêtre
 function onWindowResize() {
@@ -295,3 +299,34 @@ $(document).keyup(function (e) {
 $(document).scroll(function() {
 	$(this).scrollLeft(0).scrollTop(0);
 });
+
+
+
+// Charge un modèle 3D au format obj/*.obj,
+// return l'objet contenant le modèle et le matériel
+function loadModel(fileName, material) {
+    
+    var loader = new THREE.OBJLoader();
+    loader.load('obj/' + fileName + '.obj', function (object) {
+        
+        object.traverse(function (child) {
+            
+            if (child instanceof THREE.Mesh) {
+                child.material = material;
+            }
+        });
+        
+        return object;
+    });
+}
+
+
+var interval = setInterval(waiting, 10);
+
+// Tant que le jeu n'est pas chargée, attend...
+function waiting() {
+    if (gameLoaded) {
+        clearInterval(interval);
+        gameLoop();
+    }
+}

@@ -1,13 +1,3 @@
-var interval = setInterval(waiting, 10);
-
-// Tant que le jeu n'est pas chargée, attend...
-function waiting() {
-    if (gameLoaded) {
-        clearInterval(interval);
-        gameLoop();
-    }
-}
-
 // Boucle du jeu
 function gameLoop() {
     
@@ -241,7 +231,7 @@ function reset() {
     roadPath = 1;
     fallSpeed = 0;
     
-    road.position.z = floor.position.z = 512;
+    road.position.z = floor.position.z = -448;
     
     positionEndLevel = 0;
     distanceNextDecor = rand.int(0, 64);
