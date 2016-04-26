@@ -174,7 +174,7 @@ function gameLoop() {
     
     
     distance = parseInt(caracter.position.z * -1 / 16);
-    score = distance * 10 * coinsCollect;
+    score = distance + 10 * coinsCollect;
     
     // Position de la caméra relative au personnage
     camera.position.set(caracter.position.x,
@@ -197,13 +197,13 @@ function gameLoop() {
     ctx.textAlign = 'left';
     ctx.fillText('Distance : ' + (distance + 'm'), 22, 22, 400);
     ctx.fillText('Pièces : ' + (coinsCollect), 22, 57, 400);
-    ctx.fillText('Score : ' + (distance + coinsCollect * 10), 22, 92, 400);
+    ctx.fillText('Score : ' + (score), 22, 92, 400);
     
     ctx.fillStyle = 'white';
     ctx.fillText('Distance : ' + (distance + 'm'), 20, 20, 400);
     ctx.fillText('Pièces : ' + (coinsCollect), 20, 55, 400);
-    ctx.fillText('Score : ' + (distance + coinsCollect * 10), 20, 90, 400);
-    document.body.style.zoom = "100%";
+    ctx.fillText('Score : ' + (score), 20, 90, 400);
+    
     lastTime = now;
 }
 

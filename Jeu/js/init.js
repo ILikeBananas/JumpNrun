@@ -124,6 +124,7 @@ var materials = {
 var geometries = {
     
     cube: new THREE.BoxBufferGeometry(16, 16, 16),
+    sphere: new THREE.SphereBufferGeometry(11, 11, 11),
     road: new THREE.BoxBufferGeometry(64, 0, 1024),
     floor: new THREE.BoxBufferGeometry(8192, 0, 1024),
 };
@@ -243,6 +244,7 @@ loader.load( 'obj/rock.obj', function (object) {
 // Personnage jouable
 var caracter = new THREE.Mesh(geometries.cube, materials.iron);
 caracter.position.set(0, 8, -40);
+THREE.GeometryUtils.merge(geometries.road, caracter);
 scene.add(caracter);
 
 
@@ -259,7 +261,8 @@ document.body.appendChild(renderer.domElement); // Créer le canvas
 
 window.addEventListener('resize', onWindowResize, false);
 
-
+var yolo = new Obj(0, 16, -800, 0,0,0, 0,0,0, [geometries.cube, materials.sand, geometries.sphere, materials.cactus]);
+yolo.addPosition(0, -16, 0);
 
 // Lorsque l'on change la taille de la fenêtre
 function onWindowResize() {

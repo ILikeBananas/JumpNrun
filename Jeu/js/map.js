@@ -27,7 +27,9 @@ function loadLevel(id) {
                 'SBS' +
                 'SBS' +
                 'SBS' +
+                'SBS' +
                 'sbs' +
+                'sCs' +
                 'sCs' +
                 'sbs';
             break;
