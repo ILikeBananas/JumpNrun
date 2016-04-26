@@ -1,3 +1,6 @@
+// Nombre de niveaux
+const NUMBER_LEVEL = 7;
+
 var now = Date.now();
 var lastTime = now;
 // Secondes écoulée par image

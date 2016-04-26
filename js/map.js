@@ -4,11 +4,11 @@ function loadLevel(id) {
     var level = '';
     
     switch (id) {
-        case 0:
+        case 1:
             level =
                 'sss';
             break;
-        case 1:
+        case 2:
             level =
                 'sSS' +
                 '   ' +
@@ -22,7 +22,7 @@ function loadLevel(id) {
                 '   ' +
                 'SSs';
             break;
-        case 2:
+        case 3:
             level =
                 'SBS' +
                 'SBS' +
@@ -31,7 +31,7 @@ function loadLevel(id) {
                 'sCs' +
                 'sbs';
             break;
-        case 3:
+        case 4:
             level =
                 'BbB' +
                 '   ' +
@@ -43,6 +43,106 @@ function loadLevel(id) {
                 ' c ' +
                 'c c';
             break;
+        case 5:
+            level =
+				'SbC' +
+				'bbb' +
+				'sss' +
+				'  c' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'Csb' +
+				'Csb' +
+				'b  ' +
+				'b  ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'bcS' +
+				'scs' +
+				'   ' +
+				'   ' +
+				'c  ' +
+				'c  ' +
+				'css' +
+				' sb';
+            break;
+        case 6:
+            level =
+                'css' +
+				'c  ' +
+				'   ' +
+				'bsb' +
+				'bsb' +
+				'   ' +
+				'   ' +
+				'  c' +
+				'  c' +
+				'   ' +
+				' sb' +
+				'   ' +
+				'   ' +
+				'cbS' +
+				'c  ' +
+				'   ' +
+				'   ' +
+				'bbS' +
+				'bbS' +
+				'bbS' +
+				' c ' +
+				' c ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'Cbs' +
+				'Cbs' +
+				'bb ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'sb ' +
+				'sb ' +
+				' cc';
+            break;
+        case 7:
+            level =
+				'cbS' +
+				'c  ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				' c ' +
+				'sbc' +
+				'sSc' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'sss' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'Bb ' +
+				'S s' +
+				'  c' +
+				'  c' +
+				' c ' +
+				's  ' +
+				' c ' +
+				'  c' +
+				' c ' +
+				'c  ' +
+				'  s' +
+				'bss' +
+				'bss' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				' sb' +
+				'sss';
     }
     
     var endZ = camera.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;

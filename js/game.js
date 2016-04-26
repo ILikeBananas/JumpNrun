@@ -88,7 +88,7 @@ function gameLoop() {
     
     // Charge un niveau
     if (camera.position.z < positionEndLevel + 800) {
-        loadLevel(rand.int(0, 3));
+        loadLevel(rand.int(1, NUMBER_LEVEL));
     }
     
     distanceNextDecor -= 96 * delta
