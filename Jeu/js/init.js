@@ -32,6 +32,8 @@ var fallSpeed = 0;
 var onGround = false;
 // Distance avant de faire apparaître un décor
 var distanceNextDecor = rand.int(0, 64);
+// Tableau contenant des modèles 3D chargés
+var models = [];
 
 // Canvas 2D
 var canvas;
@@ -247,11 +249,14 @@ var caracter = new THREE.Mesh(geometries.cube, materials.iron);
 caracter.position.set(0, 8, -40);
 scene.add(caracter);
 
-var wolf = loadModel('wolf', materials.fur);
-alert();
+console.log(0);
+var wolf;
+loadModel('wolf', materials.fur);
+alert('Hors de la fonction.');
+alert(wolf);
 var yolo1 = createObject(-20, 16, -200, [modelBox]);
 var yolo2 = createObject(-10, 8, -250, [modelBox]);
-var yolo3 = createObject(0, 0, -300, [modelCactus]);
+var yolo3 = createObject(0, 0, -300, [wolf]);
 var yolo4 = createObject(10, 8, -350, [modelBox]);
 var yolo5 = createObject(20, 16, -400, [modelBox]);
 
@@ -304,19 +309,20 @@ $(document).scroll(function() {
 
 // Charge un modèle 3D au format obj/*.obj,
 // return l'objet contenant le modèle et le matériel
-function loadModel(fileName, material) {
+function loadModel(fileName, material, index) {
     
     var loader = new THREE.OBJLoader();
+    var mesh;
+    
     loader.load('obj/' + fileName + '.obj', function (object) {
         
         object.traverse(function (child) {
-            
             if (child instanceof THREE.Mesh) {
                 child.material = material;
             }
         });
         
-        return object;
+        models[index] = object;
     });
 }
 
