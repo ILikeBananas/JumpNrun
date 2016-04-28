@@ -156,52 +156,25 @@ function loadLevel(id) {
         var z = endZ + parseInt(i / 3) * 16;
         
         if (level[i] == 'b') {
-            boxes.push(modelBox.clone());
-            var box = boxes[boxes.length-1];
-            box.position.set(x, 8, z);
-            scene.add(box);
+            boxes.push(createObject(x, 8, z, [models.box]));
             
         } else if (level[i] == 'B') {
-            boxes.push(modelBox.clone());
-            boxes.push(modelBox.clone());
-            var box1 = boxes[boxes.length-2];
-            var box2 = boxes[boxes.length-1];
-            box1.position.set(x, 8, z);
-            box2.position.set(x, 24, z);
-            scene.add(box1);
-            scene.add(box2);
+            boxes.push(createObject(x, 8, z, [models.box]));
+            boxes.push(createObject(x, 24, z, [models.box]));
             
         } else if (level[i] == 's') {
-            spikes.push(modelSpike.clone());
-            var spike = spikes[spikes.length-1];
-            spike.position.set(x, 8, z);
-            scene.add(spike);
+            spikes.push(createObject(x, 8, z, [models.spikes]));
             
         } else if (level[i] == 'S') {
-            boxes.push(modelBox.clone());
-            spikes.push(modelSpike.clone());
-            var box = boxes[boxes.length-1];
-            var spike = spikes[spikes.length-1];
-            box.position.set(x, 8, z);
-            spike.position.set(x, 24, z);
-            scene.add(box);
-            scene.add(spike);
+            boxes.push(createObject(x, 8, z, [models.box]));
+            spikes.push(createObject(x, 24, z, [models.spikes]));
             
         } else if (level[i] == 'c') {
-            coins.push(modelCoin.clone());
-            var coin = coins[coins.length-1];
-            coin.position.set(x, 8, z);
-            scene.add(coin);
+            coins.push(createObject(x, 8, z, [models.coin]));
             
         } else if (level[i] == 'C') {
-            boxes.push(modelBox.clone());
-            coins.push(modelCoin.clone());
-            var box = boxes[boxes.length-1];
-            var coin = coins[coins.length-1];
-            box.position.set(x, 8, z);
-            coin.position.set(x, 24, z);
-            scene.add(box);
-            scene.add(coin);
+            boxes.push(createObject(x, 8, z, [models.box]));
+            coins.push(createObject(x, 24, z, [models.coin]));
         }
     }
     

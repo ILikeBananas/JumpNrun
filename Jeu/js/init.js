@@ -12,8 +12,8 @@ var width = window.innerWidth;
 // Hauteur de la fenêtre du jeu
 var height = window.innerHeight;
 
-// Si le jeu est chargée ou non
-var gameLoaded = false;
+// Tableau de booléens représentant les chargements terminés ou non
+var loadings = [];
 // Tableau de booléens des touches appuyées
 var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
@@ -118,7 +118,7 @@ var materials = {
     fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
     box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
     iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.bright}),
-    coin: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
+    gold: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
 };
 
 
@@ -127,138 +127,10 @@ var geometries = {
     
     cube: new THREE.BoxBufferGeometry(16, 16, 16),
     sphere: new THREE.SphereBufferGeometry(11, 11, 11),
-    road: new THREE.BoxBufferGeometry(64, 0, 1024),
-    floor: new THREE.BoxBufferGeometry(8192, 0, 1024),
+    path: new THREE.BoxBufferGeometry(64, 0, 1024),
+    ground: new THREE.BoxBufferGeometry(8192, 0, 1024),
 };
 
-
-
-// Création de la route
-var road = new THREE.Mesh(geometries.road, materials.road);
-road.position.z = -512;
-road.receiveShadow = true;
-scene.add(road);
-
-// Création du sol
-var floor = new THREE.Mesh(geometries.floor, materials.sand);
-floor.position.set(0, -0.01, -512);
-floor.receiveShadow = true;
-scene.add(floor);
-
-// Liste des caisses
-var boxes = [];
-// Objet sur lequel les caisses seront créées
-var modelBox = new THREE.Mesh(geometries.cube, materials.box);
-modelBox.receiveShadow = true;
-
-// Liste des piques
-var spikes = [];
-// Objet sur lequel les piques seront créés
-var modelSpike;
-// Chargement du modèle 3D et du matériel des piques
-var loader = new THREE.OBJLoader();
-loader.load('obj/spikes.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.iron;
-        }
-    });
-    
-    modelSpike = object;
-    gameLoaded = true;
-});
-
-// Liste des pièces
-var coins = [];
-// Objet sur lequel les pièces seront créées
-var modelCoin;
-// Chargement du modèle 3D et du matériel des pièces
-var loader = new THREE.OBJLoader();
-loader.load('obj/coin.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.coin;
-        }
-    });
-    
-    modelCoin = object;
-    gameLoaded = true;
-});
-
-// Liste des piques
-var spikes = [];
-// Objet sur lequel les piques seront créés
-var modelSpike;
-// Chargement du modèle 3D et du matériel des piques
-var loader = new THREE.OBJLoader();
-loader.load('obj/spikes.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.iron;
-        }
-    });
-    
-    modelSpike = object;
-    gameLoaded = true;
-});
-
-// Liste des décors
-var decors = [];
-// Objet sur lequel les décors de type cactus seront créés
-var modelCactus;
-// Chargement du modèle 3D et du matériel des piques
-var loader = new THREE.OBJLoader();
-loader.load('obj/cactus.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.cactus;
-        }
-    });
-    
-    modelCactus = object;
-    modelCactus.add(modelSpike);
-    gameLoaded = true;
-});
-// Objet sur lequel les décors de type pierre seront créés
-var modelRock;
-// Chargement du modèle 3D et du matériel des piques
-var loader = new THREE.OBJLoader();
-loader.load('obj/rock.obj', function (object) {
-    
-    object.traverse(function (child) {
-        
-        if (child instanceof THREE.Mesh) {
-            child.material = materials.rock;
-        }
-    });
-    
-    modelRock = object;
-    gameLoaded = true;
-});
-
-// Personnage jouable
-var caracter = new THREE.Mesh(geometries.cube, materials.iron);
-caracter.position.set(0, 8, -40);
-scene.add(caracter);
-
-console.log(0);
-var wolf;
-loadModel('wolf', materials.fur);
-alert('Hors de la fonction.');
-alert(wolf);
-var yolo1 = createObject(-20, 16, -200, [modelBox]);
-var yolo2 = createObject(-10, 8, -250, [modelBox]);
-var yolo3 = createObject(0, 0, -300, [wolf]);
-var yolo4 = createObject(10, 8, -350, [modelBox]);
-var yolo5 = createObject(20, 16, -400, [modelBox]);
 
 // Rendu
 var renderer = new THREE.WebGLRenderer();
@@ -272,6 +144,8 @@ renderer.shadowMap.type = THREE.PCFShadowMap;
 document.body.appendChild(renderer.domElement); // Créer le canvas
 
 window.addEventListener('resize', onWindowResize, false);
+
+
 
 // Lorsque l'on change la taille de la fenêtre
 function onWindowResize() {
@@ -308,11 +182,11 @@ $(document).scroll(function() {
 
 
 // Charge un modèle 3D au format obj/*.obj,
-// return l'objet contenant le modèle et le matériel
-function loadModel(fileName, material, index) {
+// stock l'objet dans un tableau
+function loadModel(fileName, material) {
     
+    var index = loadings.push(false) - 1;
     var loader = new THREE.OBJLoader();
-    var mesh;
     
     loader.load('obj/' + fileName + '.obj', function (object) {
         
@@ -322,17 +196,75 @@ function loadModel(fileName, material, index) {
             }
         });
         
-        models[index] = object;
+        loadings[index] = true;
+        models[fileName] = object;
     });
 }
 
 
+
+
+// --- Chargement des modèles 3D et des formes géométriques ---
+
+loadModel('wolf', materials.fur);
+loadModel('spikes', materials.iron);
+loadModel('coin', materials.gold);
+loadModel('cactus', materials.cactus);
+loadModel('rock', materials.rock);
+
+models['box'] = new THREE.Mesh(geometries.cube, materials.box);
+models['road'] = new THREE.Mesh(geometries.path, materials.road);
+models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
+models['ground'].position.y = -0.01;
+
+// --- Création des objets ---
+
+// Personnage jouable
+var caracter;
+// Sol
+var floor;
+// Liste des caisses
+var boxes = [];
+// Liste des piques
+var spikes = [];
+// Liste des pièces
+var coins = [];
+// Liste des décors
+var decors = [];
+
+
+
 var interval = setInterval(waiting, 10);
 
-// Tant que le jeu n'est pas chargée, attend...
+// Tant que le jeu n'est pas chargé, attend...
 function waiting() {
-    if (gameLoaded) {
+    
+    // Si le jeu est chargé
+    if (isGameLoaded()) {
+        
         clearInterval(interval);
+        
+        // --- Application des modèles à certains objets ---
+        
+        caracter = createObject(0, 8, -40, [models.wolf]);
+        floor = createObject(0, 0, -448, [models.road, models.ground]);
+        
+        // Lancement de la boucle du jeu
         gameLoop();
     }
+}
+
+
+// Si le jeu est chargé ou non
+function isGameLoaded() {
+    
+    // Pour chaque élément du tableau des chargements
+    for (var i = 0; i < loadings.length; i++) {
+        
+        if (!loadings[i]) {
+            return false;
+        }
+    }
+    
+    return true;
 }

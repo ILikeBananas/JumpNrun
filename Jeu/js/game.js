@@ -71,8 +71,7 @@ function gameLoop() {
     caracter.position.z -= 96 * delta;
     
     // Déplace la route et le sable pour qu'ils restent dans la vue
-    if (camera.position.z < road.position.z + 448) {
-        road.position.z -= 64;
+    if (camera.position.z < floor.position.z + 448) {
         floor.position.z -= 64;
     }
     
@@ -85,12 +84,11 @@ function gameLoop() {
     
     // Charge un décor
     if (distanceNextDecor <= 0) {
-        rand.int() ? decors.push(modelCactus.clone()) : decors.push(modelRock.clone());
-        var decor = decors[decors.length-1];
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
-        decor.position.set(x, 0, camera.position.z - 896);
-        decor.rotation.y = rand.int(0, Math.PI);
-        scene.add(decor);
+        var decorName = rand.int() ? 'cactus' : 'rock';
+        var index = decors.push(createObject(x, 0, camera.position.z - 896, [models[decorName]])) - 1;
+        decors[index].rotation.y = rand.int(0, Math.PI);
+        
         distanceNextDecor = rand.int(32, 128);
     }
     
@@ -135,7 +133,7 @@ function gameLoop() {
             reset();
         }
     }
-        
+    
     // Pour chaque pièce
     for (var i = 0; i < coins.length; i++) {
         if (coins[i].position.z >= camera.position.z + 16) {
@@ -161,7 +159,6 @@ function gameLoop() {
             scene.remove(decors[i]);
         }
     }
-    
     
     distance = parseInt(caracter.position.z * -1 / 16);
     score = distance + 10 * coinsCollect;
@@ -231,7 +228,7 @@ function reset() {
     roadPath = 1;
     fallSpeed = 0;
     
-    road.position.z = floor.position.z = -448;
+    floor.position.z = -448;
     
     positionEndLevel = 0;
     distanceNextDecor = rand.int(0, 64);
