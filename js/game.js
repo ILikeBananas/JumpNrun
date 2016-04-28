@@ -197,10 +197,12 @@ function gameLoop() {
 // Réinitialise la partie
 function reset() {
     
+    /*
     alert('Vous êtes mort.\n\n' +
           'Distance parcouru : ' + distance + ' mètres\n' +
           'Nombre de pièces collectées : ' + coinsCollect + '\n\n' +
           'Score final : ' + score);
+          */
     
     coinsCollect = 0;
     

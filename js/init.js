@@ -58,7 +58,7 @@ var scene = new THREE.Scene();
 var fog = new THREE.Fog('#80C0FF', 200, 800);
 scene.fog = fog;
 
-var ambLight = new THREE.AmbientLight('#C0C0C0');
+var ambLight = new THREE.AmbientLight('FFFFFF');
 scene.add(ambLight);
 
 var light = new THREE.SpotLight('#FF0000', 1, 0, Math.PI / 2 );
@@ -200,7 +200,6 @@ function loadModel(fileName, material) {
         models[fileName] = object;
     });
 }
-
 
 
 
