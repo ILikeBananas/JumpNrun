@@ -76,7 +76,6 @@ var textures = {
     cactus: new THREE.TextureLoader().load('img/textures/cactus.png'),
     fur: new THREE.TextureLoader().load('img/textures/fur.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
-    iron: new THREE.TextureLoader().load('img/textures/iron.png'),
     test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
@@ -205,7 +204,7 @@ function loadModel(fileName, material) {
 
 // --- Chargement des modèles 3D et des formes géométriques ---
 
-loadModel('wolf', materials.fur);
+loadModel('coyote', materials.fur);
 loadModel('spikes', materials.iron);
 loadModel('coin', materials.gold);
 loadModel('cactus', materials.cactus);
@@ -214,7 +213,7 @@ loadModel('rock', materials.rock);
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
-models['ground'].position.y = -0.01;
+models.ground.position.y = -0.01;
 
 // --- Création des objets ---
 
@@ -243,9 +242,16 @@ function waiting() {
         
         clearInterval(interval);
         
+        // --- Masques de collision
+        
+        changeMask(models.box, -8, -8, -8, 8, 8, 8);
+        changeMask(models.spikes, -8, -8, -8, 8, -6, 8);
+        changeMask(models.coyote, -8, -8, -8, 8, 8, 8);
+        
+        
         // --- Application des modèles à certains objets ---
         
-        caracter = createObject(0, 8, -40, [models.wolf]);
+        caracter = createObject(0, 0, -40, [models.coyote]);
         floor = createObject(0, 0, -448, [models.road, models.ground]);
         
         // Lancement de la boucle du jeu

@@ -1,6 +1,6 @@
 function plural(value, sg, pl) {
 	
-	value = typeof value !== 'undefined' ? value : 2; 
+	value = typeof value !== 'undefined' ? value : 2;
 	sg = typeof sg !== 'undefined' ?  sg : 's';
 	
 	if (typeof pl === 'undefined') {

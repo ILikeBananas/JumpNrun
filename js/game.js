@@ -22,8 +22,8 @@ function gameLoop() {
     caracter.position.y -= fallSpeed * delta;
     
     // Empêche le personnage à rentrer dans le sol
-    if (caracter.position.y <= 8) {
-        caracter.position.y = 8;
+    if (caracter.position.y <= 0) {
+        caracter.position.y = 0;
         onGround = true;
     }
     
@@ -70,7 +70,7 @@ function gameLoop() {
     // Déplacement du personnage
     caracter.position.z -= 96 * delta;
     
-    // Déplace la route et le sable pour qu'ils restent dans la vue
+    // Déplace le sol pour qu'il reste dans la vue
     if (camera.position.z < floor.position.z + 448) {
         floor.position.z -= 64;
     }
@@ -111,11 +111,11 @@ function gameLoop() {
         }
         
         // Si il y a une collision
-        if (collision(boxes[i], -8, -8, -8, 8, 2, 8)) {
+        if (collision(caracter, boxes[i])) {
             
             reset();
             
-        } else if (collision(boxes[i], -8, 2, -8, 8, 8, 8)) {
+        } else if (collision(caracter, boxes[i])) {
             
             caracter.position.y = boxes[i].position.y + 16;
             onGround = true;
@@ -129,7 +129,7 @@ function gameLoop() {
         }
         
         // Si il y a une collision
-        if (collision(spikes[i], -8, -8, -8, 8, -6, 8)) {
+        if (collision(caracter, spikes[i])) {
             reset();
         }
     }
