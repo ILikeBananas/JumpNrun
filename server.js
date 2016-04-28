@@ -7,29 +7,26 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require("fs");
 var path = require("path");
+var colog = require("colog");
+var config = require("./config/config.json");
 
-// Read the config file and start the server
-fs.readFile("config.json", "utf8", (err, data) => {
-  // Test if the read was succesfull
-  if(err){
-    console.log("Config file read error" + err);
-  } else {
-    data = JSON.parse(data);
-    // Start the server
-    server.listen(data["port"]);
-    console.log("Server started on port %d", data["port"]);
-  }
-});
+server.listen(config.port);
+colog.success("server started " +  config.port);
 
 // Static routes
 app.use("/js", express.static("js"));
 app.use("/maps", express.static("maps"));
 app.use("/img", express.static("img"));
 app.use("/css", express.static("css"));
+app.use("/vendors", express.static("vendors"));
+app.use("/obj", express.static("obj"));
 
+// Set the view engine
+app.set("view engine", "jade");
+app.set("views", "./views");
 // Routings
 app.get("/", (req, res) => {
-  res.sendFile(path.join( __dirname+ "/index.html"));
+  res.render("index");
 });
 io.on("connection", (data) => {
   console.log("Client connected" + data);
