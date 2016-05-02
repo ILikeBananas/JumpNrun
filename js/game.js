@@ -6,8 +6,8 @@ function gameLoop() {
     now = Date.now();
     delta = (now - lastTime) / 1000;
     fps = parseInt(1 / delta * 1) / 1;
-    if (delta > .025) {
-        delta = .025;
+    if (delta > .05) {
+        delta = .05;
     }
     
     // Vitesse de chute augmentant avec le temps
@@ -59,7 +59,22 @@ function gameLoop() {
         keysOnce[32] = false;
     }
     
-        
+    isSquat = false;
+    
+    // Touche d'accroupissement appuyé
+    if (keys[16]) {
+        isSquat = true;
+        keysOnce[16] = true;
+    }
+    
+    if (isSquat) {
+        caracter.children[0].position.y = -3;
+        caracter.endY = 6;
+    } else {
+        caracter.children[0].position.y = 1;
+        caracter.endY = 8;
+    }
+    
     // Si on est sur le sol, on ne chute pas
     if (onGround && fallSpeed > 0) {
         fallSpeed = 0;
@@ -68,10 +83,10 @@ function gameLoop() {
     onGround = false;
     
     // Déplacement du personnage
-    caracter.position.z -= 96 * delta;
+    caracter.position.z -= 112 * delta;
     
     // Déplace le sol pour qu'il reste dans la vue
-    if (camera.position.z < floor.position.z + 448) {
+    if (camera.position.z < floor.position.z) {
         floor.position.z -= 64;
     }
     
@@ -87,7 +102,7 @@ function gameLoop() {
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
         var decorName = rand.int() ? 'cactus' : 'rock';
         var index = decors.push(createObject(x, 0, camera.position.z - 896, [models[decorName]])) - 1;
-        decors[index].rotation.y = rand.int(0, Math.PI);
+        decors[index].rotation.y = rand.int(Math.PI);
         
         distanceNextDecor = rand.int(32, 128);
     }
@@ -110,15 +125,16 @@ function gameLoop() {
             scene.remove(boxes[i]);
         }
         
-        // Si il y a une collision
-        if (collision(caracter, boxes[i])) {
+        // Si fonce dans une caisse
+        if (collision(caracter, boxes[i], -8,-8,-8, 8,0,8)) {
             
             reset();
             
         } else if (collision(caracter, boxes[i])) {
             
-            caracter.position.y = boxes[i].position.y + 16;
+            caracter.position.y = boxes[i].position.y + 8;
             onGround = true;
+            
         }
     }
     
@@ -144,7 +160,7 @@ function gameLoop() {
             coins[i].rotation.y += 4 * delta;
             
             // Si il y a une collision
-            if (collision(coins[i], -2, -2, -2, 2, 2, 2)) {
+            if (collision(caracter, coins[i])) {
                 
                 coinsCollect++;
                 coins[i].position.y = -64;
@@ -163,10 +179,48 @@ function gameLoop() {
     distance = parseInt(caracter.position.z * -1 / 16);
     score = distance + 10 * coinsCollect;
     
+    // Animation de départ
+    
+    if (viewX > 0) {
+        viewX -= delta * 16;
+    }    
+    if (viewX < 0) {
+        viewX = 0;
+    }
+    
+    if (viewY < 40) {
+        viewY += delta * 6;
+    }    
+    if (viewY > 40) {
+        viewY = 40;
+    }
+    
+    if (viewZ < 40) {
+        viewZ += delta * 32;
+    }    
+    if (viewZ > 40) {
+        viewZ = 40;
+    }
+    
+    if (camera.rotation.y > 0) {
+        camera.rotation.y -= delta;
+    }
+    if (camera.rotation.y < 0) {
+        camera.rotation.y = 0;
+    }
+    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
+        camera.rotation.x -= delta * .5;
+    }
+    if (camera.rotation.x < -Math.PI / 6) {
+        camera.rotation.x = -Math.PI / 6;
+    }
+    
+    
+    
     // Position de la caméra relative au personnage
-    camera.position.set(caracter.position.x,
-                        caracter.position.y + 32,
-                        caracter.position.z + 40);
+    camera.position.set(caracter.position.x + viewX,
+                        caracter.position.y + viewY,
+                        caracter.position.z + viewZ);
     
     // Affiche le contenu à l'écran
     renderer.render(scene, camera);
@@ -226,12 +280,12 @@ function reset() {
     }
     decors = [];
     
-    caracter.position.set(0, 8, 0);
+    caracter.position.set(0, 0, 0);
     roadPath = 1;
     fallSpeed = 0;
     
-    floor.position.z = -448;
+    floor.position.z = 0;
     
     positionEndLevel = 0;
-    distanceNextDecor = rand.int(0, 64);
+    distanceNextDecor = rand.int(64);
 }

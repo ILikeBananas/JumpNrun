@@ -18,8 +18,13 @@ var rand = {
 	// Retourne un nombre entier aléatoire >= à "min" et <= à "max"
 	int: function (min, max) {
 		
-		min = typeof min !== 'undefined' ?  min : 0;
-		max = typeof max !== 'undefined' ?  max : 1;
+        if (typeof min !== 'undefined' && typeof max === 'undefined') {
+            max = min;
+            min = 0;
+        } else {
+            min = typeof min !== 'undefined' ?  min : 0;
+            max = typeof max !== 'undefined' ?  max : 1;
+        }
 		
 		if (min > max) {
 			var temp = min;

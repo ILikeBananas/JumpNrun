@@ -39,7 +39,7 @@ function changeMask(obj, startX, startY, startZ, endX, endY, endZ) {
 
 // Créer un objet et l'ajoute à la scène,
 // return l'objet créé
-function createObject(x, y, z, tabMeshes) {
+function createObject(x, y, z, tabMeshes, startX, startY, startZ, endX, endY, endZ) {
     
     var object = new THREE.Mesh();
     object.position.set(x, y, z);
@@ -49,6 +49,13 @@ function createObject(x, y, z, tabMeshes) {
         object.add(tabMeshes[i].clone());
     }
     
+    typeof startX !== 'undefined' ? object.startX = startX : false;
+    typeof startY !== 'undefined' ? object.startY = startY : false;
+    typeof startZ !== 'undefined' ? object.startZ = startZ : false;     
+    typeof endX !== 'undefined' ? object.endX = endX : false;
+    typeof endY !== 'undefined' ? object.endY = endY : false;
+    typeof endZ !== 'undefined' ? object.endZ = endZ : false; 
+    
     scene.add(object);
     return object;
 }
@@ -56,7 +63,7 @@ function createObject(x, y, z, tabMeshes) {
 
 // Test si il y a une collision entre deux objets
 // return vrai si il y a une collision, sinon faux
-function collision(obj1, obj2) {
+function collision(obj1, obj2, startX, startY, startZ, endX, endY, endZ) {
     
     var x1 = obj1.position.x + obj1.startX;
     var y1 = obj1.position.y + obj1.startY;
@@ -65,12 +72,19 @@ function collision(obj1, obj2) {
     var h1 = obj1.endY - obj1.startY;
     var d1 = obj1.endZ - obj1.startZ;
     
-    var x2 = obj2.position.x + obj2.startW;
-    var y2 = obj2.position.y + obj2.startH;
-    var z2 = obj2.position.z + obj2.startD;
-    var w2 = obj2.endW - obj2.startW;
-    var h2 = obj2.endH - obj2.startH;
-    var d2 = obj2.endD - obj2.startD;
+    startX = typeof startX !== 'undefined' ? startX : obj2.startX;
+    startY = typeof startY !== 'undefined' ? startY : obj2.startY;
+    startZ = typeof startZ !== 'undefined' ? startZ : obj2.startZ;    
+    endX = typeof endX !== 'undefined' ? endX : obj2.endX;
+    endY = typeof endY !== 'undefined' ? endY : obj2.endY;
+    endZ = typeof endZ !== 'undefined' ? endZ : obj2.endZ;
+    
+    var x2 = obj2.position.x + startX;
+    var y2 = obj2.position.y + startY;
+    var z2 = obj2.position.z + startZ;
+    var w2 = endX - startX;
+    var h2 = endY - startY;
+    var d2 = endZ - startZ;
     
     // Test la collision
     if (x1 < x2 + w2 &&

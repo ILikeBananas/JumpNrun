@@ -145,6 +145,53 @@ function loadLevel(id) {
 				'   ' +
 				' sb' +
 				'sss';
+            break;
+        case 8:
+            level =
+                'B B' +
+                'BdB' +
+                'B B';
+        case 9:
+            level =
+                'sBc' +
+                'sBc' +
+                ' Bc' +
+                ' Bc' +
+                ' Bc' +
+                ' Bc' +
+                ' B ' +
+                'dBC' +
+                ' BC' +
+                ' BC' +
+                ' Bb' +
+                ' BB' +
+                '   ' +
+                '   ' +
+                '   ' +
+                'Bss' +
+                'B  ' +
+                'B  ' +
+                'B  ' +
+                '   ' +
+                '   ' +
+                '   ' +
+                ' C ' +
+                ' C ' +
+                ' b ' +
+                ' b ' +
+                '   ';
+            break;
+        case 10:
+            level =
+                'dBs' +
+                ' B ' +
+                ' B ' +
+                'cBc' +
+                'cBc' +
+                'cBc' +
+                ' B ' +
+                ' B ' +
+                'sBd';
     }
     
     var endZ = camera.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
@@ -156,25 +203,33 @@ function loadLevel(id) {
         var z = endZ + parseInt(i / 3) * 16;
         
         if (level[i] == 'b') {
-            boxes.push(createObject(x, 8, z, [models.box]));
+            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
             
         } else if (level[i] == 'B') {
-            boxes.push(createObject(x, 8, z, [models.box]));
-            boxes.push(createObject(x, 24, z, [models.box]));
+            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
+            boxes.push(createObject(x, 24, z, [models.box], -8,-8,-8, 8,8,8));
             
         } else if (level[i] == 's') {
-            spikes.push(createObject(x, 8, z, [models.spikes]));
+            spikes.push(createObject(x, 8, z, [models.spikes], -8,-8,-8, 8,-4,8));
             
         } else if (level[i] == 'S') {
-            boxes.push(createObject(x, 8, z, [models.box]));
-            spikes.push(createObject(x, 24, z, [models.spikes]));
+            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
+            spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
             
         } else if (level[i] == 'c') {
-            coins.push(createObject(x, 8, z, [models.coin]));
+            coins.push(createObject(x, 8, z, [models.coin], -4,-4,-4, 4,4,4));
             
         } else if (level[i] == 'C') {
-            boxes.push(createObject(x, 8, z, [models.box]));
-            coins.push(createObject(x, 24, z, [models.coin]));
+            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
+            coins.push(createObject(x, 24, z, [models.coin], -4,-4,-4, 4,4,4));
+        } else if (level[i] == 'd') {
+            boxes.push(createObject(x, 24, z, [models.box], -8,-8,-8, 8,8,8));
+            decors.push(createObject(x, 24, z, [models.arrow]));
+            spikes.push(createObject(x, 8, z, [models.spikes], -8,2,-8, 8,8,8));
+            var spike = spikes[spikes.length-1];
+            spike.scale.y = 1.5;
+            spike.position.y -= 4;
+            spike.rotation.x = Math.PI;
         }
     }
     

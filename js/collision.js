@@ -1,6 +1,7 @@
 // Test la collision entre le personnage et
 //l'objet passé en paramètre,
 //return true si il y a une collision
+/*
 function collision(obj, width1, height1, depth1, width2, height2, depth2) {
     
     var x1 = caracter.position.x - 8;
@@ -30,3 +31,4 @@ function collision(obj, width1, height1, depth1, width2, height2, depth2) {
     
     return false;
 }
+*/

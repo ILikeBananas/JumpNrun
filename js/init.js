@@ -1,5 +1,5 @@
 // Nombre de niveaux
-const NUMBER_LEVEL = 7;
+const NUMBER_LEVEL = 10;
 
 var now = Date.now();
 var lastTime = now;
@@ -30,10 +30,18 @@ var roadPath = 1;
 var fallSpeed = 0;
 // Si on est au sol ou non
 var onGround = false;
+// Si on est accroupi ou non
+var isSquat = false;
 // Distance avant de faire apparaître un décor
-var distanceNextDecor = rand.int(0, 64);
+var distanceNextDecor = rand.int(64);
 // Tableau contenant des modèles 3D chargés
 var models = [];
+// Position X de la camera relative au personnage
+var viewX = 60;
+// Position Y de la camera relative au personnage
+var viewY = 5;
+// Position Z de la camera relative au personnage
+var viewZ = -40;
 
 // Canvas 2D
 var canvas;
@@ -51,14 +59,14 @@ ctx = canvas.getContext('2d');
 
 // Caméra
 var camera = new THREE.PerspectiveCamera(70, width / height, 1, 800);
-camera.rotation.x = -Math.PI / 6;
+camera.rotation.set(0, Math.PI, 0);
 
 // Scène et brouillard
 var scene = new THREE.Scene();
 var fog = new THREE.Fog('#80C0FF', 200, 800);
 scene.fog = fog;
 
-var ambLight = new THREE.AmbientLight('FFFFFF');
+var ambLight = new THREE.AmbientLight('#FF0000');
 scene.add(ambLight);
 
 var light = new THREE.SpotLight('#FF0000', 1, 0, Math.PI / 2 );
@@ -75,14 +83,15 @@ var textures = {
     rock: new THREE.TextureLoader().load('img/textures/rock.png'),
     cactus: new THREE.TextureLoader().load('img/textures/cactus.png'),
     fur: new THREE.TextureLoader().load('img/textures/fur.png'),
+    skateboard: new THREE.TextureLoader().load('img/textures/skateboard.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
     test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
-textures.road.repeat.set(1, 16);
+textures.road.repeat.set(1, 32);
 
 textures.sand.wrapS = textures.sand.wrapT = THREE.RepeatWrapping;
-textures.sand.repeat.set(512, 64);
+textures.sand.repeat.set(512, 128);
 
 textures.rock.wrapS = textures.rock.wrapT = THREE.RepeatWrapping;
 textures.rock.repeat.set(.005, .005);
@@ -90,19 +99,24 @@ textures.rock.repeat.set(.005, .005);
 textures.cactus.wrapS = textures.cactus.wrapT = THREE.RepeatWrapping;
 textures.cactus.repeat.set(.25, .25);
 
+textures.skateboard.wrapS = textures.skateboard.wrapT = THREE.RepeatWrapping;
+textures.skateboard.repeat.set(.0016, .0016);
+
 
 // Liste des reflets
 var reflexions = {
     
     dull: new THREE.TextureLoader().load('img/env/dull.png'),
-    bright: new THREE.TextureLoader().load('img/env/bright.png'),
+    iron: new THREE.TextureLoader().load('img/env/iron.png'),
     gold: new THREE.TextureLoader().load('img/env/gold.png'),
+    emerald: new THREE.TextureLoader().load('img/env/emerald.png'),
     test: new THREE.TextureLoader().load('img/env/test.png'),
 };
 
 reflexions.dull.mapping = THREE.SphericalReflectionMapping;
-reflexions.bright.mapping = THREE.SphericalReflectionMapping;
+reflexions.iron.mapping = THREE.SphericalReflectionMapping;
 reflexions.gold.mapping = THREE.SphericalReflectionMapping;
+reflexions.emerald.mapping = THREE.SphericalReflectionMapping;
 reflexions.test.mapping = THREE.SphericalReflectionMapping;
 
 
@@ -114,10 +128,14 @@ var materials = {
     sand: new THREE.MeshBasicMaterial({map: textures.sand}),
     rock: new THREE.MeshBasicMaterial({map: textures.rock, envMap: reflexions.dull}),
     cactus: new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
+    red: new THREE.MeshBasicMaterial({color: '#FF0000', envMap: reflexions.dull}),
     fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
+    skateboardPattern: new THREE.MeshBasicMaterial({map: textures.skateboard, envMap: reflexions.dull}),
+    black: new THREE.MeshBasicMaterial({color: '#404040', envMap: reflexions.dull}),
     box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
-    iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.bright}),
+    iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.iron}),
     gold: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
+    emerald: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.emerald}),
 };
 
 
@@ -126,8 +144,8 @@ var geometries = {
     
     cube: new THREE.BoxBufferGeometry(16, 16, 16),
     sphere: new THREE.SphereBufferGeometry(11, 11, 11),
-    path: new THREE.BoxBufferGeometry(64, 0, 1024),
-    ground: new THREE.BoxBufferGeometry(8192, 0, 1024),
+    path: new THREE.BoxBufferGeometry(64, 0, 2048),
+    ground: new THREE.BoxBufferGeometry(8192, 0, 2048),
 };
 
 
@@ -182,11 +200,16 @@ $(document).scroll(function() {
 
 // Charge un modèle 3D au format obj/*.obj,
 // stock l'objet dans un tableau
-function loadModel(fileName, material) {
+function loadModel(fileName, material, modelName) {
     
     var index = loadings.push(false) - 1;
     var loader = new THREE.OBJLoader();
     
+    if (typeof modelName === 'undefined') {
+        modelName = fileName;
+    }
+    
+    // Chargement du modèle
     loader.load('obj/' + fileName + '.obj', function (object) {
         
         object.traverse(function (child) {
@@ -196,7 +219,7 @@ function loadModel(fileName, material) {
         });
         
         loadings[index] = true;
-        models[fileName] = object;
+        models[modelName] = object;
     });
 }
 
@@ -205,10 +228,15 @@ function loadModel(fileName, material) {
 // --- Chargement des modèles 3D et des formes géométriques ---
 
 loadModel('coyote', materials.fur);
+loadModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
+loadModel('skateboard_edge', materials.black, 'skateboardEdge');
+loadModel('skateboard_wheels', materials.iron, 'skateboardWheels');
 loadModel('spikes', materials.iron);
 loadModel('coin', materials.gold);
+loadModel('bonus', materials.emerald);
 loadModel('cactus', materials.cactus);
 loadModel('rock', materials.rock);
+loadModel('arrow', materials.red);
 
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);
@@ -242,17 +270,14 @@ function waiting() {
         
         clearInterval(interval);
         
-        // --- Masques de collision
-        
-        changeMask(models.box, -8, -8, -8, 8, 8, 8);
-        changeMask(models.spikes, -8, -8, -8, 8, -6, 8);
-        changeMask(models.coyote, -8, -8, -8, 8, 8, 8);
-        
-        
         // --- Application des modèles à certains objets ---
         
-        caracter = createObject(0, 0, -40, [models.coyote]);
-        floor = createObject(0, 0, -448, [models.road, models.ground]);
+        models.coyote.position.y += 1;
+        caracter = createObject(0, 0, -40, [models.coyote,
+                                            models.skateboardPattern,
+                                            models.skateboardEdge,
+                                            models.skateboardWheels], -3,0,-4, 3,8,4);
+        floor = createObject(0, 0, 0, [models.road, models.ground]);
         
         // Lancement de la boucle du jeu
         gameLoop();
