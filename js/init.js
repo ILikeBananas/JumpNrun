@@ -1,7 +1,9 @@
 // Nombre de niveaux
 const NUMBER_LEVEL = 10;
 
+// Maintenant
 var now = Date.now();
+// Temps à la dernière frame
 var lastTime = now;
 // Secondes écoulée par image
 var delta = 0;
@@ -14,10 +16,13 @@ var height = window.innerHeight;
 
 // Tableau de booléens représentant les chargements terminés ou non
 var loadings = [];
+// Tableau contenant des modèles 3D chargés
+var models = [];
 // Tableau de booléens des touches appuyées
 var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
 var keysOnce = [];
+
 // Distance parcouru (1 bloc = 1 mètre)
 var distance = 0;
 // Nombre de pièces collectées
@@ -33,15 +38,19 @@ var onGround = false;
 // Si on est accroupi ou non
 var isSquat = false;
 // Distance avant de faire apparaître un décor
-var distanceNextDecor = rand.int(64);
-// Tableau contenant des modèles 3D chargés
-var models = [];
+var positionNextDecor = rand.int(64);
 // Position X de la camera relative au personnage
 var viewX = 60;
 // Position Y de la camera relative au personnage
 var viewY = 5;
 // Position Z de la camera relative au personnage
 var viewZ = -40;
+
+// Temps restant avant que le bouclier se dissipe
+var shieldTime = 0;
+
+// TEMP
+var yolo = false;
 
 // Canvas 2D
 var canvas;
@@ -87,6 +96,7 @@ var textures = {
     box: new THREE.TextureLoader().load('img/textures/box.png'),
     test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
+
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
 textures.road.repeat.set(1, 32);
 
@@ -110,6 +120,8 @@ var reflexions = {
     iron: new THREE.TextureLoader().load('img/env/iron.png'),
     gold: new THREE.TextureLoader().load('img/env/gold.png'),
     emerald: new THREE.TextureLoader().load('img/env/emerald.png'),
+    ruby: new THREE.TextureLoader().load('img/env/ruby.png'),
+    sapphire: new THREE.TextureLoader().load('img/env/sapphire.png'),
     test: new THREE.TextureLoader().load('img/env/test.png'),
 };
 
@@ -117,6 +129,8 @@ reflexions.dull.mapping = THREE.SphericalReflectionMapping;
 reflexions.iron.mapping = THREE.SphericalReflectionMapping;
 reflexions.gold.mapping = THREE.SphericalReflectionMapping;
 reflexions.emerald.mapping = THREE.SphericalReflectionMapping;
+reflexions.sapphire.mapping = THREE.SphericalReflectionMapping;
+reflexions.ruby.mapping = THREE.SphericalReflectionMapping;
 reflexions.test.mapping = THREE.SphericalReflectionMapping;
 
 
@@ -136,6 +150,8 @@ var materials = {
     iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.iron}),
     gold: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
     emerald: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.emerald}),
+    ruby: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.ruby}),
+    sapphire: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.sapphire}),
 };
 
 
@@ -229,14 +245,16 @@ function loadModel(fileName, material, modelName) {
 
 loadModel('coyote', materials.fur);
 loadModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
-loadModel('skateboard_edge', materials.black, 'skateboardEdge');
-loadModel('skateboard_wheels', materials.iron, 'skateboardWheels');
-loadModel('spikes', materials.iron);
-loadModel('coin', materials.gold);
-loadModel('bonus', materials.emerald);
-loadModel('cactus', materials.cactus);
-loadModel('rock', materials.rock);
-loadModel('arrow', materials.red);
+loadModel('skateboard_edge',    materials.black,             'skateboardEdge');
+loadModel('skateboard_wheels',  materials.iron,              'skateboardWheels');
+loadModel('spikes',             materials.iron);
+loadModel('coin',               materials.gold);
+loadModel('coin_star_4',        materials.emerald,           'coin5');
+loadModel('coin_star_5',        materials.sapphire,          'coin10');
+loadModel('coin_shield',        materials.ruby,              'coinShield');
+loadModel('cactus',             materials.cactus);
+loadModel('rock',               materials.rock);
+loadModel('arrow',              materials.red);
 
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);

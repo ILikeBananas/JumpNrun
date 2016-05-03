@@ -10,6 +10,16 @@ function gameLoop() {
         delta = .05;
     }
     
+    
+    // Diminue la durée du bouclier
+    if (shieldTime > 0) {
+        shieldTime -= delta;
+    }
+    // Le temps ne peut pas être négatif
+    if (shieldTime < 0) {
+        shieldTime = 0;
+    }
+    
     // Vitesse de chute augmentant avec le temps
     fallSpeed += 384 * delta;
     
@@ -91,20 +101,18 @@ function gameLoop() {
     }
     
     // Charge un niveau
-    if (camera.position.z < positionEndLevel + 800) {
+    if (caracter.position.z < positionEndLevel + 800) {
         loadLevel(rand.int(1, NUMBER_LEVEL));
     }
     
-    distanceNextDecor -= 96 * delta
-    
     // Charge un décor
-    if (distanceNextDecor <= 0) {
+    if (caracter.position.z < positionNextDecor + 800) {
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
         var decorName = rand.int() ? 'cactus' : 'rock';
         var index = decors.push(createObject(x, 0, camera.position.z - 896, [models[decorName]])) - 1;
         decors[index].rotation.y = rand.int(Math.PI);
         
-        distanceNextDecor = rand.int(32, 128);
+        positionNextDecor = caracter.position.z - 800 - rand.int(32, 128);
     }
     
     // Déplacement à gauche/droite
@@ -128,7 +136,12 @@ function gameLoop() {
         // Si fonce dans une caisse
         if (collision(caracter, boxes[i], -8,-8,-8, 8,0,8)) {
             
-            reset();
+            // Si on n'a pas de bouclier
+            if (!shieldTime) {
+                reset();
+            } else {
+                boxes[i].position.z -= delta * 128;
+            }
             
         } else if (collision(caracter, boxes[i])) {
             
@@ -162,7 +175,16 @@ function gameLoop() {
             // Si il y a une collision
             if (collision(caracter, coins[i])) {
                 
-                coinsCollect++;
+                // Si la pièce est jaune/verte/bleue/rouge
+                if (coins[i].name == 'coin') {
+                    coinsCollect++;
+                } else if (coins[i].name == 'coin5') {
+                    coinsCollect += 5;
+                } else if (coins[i].name == 'coin10') {
+                    coinsCollect += 10;
+                }  else if (coins[i].name == 'coinShield') {
+                    shieldTime = 20;
+                }
                 coins[i].position.y = -64;
                 scene.remove(coins[i]);
             }
@@ -208,7 +230,7 @@ function gameLoop() {
     if (camera.rotation.y < 0) {
         camera.rotation.y = 0;
     }
-    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
+    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6 && !yolo) {
         camera.rotation.x -= delta * .5;
     }
     if (camera.rotation.x < -Math.PI / 6) {
@@ -227,8 +249,17 @@ function gameLoop() {
     
     // Affiche le nombre d'image par seconde en haut à droite de l'écran
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font="30px Arial";
+    ctx.font="32px Arial";
     ctx.textBaseline = 'top';
+    
+    // Affiche la jauge de bouclier
+    ctx.fillStyle = '#C0001A';
+    ctx.fillRect(60, 20, shieldTime * 9.6, 24);
+    
+    // Affichage de l'interface
+    var interface = new Image();
+    interface.src = 'img/other/interface.png';
+    ctx.drawImage(interface, 0, 0);
     
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
@@ -236,14 +267,12 @@ function gameLoop() {
     
     ctx.fillStyle = 'rgba(0, 0, 0, .5)';
     ctx.textAlign = 'left';
-    ctx.fillText('Distance : ' + (distance + 'm'), 22, 22, 400);
-    ctx.fillText('Pièces : ' + (coinsCollect), 22, 57, 400);
-    ctx.fillText('Score : ' + (score), 22, 92, 400);
+    ctx.fillText('Distance : ' + (distance + 'm'), 62, 60);
+    ctx.fillText('Pièces : ' + (coinsCollect), 62, 100);
     
     ctx.fillStyle = 'white';
-    ctx.fillText('Distance : ' + (distance + 'm'), 20, 20, 400);
-    ctx.fillText('Pièces : ' + (coinsCollect), 20, 55, 400);
-    ctx.fillText('Score : ' + (score), 20, 90, 400);
+    ctx.fillText('Distance : ' + (distance + 'm'), 60, 58);
+    ctx.fillText('Pièces : ' + (coinsCollect), 60, 98);
     
     lastTime = now;
 }
@@ -287,5 +316,5 @@ function reset() {
     floor.position.z = 0;
     
     positionEndLevel = 0;
-    distanceNextDecor = rand.int(64);
+    positionNextDecor = rand.int(64);
 }

@@ -97,3 +97,14 @@ function collision(obj1, obj2, startX, startY, startZ, endX, endY, endZ) {
     }
     return false;
 }
+
+
+// Fonctions d'aide
+function yoloBigCoin(coinName) {
+    yolo = true;
+    camera.rotation.x = 0;
+    coinName = typeof coinName !== 'undefined' ? coinName : 'coin';
+    caracter.add(models[coinName].clone());
+    caracter.children[4].position.set(0, 40, 28);
+    caracter.position.y = 9999;
+}

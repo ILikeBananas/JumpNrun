@@ -158,13 +158,15 @@ function loadLevel(id) {
                 ' Bc' +
                 ' Bc' +
                 ' Bc' +
-                ' Bc' +
                 ' B ' +
+                ' BC' +
+                ' BC' +
                 'dBC' +
                 ' BC' +
                 ' BC' +
                 ' Bb' +
                 ' BB' +
+                '   ' +
                 '   ' +
                 '   ' +
                 '   ' +
@@ -194,13 +196,16 @@ function loadLevel(id) {
                 'sBd';
     }
     
-    var endZ = camera.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
+    var endZ = caracter.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
     
     // Pour chaque caractère composant le niveau
     for (var i = 0; i < level.length; i++) {
         
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
+        var coinName = rand.int(4) ? 'coin' :
+        (rand.int(3) ? 'coin5' :
+        (rand.int(2) ? 'coin10' : 'coinShield'));
         
         if (level[i] == 'b') {
             boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
@@ -217,14 +222,16 @@ function loadLevel(id) {
             spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
             
         } else if (level[i] == 'c') {
-            coins.push(createObject(x, 8, z, [models.coin], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 8, z, [models[coinName]], -4,-4,-4, 4,4,4));
+            coins[coins.length-1].name = coinName;
             
         } else if (level[i] == 'C') {
             boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            coins.push(createObject(x, 24, z, [models.coin], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 24, z, [models[coinName]], -4,-4,-4, 4,4,4));
+            coins[coins.length-1].name = coinName;
         } else if (level[i] == 'd') {
-            boxes.push(createObject(x, 24, z, [models.box], -8,-8,-8, 8,8,8));
-            decors.push(createObject(x, 24, z, [models.arrow]));
+            boxes.push(createObject(x, 24, z, [models.box, models.arrow], -8,-8,-8, 8,8,8));
+            //decors.push(createObject(x, 24, z, [models.arrow]));
             spikes.push(createObject(x, 8, z, [models.spikes], -8,2,-8, 8,8,8));
             var spike = spikes[spikes.length-1];
             spike.scale.y = 1.5;
