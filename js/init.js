@@ -1,5 +1,7 @@
 // Nombre de niveaux
 const NUMBER_LEVEL = 10;
+// Couleur du ciel
+const SKY_COLOR = '#80C0FF';
 
 // Maintenant
 var now = Date.now();
@@ -29,8 +31,10 @@ var distance = 0;
 var coinsCollect = 0;
 // Score obtenu
 var score = 0;
-// Chemin sur la route (0 = Gauche, 1 = Millieu, 2 = Droite)
+// Chemin sur la route (0 = gauche, 1 = millieu, 2 = droite)
 var roadPath = 1;
+// Vélocité (vitesse de déplacement du personnage)
+var velocity = 112;
 // Vitesse du chute
 var fallSpeed = 0;
 // Si on est au sol ou non
@@ -44,13 +48,12 @@ var viewX = 60;
 // Position Y de la camera relative au personnage
 var viewY = 5;
 // Position Z de la camera relative au personnage
-var viewZ = -40;
+var viewZ = -60;
 
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
-
-// TEMP
-var yolo = false;
+// Opacité du flash lorsque l'on fonce dans un obstacle avec le bouclier
+var flashOpacity = 0;
 
 // Canvas 2D
 var canvas;
@@ -60,11 +63,22 @@ var ctx;
 // Position Z de la fin du dernier niveau chargé
 var positionEndLevel = 0;
 
+
 // Canvas en 2 dimensions
 canvas = document.getElementById('canvas2d');
 canvas.width = width
 canvas.height = height
 ctx = canvas.getContext('2d');
+
+// Rendu
+var renderer = new THREE.WebGLRenderer({antialias: true});
+renderer.setClearColor(SKY_COLOR);
+renderer.domElement.setAttribute('id', 'canvas3d');
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(width, height);
+renderer.shadowMap.enabled = true;
+
+document.body.appendChild(renderer.domElement); // Créer le canvas
 
 // Caméra
 var camera = new THREE.PerspectiveCamera(70, width / height, 1, 800);
@@ -72,17 +86,10 @@ camera.rotation.set(0, Math.PI, 0);
 
 // Scène et brouillard
 var scene = new THREE.Scene();
-var fog = new THREE.Fog('#80C0FF', 200, 800);
+var fog = new THREE.Fog(SKY_COLOR, 400, 800);
 scene.fog = fog;
 
-var ambLight = new THREE.AmbientLight('#FF0000');
-scene.add(ambLight);
 
-var light = new THREE.SpotLight('#FF0000', 1, 0, Math.PI / 2 );
-light.position.set(0, 1000, -256);
-light.target.position.set( 0, 0, 0 );
-light.castShadow = true;
-scene.add(light);
 
 // Liste des textures
 var textures = {
@@ -122,66 +129,46 @@ var reflexions = {
     emerald: new THREE.TextureLoader().load('img/env/emerald.png'),
     ruby: new THREE.TextureLoader().load('img/env/ruby.png'),
     sapphire: new THREE.TextureLoader().load('img/env/sapphire.png'),
-    test: new THREE.TextureLoader().load('img/env/test.png'),
 };
 
-reflexions.dull.mapping = THREE.SphericalReflectionMapping;
-reflexions.iron.mapping = THREE.SphericalReflectionMapping;
-reflexions.gold.mapping = THREE.SphericalReflectionMapping;
-reflexions.emerald.mapping = THREE.SphericalReflectionMapping;
-reflexions.sapphire.mapping = THREE.SphericalReflectionMapping;
-reflexions.ruby.mapping = THREE.SphericalReflectionMapping;
-reflexions.test.mapping = THREE.SphericalReflectionMapping;
+$.each(reflexions, function (index) {
+    reflexions[index].mapping = THREE.SphericalReflectionMapping;
+});
+
+
+// Liste des formes géométriques simples
+var geometries = {
+    
+    cube: new THREE.BoxBufferGeometry(16, 16, 16),
+    sphere: new THREE.SphereBufferGeometry(16, 32, 32),
+    path: new THREE.PlaneBufferGeometry(64, 2048),
+    ground: new THREE.PlaneBufferGeometry(8192, 2048),
+};
 
 
 // Liste des matériaux
 var materials = {
     
-    test: new THREE.MeshBasicMaterial({map: textures.test, envMap: reflexions.dull}),
-    road: new THREE.MeshBasicMaterial({map: textures.road}),
-    sand: new THREE.MeshBasicMaterial({map: textures.sand}),
-    rock: new THREE.MeshBasicMaterial({map: textures.rock, envMap: reflexions.dull}),
-    cactus: new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
-    red: new THREE.MeshBasicMaterial({color: '#FF0000', envMap: reflexions.dull}),
-    fur: new THREE.MeshBasicMaterial({map: textures.fur, envMap: reflexions.dull}),
+    road:     new THREE.MeshBasicMaterial({map: textures.road}),
+    sand:     new THREE.MeshBasicMaterial({map: textures.sand}),
+    rock:     new THREE.MeshBasicMaterial({map: textures.rock,   envMap: reflexions.dull}),
+    cactus:   new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
+    fur:      new THREE.MeshBasicMaterial({map: textures.fur,    envMap: reflexions.dull}),
+    box:      new THREE.MeshBasicMaterial({map: textures.box,    envMap: reflexions.dull}),
+    iron:     new THREE.MeshBasicMaterial({envMap: reflexions.iron}),
+    gold:     new THREE.MeshBasicMaterial({envMap: reflexions.gold}),
+    emerald:  new THREE.MeshBasicMaterial({envMap: reflexions.emerald}),
+    sapphire: new THREE.MeshBasicMaterial({envMap: reflexions.sapphire}),
+    ruby:     new THREE.MeshBasicMaterial({envMap: reflexions.ruby}),
+    shield:   new THREE.MeshBasicMaterial({color: '#FF0020', envMap: reflexions.dull}),
+    flash:   new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.dull}),
     skateboardPattern: new THREE.MeshBasicMaterial({map: textures.skateboard, envMap: reflexions.dull}),
-    black: new THREE.MeshBasicMaterial({color: '#404040', envMap: reflexions.dull}),
-    box: new THREE.MeshBasicMaterial({map: textures.box, envMap: reflexions.dull}),
-    iron: new THREE.MeshBasicMaterial({color: '#C0C0C0', envMap: reflexions.iron}),
-    gold: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.gold}),
-    emerald: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.emerald}),
-    ruby: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.ruby}),
-    sapphire: new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.sapphire}),
+    skateboardEdge:    new THREE.MeshBasicMaterial({color: '#404040'}),
 };
-
-
-// Liste des formes géométriques
-var geometries = {
-    
-    cube: new THREE.BoxBufferGeometry(16, 16, 16),
-    sphere: new THREE.SphereBufferGeometry(11, 11, 11),
-    path: new THREE.BoxBufferGeometry(64, 0, 2048),
-    ground: new THREE.BoxBufferGeometry(8192, 0, 2048),
-};
-
-
-// Rendu
-var renderer = new THREE.WebGLRenderer();
-renderer.setClearColor('#80C0FF');
-renderer.domElement.setAttribute('id', 'canvas3d');
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
-
-document.body.appendChild(renderer.domElement); // Créer le canvas
-
-window.addEventListener('resize', onWindowResize, false);
-
 
 
 // Lorsque l'on change la taille de la fenêtre
-function onWindowResize() {
+$(window).resize(function () {
     
     width = window.innerWidth;
     height = window.innerHeight;
@@ -192,8 +179,9 @@ function onWindowResize() {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
-}
+});
 
 
 
@@ -245,7 +233,7 @@ function loadModel(fileName, material, modelName) {
 
 loadModel('coyote', materials.fur);
 loadModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
-loadModel('skateboard_edge',    materials.black,             'skateboardEdge');
+loadModel('skateboard_edge',    materials.skateboardEdge,    'skateboardEdge');
 loadModel('skateboard_wheels',  materials.iron,              'skateboardWheels');
 loadModel('spikes',             materials.iron);
 loadModel('coin',               materials.gold);
@@ -254,14 +242,25 @@ loadModel('coin_star_5',        materials.sapphire,          'coin10');
 loadModel('coin_shield',        materials.ruby,              'coinShield');
 loadModel('cactus',             materials.cactus);
 loadModel('rock',               materials.rock);
-loadModel('arrow',              materials.red);
+loadModel('arrow',              materials.ruby);
 
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
-models.ground.position.y = -0.01;
+models.road.rotation.x = models.ground.rotation.x = -Math.PI / 2;
+models.ground.position.y -= .01;
+models['shield'] = new THREE.Mesh(geometries.sphere, materials.shield);
+models.shield.position.y = 8;
+models.shield.scale.set(.35, .7, .7);
+models.shield.material.transparent = true;
+models['flash'] = new THREE.Mesh(geometries.sphere, materials.flash);
+models.flash.position.y = 8;
+models.flash.scale.set(.36, .71, .71);
+models.flash.material.transparent = true;
 
-// --- Création des objets ---
+
+
+// --- Objets ---
 
 // Personnage jouable
 var caracter;
@@ -294,7 +293,11 @@ function waiting() {
         caracter = createObject(0, 0, -40, [models.coyote,
                                             models.skateboardPattern,
                                             models.skateboardEdge,
-                                            models.skateboardWheels], -3,0,-4, 3,8,4);
+                                            models.skateboardWheels,
+                                            models.shield,
+                                            models.flash], -3,0,-4, 3,8,4);
+        
+        
         floor = createObject(0, 0, 0, [models.road, models.ground]);
         
         // Lancement de la boucle du jeu

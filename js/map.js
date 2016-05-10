@@ -203,7 +203,7 @@ function loadLevel(id) {
         
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
-        var coinName = rand.int(4) ? 'coin' :
+        var coinName = rand.int(5) ? 'coin' :
         (rand.int(3) ? 'coin5' :
         (rand.int(2) ? 'coin10' : 'coinShield'));
         

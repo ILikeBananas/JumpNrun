@@ -11,21 +11,25 @@ function gameLoop() {
     }
     
     
-    // Diminue la durée du bouclier
-    if (shieldTime > 0) {
-        shieldTime -= delta;
-    }
-    // Le temps ne peut pas être négatif
-    if (shieldTime < 0) {
-        shieldTime = 0;
-    }
-    
     // Vitesse de chute augmentant avec le temps
     fallSpeed += 384 * delta;
     
     // Limite la vitesse de chute
     if (fallSpeed > 256) {
         fallSpeed = 256;
+    }
+    
+    caracter.children[5].material.opacity = flashOpacity;
+    // Dissipe le flash
+    flashOpacity -= 2 * delta;
+    
+    // Diminue la durée du bouclier
+    if (shieldTime > 0) {
+        shieldTime -= delta;
+        var opacity = shieldTime >= 2 ? .5 : shieldTime / 4;
+        caracter.children[4].material.opacity = opacity;
+    } else {
+        caracter.children[4].material.opacity = 0;
     }
     
     // Fait chuter/sauter le personnage
@@ -93,7 +97,7 @@ function gameLoop() {
     onGround = false;
     
     // Déplacement du personnage
-    caracter.position.z -= 112 * delta;
+    caracter.position.z -= velocity * delta;
     
     // Déplace le sol pour qu'il reste dans la vue
     if (camera.position.z < floor.position.z) {
@@ -129,42 +133,92 @@ function gameLoop() {
     
     // Pour chaque caisse
     for (var i = 0; i < boxes.length; i++) {
-        if (boxes[i].position.z >= camera.position.z + 16) {
-            scene.remove(boxes[i]);
+        
+        var box = boxes[i];
+        
+        // Si la caisse sort de l'écran
+        if (box.position.z >= camera.position.z + 16) {
+            scene.remove(box);
         }
         
-        // Si fonce dans une caisse
-        if (collision(caracter, boxes[i], -8,-8,-8, 8,0,8)) {
+        // Si la caisse n'est pas éjectée
+        if (box.name == '') {
             
-            // Si on n'a pas de bouclier
-            if (!shieldTime) {
-                reset();
-            } else {
-                boxes[i].position.z -= delta * 128;
+            // Si fonce dans une caisse
+            if (collision(caracter, box, -8,-8,-8, 8,0,8)) {
+                
+                // Si on n'a pas de bouclier
+                if (!shieldTime) {
+                    reset();
+                } else {
+                    shieldTime--;
+                    flashOpacity = 1;
+                    box.name = 'ejected';
+                    box['fallSpeed'] = -96;
+                    
+                    // Pour chaque piques
+                    for (var j = 0; j < spikes.length; j++) {
+                        
+                        if (box.position.x == spikes[j].position.x &&
+                            box.position.z == spikes[j].position.z) {
+                            
+                            spikes[j].name = 'ejected';
+                            spikes[j]['fallSpeed'] = -96;
+                        }
+                    }
+                }
+                
+            } else if (collision(caracter, box)) {
+                
+                caracter.position.y = box.position.y + 8;
+                onGround = true;
             }
             
-        } else if (collision(caracter, boxes[i])) {
-            
-            caracter.position.y = boxes[i].position.y + 8;
-            onGround = true;
-            
+        }
+        
+        // Si la caisse est éjectée
+        if (box.name == 'ejected') {
+            ejectObstacle(box);
         }
     }
     
     // Pour chaque pique
     for (var i = 0; i < spikes.length; i++) {
-        if (spikes[i].position.z >= camera.position.z + 16) {
-            scene.remove(spikes[i]);
+        
+        var spike = spikes[i];
+        
+        // Si le pique sort de l'écran
+        if (spike.position.z >= camera.position.z + 16) {
+            scene.remove(spike);
         }
         
-        // Si il y a une collision
-        if (collision(caracter, spikes[i])) {
-            reset();
+        // Si le pique n'est pas éjecté
+        if (spike.name == '') {
+            
+            // Si on fonce dans des piques
+            if (collision(caracter, spike)) {
+                
+                // Si on n'a pas de bouclier
+                if (!shieldTime) {
+                    reset();
+                } else {
+                    shieldTime--;
+                    flashOpacity = 1;
+                    spike.name = 'ejected';
+                    spike['fallSpeed'] = -96;
+                }
+            }
+            
+        }
+        
+        if (spike.name == 'ejected') {
+            ejectObstacle(spike);
         }
     }
     
     // Pour chaque pièce
     for (var i = 0; i < coins.length; i++) {
+        
         if (coins[i].position.z >= camera.position.z + 16) {
             scene.remove(coins[i]);
             
@@ -183,7 +237,7 @@ function gameLoop() {
                 } else if (coins[i].name == 'coin10') {
                     coinsCollect += 10;
                 }  else if (coins[i].name == 'coinShield') {
-                    shieldTime = 20;
+                    shieldTime = 10;
                 }
                 coins[i].position.y = -64;
                 scene.remove(coins[i]);
@@ -201,42 +255,15 @@ function gameLoop() {
     distance = parseInt(caracter.position.z * -1 / 16);
     score = distance + 10 * coinsCollect;
     
+    
+    // La durée du bouclier ne peut pas être négative
+    if (shieldTime < 0) {
+        shieldTime = 0;
+    }
+    
+    
     // Animation de départ
-    
-    if (viewX > 0) {
-        viewX -= delta * 16;
-    }    
-    if (viewX < 0) {
-        viewX = 0;
-    }
-    
-    if (viewY < 40) {
-        viewY += delta * 6;
-    }    
-    if (viewY > 40) {
-        viewY = 40;
-    }
-    
-    if (viewZ < 40) {
-        viewZ += delta * 32;
-    }    
-    if (viewZ > 40) {
-        viewZ = 40;
-    }
-    
-    if (camera.rotation.y > 0) {
-        camera.rotation.y -= delta;
-    }
-    if (camera.rotation.y < 0) {
-        camera.rotation.y = 0;
-    }
-    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6 && !yolo) {
-        camera.rotation.x -= delta * .5;
-    }
-    if (camera.rotation.x < -Math.PI / 6) {
-        camera.rotation.x = -Math.PI / 6;
-    }
-    
+    beginningAnimation();
     
     
     // Position de la caméra relative au personnage
@@ -254,7 +281,7 @@ function gameLoop() {
     
     // Affiche la jauge de bouclier
     ctx.fillStyle = '#C0001A';
-    ctx.fillRect(60, 20, shieldTime * 9.6, 24);
+    ctx.fillRect(60, 20, shieldTime * 19.2, 24);
     
     // Affichage de l'interface
     var interface = new Image();
@@ -317,4 +344,56 @@ function reset() {
     
     positionEndLevel = 0;
     positionNextDecor = rand.int(64);
+}
+
+
+// Éjecte l'obstacle passé en paramètre
+function ejectObstacle(obj) {
+    
+    if (obj.position.z <= camera.position.z) {
+        
+        obj.position.y -= obj.fallSpeed * delta;
+        obj.fallSpeed += 384 * delta;
+        obj.position.z -= 192 * delta;
+    }
+}
+
+
+// Animation de départ
+function beginningAnimation() {
+    
+    if (viewX > 0) {
+        viewX -= delta * 16;
+    }    
+    if (viewX < 0) {
+        viewX = 0;
+    }
+    
+    if (viewY < 40) {
+        viewY += delta * 6;
+    }    
+    if (viewY > 40) {
+        viewY = 40;
+    }
+    
+    if (viewZ < 40) {
+        viewZ += delta * 32;
+    }    
+    if (viewZ > 40) {
+        viewZ = 40;
+    }
+    
+    if (camera.rotation.y > 0) {
+        camera.rotation.y -= delta;
+    }
+    if (camera.rotation.y < 0) {
+        camera.rotation.y = 0;
+    }
+    
+    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
+        camera.rotation.x -= delta * .5;
+    }
+    if (camera.rotation.x < -Math.PI / 6) {
+        camera.rotation.x = -Math.PI / 6;
+    }
 }

@@ -46,8 +46,12 @@ function createObject(x, y, z, tabMeshes, startX, startY, startZ, endX, endY, en
     
     // Pour chaque Mesh passé en paramètre
     for (var i = 0; i < tabMeshes.length; i++) {
-        object.add(tabMeshes[i].clone());
+        var mesh = tabMeshes[i];
+        mesh.castShadow = mesh.receiveShadow = true;
+        object.add(mesh.clone());
     }
+    
+    object.castShadow = object.receiveShadow = true;
     
     typeof startX !== 'undefined' ? object.startX = startX : false;
     typeof startY !== 'undefined' ? object.startY = startY : false;
@@ -96,15 +100,4 @@ function collision(obj1, obj2, startX, startY, startZ, endX, endY, endZ) {
         return true;
     }
     return false;
-}
-
-
-// Fonctions d'aide
-function yoloBigCoin(coinName) {
-    yolo = true;
-    camera.rotation.x = 0;
-    coinName = typeof coinName !== 'undefined' ? coinName : 'coin';
-    caracter.add(models[coinName].clone());
-    caracter.children[4].position.set(0, 40, 28);
-    caracter.position.y = 9999;
 }
