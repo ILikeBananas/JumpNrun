@@ -20,8 +20,24 @@ function gameLoop() {
     }
     
     caracter.children[5].material.opacity = flashOpacity;
+    
     // Dissipe le flash
-    flashOpacity -= 2 * delta;
+    if (flashOpacity > 0) {
+        flashOpacity -= 2 * delta;
+    }
+    if (flashOpacity < 0) {
+        flashOpacity = 0;
+    }
+    
+    // Modifie, si besoin, le matériel du bouclier
+    if (shieldMaterial == 'basic') {
+        caracter.children[4].material = materials.shieldBasic;
+        
+    } else if (shieldMaterial == 'boost') {
+        caracter.children[4].material = materials.shieldBoost;
+    }
+    
+    shieldMaterial = '';
     
     // Diminue la durée du bouclier
     if (shieldTime > 0) {
@@ -31,9 +47,75 @@ function gameLoop() {
     } else {
         caracter.children[4].material.opacity = 0;
     }
+    if (shieldTime <= 0) {
+        isSwiftness = false;
+    }
     
     // Fait chuter/sauter le personnage
     caracter.position.y -= fallSpeed * delta;
+    
+    isSquat = false;
+    
+    // Si la camera est aligner verticalement, autorise les commandes
+    if (camera.rotation.y == 0) {
+        
+        // Touche gauche appuyée
+        if (keys[65] && !keysOnce[65]) {
+            if (roadPath > 0) {
+                roadPath--;
+            }
+            keysOnce[65] = true;
+        } else if (!keys[65]) {
+            keysOnce[65] = false;
+        }
+
+        // Touche droite appuyée
+        if (keys[68] && !keysOnce[68]) {
+            if (roadPath < 2) {
+                roadPath++;
+            }
+            keysOnce[68] = true;
+        } else if (!keys[68]) {
+            keysOnce[68] = false;
+        }
+
+        // Touche de saut appuyée
+        if (keys[32] && !keysOnce[32]) {
+            if (onGround) {
+                fallSpeed = -128; // Saut
+                onGround = false;
+            }
+            keysOnce[32] = true;
+        } else if (!keys[32]) {
+            keysOnce[32] = false;
+        }
+        
+        // Touche d'accroupissement appuyé
+        if (keys[16]) {
+            isSquat = true; // Se baisser
+            keysOnce[16] = true;
+        }
+    }
+    
+    // Si on est baissé
+    if (isSquat) {
+        caracter.children[0].position.y = -2;
+        caracter.endY = 6;
+    } else {
+        caracter.children[0].position.y = 1;
+        caracter.endY = 8;
+    }
+    
+    // Si on est sur le sol (true) ou sur une caisse (2)
+    if (onGround) {
+        
+        // Si on est en train de chuter alors qu'on est sur un sol
+        if (fallSpeed > 0) {
+            fallSpeed = 0;
+        }
+        
+        onGround--;
+    }
     
     // Empêche le personnage à rentrer dans le sol
     if (caracter.position.y <= 0) {
@@ -41,63 +123,8 @@ function gameLoop() {
         onGround = true;
     }
     
-    
-    // Touche gauche appuyée
-    if (keys[65] && !keysOnce[65]) {
-        if (roadPath > 0) {
-            roadPath--;
-        }
-        keysOnce[65] = true;
-    } else if (!keys[65]) {
-        keysOnce[65] = false;
-    }
-    
-    // Touche droite appuyée
-    if (keys[68] && !keysOnce[68]) {
-        if (roadPath < 2) {
-            roadPath++;
-        }
-        keysOnce[68] = true;
-    } else if (!keys[68]) {
-        keysOnce[68] = false;
-    }
-    
-    // Touche de saut appuyée
-    if (keys[32] && !keysOnce[32]) {
-        if (onGround) {
-            fallSpeed = -128; // Saut
-            onGround = false;
-        }
-        keysOnce[32] = true;
-    } else if (!keys[32]) {
-        keysOnce[32] = false;
-    }
-    
-    isSquat = false;
-    
-    // Touche d'accroupissement appuyé
-    if (keys[16]) {
-        isSquat = true;
-        keysOnce[16] = true;
-    }
-    
-    if (isSquat) {
-        caracter.children[0].position.y = -3;
-        caracter.endY = 6;
-    } else {
-        caracter.children[0].position.y = 1;
-        caracter.endY = 8;
-    }
-    
-    // Si on est sur le sol, on ne chute pas
-    if (onGround && fallSpeed > 0) {
-        fallSpeed = 0;
-    }
-    
-    onGround = false;
-    
-    // Déplacement du personnage
-    caracter.position.z -= velocity * delta;
+    // Déplacement du personnage (se déplace plus vite avec l'effet de boost)
+    caracter.position.z -= (velocity + (isSwiftness*(shieldTime >= 2 ? 2 : shieldTime)*64)) * delta;
     
     // Déplace le sol pour qu'il reste dans la vue
     if (camera.position.z < floor.position.z) {
@@ -145,14 +172,18 @@ function gameLoop() {
         if (box.name == '') {
             
             // Si fonce dans une caisse
-            if (collision(caracter, box, -8,-8,-8, 8,0,8)) {
+            if (collision(caracter, box, -8,-8,-8, 8,7-delta*fallSpeed,8)) {
                 
                 // Si on n'a pas de bouclier
                 if (!shieldTime) {
+                    console.log( + ', ' + 8 - delta * fallSpeed);
                     reset();
                 } else {
-                    shieldTime--;
-                    flashOpacity = 1;
+                    // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
+                    if (!isSwiftness) {
+                        shieldTime--;
+                        flashOpacity = 1;
+                    }
                     box.name = 'ejected';
                     box['fallSpeed'] = -96;
                     
@@ -171,7 +202,7 @@ function gameLoop() {
             } else if (collision(caracter, box)) {
                 
                 caracter.position.y = box.position.y + 8;
-                onGround = true;
+                onGround = 2;
             }
             
         }
@@ -202,8 +233,11 @@ function gameLoop() {
                 if (!shieldTime) {
                     reset();
                 } else {
-                    shieldTime--;
-                    flashOpacity = 1;
+                    // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
+                    if (!isSwiftness) {
+                        shieldTime--;
+                        flashOpacity = 1;
+                    }
                     spike.name = 'ejected';
                     spike['fallSpeed'] = -96;
                 }
@@ -236,8 +270,14 @@ function gameLoop() {
                     coinsCollect += 5;
                 } else if (coins[i].name == 'coin10') {
                     coinsCollect += 10;
-                }  else if (coins[i].name == 'coinShield') {
+                } else if (coins[i].name == 'coinShield') {
                     shieldTime = 10;
+                    isSwiftness = false;
+                    shieldMaterial = 'basic';
+                } else if (coins[i].name == 'coinSwiftness') {
+                    shieldTime = 5;
+                    isSwiftness = true;
+                    shieldMaterial = 'boost';
                 }
                 coins[i].position.y = -64;
                 scene.remove(coins[i]);
@@ -254,7 +294,6 @@ function gameLoop() {
     
     distance = parseInt(caracter.position.z * -1 / 16);
     score = distance + 10 * coinsCollect;
-    
     
     // La durée du bouclier ne peut pas être négative
     if (shieldTime < 0) {
@@ -280,13 +319,11 @@ function gameLoop() {
     ctx.textBaseline = 'top';
     
     // Affiche la jauge de bouclier
-    ctx.fillStyle = '#C0001A';
-    ctx.fillRect(60, 20, shieldTime * 19.2, 24);
+    ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
+    ctx.fillRect(60, 20, shieldTime * 19.2 * (isSwiftness+1), 24);
     
-    // Affichage de l'interface
-    var interface = new Image();
-    interface.src = 'img/other/interface.png';
-    ctx.drawImage(interface, 0, 0);
+    ctx.drawImage(images.interface, 0, 0);
+    ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
     
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
@@ -354,7 +391,7 @@ function ejectObstacle(obj) {
         
         obj.position.y -= obj.fallSpeed * delta;
         obj.fallSpeed += 384 * delta;
-        obj.position.z -= 192 * delta;
+        obj.position.z -= 160 * delta;
     }
 }
 

@@ -161,7 +161,7 @@ function loadLevel(id) {
                 ' B ' +
                 ' BC' +
                 ' BC' +
-                'dBC' +
+                '-BC' +
                 ' BC' +
                 ' BC' +
                 ' Bb' +
@@ -185,7 +185,8 @@ function loadLevel(id) {
             break;
         case 10:
             level =
-                'dBs' +
+                '-Bs' +
+                ' B ' +
                 ' B ' +
                 ' B ' +
                 'cBc' +
@@ -193,7 +194,27 @@ function loadLevel(id) {
                 'cBc' +
                 ' B ' +
                 ' B ' +
-                'sBd';
+                ' B ' +
+                'sB-';
+            break;
+        case 11:
+            level =
+                '   ' +
+                '   ' +
+                '   ' +
+                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
+                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
+                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
+                '   ' +
+                '   ' +
+                '   ' +
+                '   ' +
+                '   ' +
+                'BSB' +
+                'B B' +
+                'B^B' +
+                'B B' +
+                'S S';
     }
     
     var endZ = caracter.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
@@ -203,9 +224,11 @@ function loadLevel(id) {
         
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
-        var coinName = rand.int(5) ? 'coin' :
-        (rand.int(3) ? 'coin5' :
-        (rand.int(2) ? 'coin10' : 'coinShield'));
+        var coinName =
+             rand.int(4) ? 'coin'        :
+             (rand.int(2) ? 'coin5'      :
+             (rand.int(2) ? 'coin10'     :
+             (rand.int(2) ? 'coinShield' : 'coinSwiftness')));
         
         if (level[i] == 'b') {
             boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
@@ -229,7 +252,16 @@ function loadLevel(id) {
             boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
             coins.push(createObject(x, 24, z, [models[coinName]], -4,-4,-4, 4,4,4));
             coins[coins.length-1].name = coinName;
-        } else if (level[i] == 'd') {
+            
+        } else if (level[i] == '1') {
+            coins.push(createObject(x, 8, z, [models.coin], -4,-4,-4, 4,4,4));
+            coins[coins.length-1].name = 'coin';
+            
+        } else if (level[i] == '^') {
+            coins.push(createObject(x, 8, z, [models.coinSwiftness], -4,-4,-4, 4,4,4));
+            coins[coins.length-1].name = 'coinSwiftness';
+            
+        } else if (level[i] == '-') {
             boxes.push(createObject(x, 24, z, [models.box, models.arrow], -8,-8,-8, 8,8,8));
             //decors.push(createObject(x, 24, z, [models.arrow]));
             spikes.push(createObject(x, 8, z, [models.spikes], -8,2,-8, 8,8,8));

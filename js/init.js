@@ -1,5 +1,5 @@
 // Nombre de niveaux
-const NUMBER_LEVEL = 10;
+const NUMBER_LEVEL = 11;
 // Couleur du ciel
 const SKY_COLOR = '#80C0FF';
 
@@ -41,8 +41,12 @@ var fallSpeed = 0;
 var onGround = false;
 // Si on est accroupi ou non
 var isSquat = false;
+
+// Position Z de la fin du dernier niveau chargé
+var positionEndLevel = 0;
 // Distance avant de faire apparaître un décor
 var positionNextDecor = rand.int(64);
+
 // Position X de la camera relative au personnage
 var viewX = 60;
 // Position Y de la camera relative au personnage
@@ -52,6 +56,10 @@ var viewZ = -60;
 
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
+// Si on a le bonus de boost de vitesse actif ou non
+var isSwiftness = false;
+// Matériel à charger pour le bouclier ('basic', 'boost' ou '')
+var shieldMaterial = false;
 // Opacité du flash lorsque l'on fonce dans un obstacle avec le bouclier
 var flashOpacity = 0;
 
@@ -60,8 +68,18 @@ var canvas;
 // Contexte du canvas 2D
 var ctx;
 
-// Position Z de la fin du dernier niveau chargé
-var positionEndLevel = 0;
+
+// Liste des images (pour le canvas 2D)
+var images = {
+    
+    interface: new Image(),
+    iconShield: new Image(),
+    iconLightning: new Image(),
+}
+
+images.interface.src = 'img/other/interface.png';
+images.iconShield.src = 'img/other/icon_shield.png';
+images.iconLightning.src = 'img/other/icon_lightning.png';
 
 
 // Canvas en 2 dimensions
@@ -101,7 +119,6 @@ var textures = {
     fur: new THREE.TextureLoader().load('img/textures/fur.png'),
     skateboard: new THREE.TextureLoader().load('img/textures/skateboard.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
-    test: new THREE.TextureLoader().load('img/textures/test.png'),
 };
 
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
@@ -123,12 +140,14 @@ textures.skateboard.repeat.set(.0016, .0016);
 // Liste des reflets
 var reflexions = {
     
+    test: new THREE.TextureLoader().load('img/env/test.png'),
     dull: new THREE.TextureLoader().load('img/env/dull.png'),
     iron: new THREE.TextureLoader().load('img/env/iron.png'),
     gold: new THREE.TextureLoader().load('img/env/gold.png'),
     emerald: new THREE.TextureLoader().load('img/env/emerald.png'),
-    ruby: new THREE.TextureLoader().load('img/env/ruby.png'),
     sapphire: new THREE.TextureLoader().load('img/env/sapphire.png'),
+    ruby: new THREE.TextureLoader().load('img/env/ruby.png'),
+    citrine: new THREE.TextureLoader().load('img/env/citrine.png'),
 };
 
 $.each(reflexions, function (index) {
@@ -149,22 +168,29 @@ var geometries = {
 // Liste des matériaux
 var materials = {
     
-    road:     new THREE.MeshBasicMaterial({map: textures.road}),
-    sand:     new THREE.MeshBasicMaterial({map: textures.sand}),
-    rock:     new THREE.MeshBasicMaterial({map: textures.rock,   envMap: reflexions.dull}),
-    cactus:   new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
-    fur:      new THREE.MeshBasicMaterial({map: textures.fur,    envMap: reflexions.dull}),
-    box:      new THREE.MeshBasicMaterial({map: textures.box,    envMap: reflexions.dull}),
-    iron:     new THREE.MeshBasicMaterial({envMap: reflexions.iron}),
-    gold:     new THREE.MeshBasicMaterial({envMap: reflexions.gold}),
-    emerald:  new THREE.MeshBasicMaterial({envMap: reflexions.emerald}),
-    sapphire: new THREE.MeshBasicMaterial({envMap: reflexions.sapphire}),
-    ruby:     new THREE.MeshBasicMaterial({envMap: reflexions.ruby}),
-    shield:   new THREE.MeshBasicMaterial({color: '#FF0020', envMap: reflexions.dull}),
-    flash:   new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.dull}),
+    road:        new THREE.MeshBasicMaterial({map: textures.road}),
+    sand:        new THREE.MeshBasicMaterial({map: textures.sand}),
+    rock:        new THREE.MeshBasicMaterial({map: textures.rock,   envMap: reflexions.dull}),
+    cactus:      new THREE.MeshBasicMaterial({map: textures.cactus, envMap: reflexions.dull}),
+    fur:         new THREE.MeshBasicMaterial({map: textures.fur,    envMap: reflexions.dull}),
+    box:         new THREE.MeshBasicMaterial({map: textures.box,    envMap: reflexions.dull}),
+    iron:        new THREE.MeshBasicMaterial({envMap: reflexions.iron}),
+    gold:        new THREE.MeshBasicMaterial({envMap: reflexions.gold}),
+    emerald:     new THREE.MeshBasicMaterial({envMap: reflexions.emerald}),
+    sapphire:    new THREE.MeshBasicMaterial({envMap: reflexions.sapphire}),
+    ruby:        new THREE.MeshBasicMaterial({envMap: reflexions.ruby}),
+    citrine:     new THREE.MeshBasicMaterial({envMap: reflexions.citrine}),
+    shieldBasic: new THREE.MeshBasicMaterial({color: '#E08090', envMap: reflexions.ruby}),
+    shieldBoost: new THREE.MeshBasicMaterial({color: '#FFC080', envMap: reflexions.citrine}),
+    flash:       new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.dull}),
     skateboardPattern: new THREE.MeshBasicMaterial({map: textures.skateboard, envMap: reflexions.dull}),
     skateboardEdge:    new THREE.MeshBasicMaterial({color: '#404040'}),
 };
+
+materials.shieldBasic.transparent =
+    materials.shieldBoost.transparent =
+    materials.flash.transparent = true;
+
 
 
 // Lorsque l'on change la taille de la fenêtre
@@ -240,6 +266,7 @@ loadModel('coin',               materials.gold);
 loadModel('coin_star_4',        materials.emerald,           'coin5');
 loadModel('coin_star_5',        materials.sapphire,          'coin10');
 loadModel('coin_shield',        materials.ruby,              'coinShield');
+loadModel('coin_lightning',     materials.citrine,           'coinSwiftness');
 loadModel('cactus',             materials.cactus);
 loadModel('rock',               materials.rock);
 loadModel('arrow',              materials.ruby);
@@ -248,15 +275,15 @@ models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
 models.road.rotation.x = models.ground.rotation.x = -Math.PI / 2;
-models.ground.position.y -= .01;
-models['shield'] = new THREE.Mesh(geometries.sphere, materials.shield);
-models.shield.position.y = 8;
-models.shield.scale.set(.35, .7, .7);
-models.shield.material.transparent = true;
+models.ground.position.y -= .05;
+
+models['shield'] = new THREE.Mesh(geometries.sphere, materials.shieldBasic);
 models['flash'] = new THREE.Mesh(geometries.sphere, materials.flash);
-models.flash.position.y = 8;
+models.shield.position.y =
+    models.flash.position.y = 8;
+
+models.shield.scale.set(.35, .7, .7);
 models.flash.scale.set(.36, .71, .71);
-models.flash.material.transparent = true;
 
 
 
