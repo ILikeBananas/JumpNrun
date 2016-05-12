@@ -172,11 +172,9 @@ function gameLoop() {
         if (box.name == '') {
             
             // Si fonce dans une caisse
-            if (collision(caracter, box, -8,-8,-8, 8,7-delta*fallSpeed,8)) {
-                
+            if (collision(caracter, box, -8,-8,-8, 8,4,8)) {
                 // Si on n'a pas de bouclier
                 if (!shieldTime) {
-                    console.log( + ', ' + 8 - delta * fallSpeed);
                     reset();
                 } else {
                     // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
@@ -200,7 +198,6 @@ function gameLoop() {
                 }
                 
             } else if (collision(caracter, box)) {
-                
                 caracter.position.y = box.position.y + 8;
                 onGround = 2;
             }
