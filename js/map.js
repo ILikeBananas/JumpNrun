@@ -245,20 +245,20 @@ function loadLevel(id) {
             spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
             
         } else if (level[i] == 'c') {
-            coins.push(createObject(x, 8, z, [models[coinName]], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 8, z, [models[coinName]], -6,-6,-6, 6,6,6));
             coins[coins.length-1].name = coinName;
             
         } else if (level[i] == 'C') {
             boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            coins.push(createObject(x, 24, z, [models[coinName]], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 24, z, [models[coinName]], -6,-6,-6, 6,6,6));
             coins[coins.length-1].name = coinName;
             
         } else if (level[i] == '1') {
-            coins.push(createObject(x, 8, z, [models.coin], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 8, z, [models.coin], -6,-6,-6, 6,6,6));
             coins[coins.length-1].name = 'coin';
             
         } else if (level[i] == '^') {
-            coins.push(createObject(x, 8, z, [models.coinSwiftness], -4,-4,-4, 4,4,4));
+            coins.push(createObject(x, 8, z, [models.coinSwiftness], -6,-6,-6, 6,6,6));
             coins[coins.length-1].name = 'coinSwiftness';
             
         } else if (level[i] == '-') {

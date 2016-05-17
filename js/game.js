@@ -6,8 +6,8 @@ function gameLoop() {
     now = Date.now();
     delta = (now - lastTime) / 1000;
     fps = parseInt(1 / delta * 1) / 1;
-    if (delta > .05) {
-        delta = .05;
+    if (delta > .1) {
+        delta = .1;
     }
     
     
@@ -54,10 +54,16 @@ function gameLoop() {
     // Fait chuter/sauter le personnage
     caracter.position.y -= fallSpeed * delta;
     
-    isSquat = false;
+    // Diminue la durée de l'accroupissement
+    if (squatTime > 0) {
+        squatTime -= 1 * delta;
+    }
+    if (squatTime < 0) {
+        squatTime = 0;
+    }
     
     // Si la camera est aligner verticalement, autorise les commandes
-    if (camera.rotation.y == 0) {
+    if (viewX == 0) {
         
         // Touche gauche appuyée
         if (keys[65] && !keysOnce[65]) {
@@ -82,8 +88,10 @@ function gameLoop() {
         // Touche de saut appuyée
         if (keys[32] && !keysOnce[32]) {
             if (onGround) {
-                fallSpeed = -128; // Saut
+                fallSpeed = -JUMP_SPEED; // Saut
+                caracter.position.y = Math.ceil(caracter.position.y);
                 onGround = false;
+                squatTime = 0; // Ne se baisse plus
             }
             keysOnce[32] = true;
         } else if (!keys[32]) {
@@ -92,39 +100,45 @@ function gameLoop() {
         
         // Touche d'accroupissement appuyé
         if (keys[16]) {
-            isSquat = true; // Se baisser
+            squatTime = 1; // Se baisser pendant 1 seconde
             keysOnce[16] = true;
         }
     }
     
     // Si on est baissé
-    if (isSquat) {
-        caracter.children[0].position.y = -2;
+    if (squatTime) {
+        if (coyote.position.y > -2) {
+            coyote.position.y -= 16 * delta;
+        }
+        if (coyote.position.y < -2) {
+            coyote.position.y = -2;
+        }
         caracter.endY = 6;
     } else {
-        caracter.children[0].position.y = 1;
-        caracter.endY = 8;
+        if (coyote.position.y < 1) {
+            coyote.position.y += 16 * delta;
+        }
+        if (coyote.position.y >= 1) {
+            coyote.position.y = 1;
+            caracter.endY = 8;
+        }
     }
     
-    // Si on est sur le sol (true) ou sur une caisse (2)
-    if (onGround) {
-        
-        // Si on est en train de chuter alors qu'on est sur un sol
-        if (fallSpeed > 0) {
-            fallSpeed = 0;
-        }
-        
-        onGround--;
-    }
+    onGround = false;
     
     // Empêche le personnage à rentrer dans le sol
     if (caracter.position.y <= 0) {
         caracter.position.y = 0;
+        
+        if (fallSpeed > 0) {
+            fallSpeed = 0;
+        }
         onGround = true;
     }
     
     // Déplacement du personnage (se déplace plus vite avec l'effet de boost)
-    caracter.position.z -= (velocity + (isSwiftness*(shieldTime >= 2 ? 2 : shieldTime)*64)) * delta;
+    speed = velocity + (isSwiftness*(shieldTime >= 2 ? 2 : shieldTime)*64);
+    caracter.position.z -= speed * delta;
     
     // Déplace le sol pour qu'il reste dans la vue
     if (camera.position.z < floor.position.z) {
@@ -141,6 +155,9 @@ function gameLoop() {
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
         var decorName = rand.int() ? 'cactus' : 'rock';
         var index = decors.push(createObject(x, 0, camera.position.z - 896, [models[decorName]])) - 1;
+        if (decorName == 'rock') {
+            decors[index].scale.y *= rand.float(1, 2);
+        }
         decors[index].rotation.y = rand.int(Math.PI);
         
         positionNextDecor = caracter.position.z - 800 - rand.int(32, 128);
@@ -172,7 +189,7 @@ function gameLoop() {
         if (box.name == '') {
             
             // Si fonce dans une caisse
-            if (collision(caracter, box, -8,-8,-8, 8,4,8)) {
+            if (collision(caracter, box, -8, -8, -8, 8, 6-delta*(fallSpeed > 0 ? fallSpeed : 0), 8)) {
                 // Si on n'a pas de bouclier
                 if (!shieldTime) {
                     reset();
@@ -183,6 +200,7 @@ function gameLoop() {
                         flashOpacity = 1;
                     }
                     box.name = 'ejected';
+                    box['ejectSpeed'] = 64 + speed;
                     box['fallSpeed'] = -96;
                     
                     // Pour chaque piques
@@ -192,6 +210,7 @@ function gameLoop() {
                             box.position.z == spikes[j].position.z) {
                             
                             spikes[j].name = 'ejected';
+                            spikes[j]['ejectSpeed'] = 64 + speed;
                             spikes[j]['fallSpeed'] = -96;
                         }
                     }
@@ -199,7 +218,10 @@ function gameLoop() {
                 
             } else if (collision(caracter, box)) {
                 caracter.position.y = box.position.y + 8;
-                onGround = 2;
+                if (fallSpeed > 0) {
+                    fallSpeed = 0;
+                }
+                onGround = true;
             }
             
         }
@@ -236,6 +258,7 @@ function gameLoop() {
                         flashOpacity = 1;
                     }
                     spike.name = 'ejected';
+                    spike['ejectSpeed'] = 64 + speed;
                     spike['fallSpeed'] = -96;
                 }
             }
@@ -388,7 +411,7 @@ function ejectObstacle(obj) {
         
         obj.position.y -= obj.fallSpeed * delta;
         obj.fallSpeed += 384 * delta;
-        obj.position.z -= 160 * delta;
+        obj.position.z -= obj.ejectSpeed * delta;
     }
 }
 

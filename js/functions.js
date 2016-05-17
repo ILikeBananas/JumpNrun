@@ -1,17 +1,3 @@
-function plural(value, sg, pl) {
-	
-	value = typeof value !== 'undefined' ? value : 2;
-	sg = typeof sg !== 'undefined' ?  sg : 's';
-	
-	if (typeof pl === 'undefined') {
-		pl = sg;
-		sg = '';
-	}
-	
-	return value < 2 ? sg : pl;
-}
-
-
 // NAMESPACE "RAND"
 var rand = {
 	
@@ -38,8 +24,19 @@ var rand = {
 	// Retourne un nombre aléatoire >= à "min" et < à "max"
 	float: function (min, max) {
 		
-		min = typeof min !== 'undefined' ?  min : 0;
-		max = typeof max !== 'undefined' ?  max : 1;
+		if (typeof min !== 'undefined' && typeof max === 'undefined') {
+            max = min;
+            min = 0;
+        } else {
+            min = typeof min !== 'undefined' ?  min : 0;
+            max = typeof max !== 'undefined' ?  max : 1;
+        }
+		
+		if (min > max) {
+			var temp = min;
+			min = max;
+			max = temp;
+		}
 		
 		return Math.random() * (max - min) + min;
 	},

@@ -1,5 +1,7 @@
 // Nombre de niveaux
 const NUMBER_LEVEL = 11;
+// Vitesse des sauts
+const JUMP_SPEED = 128;
 // Couleur du ciel
 const SKY_COLOR = '#80C0FF';
 
@@ -33,14 +35,16 @@ var coinsCollect = 0;
 var score = 0;
 // Chemin sur la route (0 = gauche, 1 = millieu, 2 = droite)
 var roadPath = 1;
-// Vélocité (vitesse de déplacement du personnage)
+// Vélocité (vitesse initiale du personnage)
 var velocity = 112;
+// Vitesse du personnage, boost compris
+var speed = 0;
 // Vitesse du chute
 var fallSpeed = 0;
 // Si on est au sol ou non
 var onGround = false;
-// Si on est accroupi ou non
-var isSquat = false;
+// Temps restant avant de ne plus être accroupi
+var squatTime = 0;
 
 // Position Z de la fin du dernier niveau chargé
 var positionEndLevel = 0;
@@ -291,6 +295,8 @@ models.flash.scale.set(.36, .71, .71);
 
 // Personnage jouable
 var caracter;
+// Modèle du coyote
+var coyote;
 // Sol
 var floor;
 // Liste des caisses
@@ -317,12 +323,13 @@ function waiting() {
         // --- Application des modèles à certains objets ---
         
         models.coyote.position.y += 1;
-        caracter = createObject(0, 0, -40, [models.coyote,
+        caracter = createObject(0, 0, 0, [models.coyote,
                                             models.skateboardPattern,
                                             models.skateboardEdge,
                                             models.skateboardWheels,
                                             models.shield,
-                                            models.flash], -3,0,-4, 3,8,4);
+                                            models.flash], -3,0,-5, 3,8,5);
+        coyote = caracter.children[0];
         
         
         floor = createObject(0, 0, 0, [models.road, models.ground]);
