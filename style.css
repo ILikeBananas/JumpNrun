@@ -1,0 +1,99 @@
+*{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+body{
+	background: url("images/sand.png");
+	color: #59371E;
+	font-family: 'Philosopher', sans-serif;
+	font-size: 1.2em;
+}
+
+.contenaire{
+	background-color: #ce884b;
+	width: 70%;
+	margin: 0 auto;
+	border-radius: 10px;
+	padding-bottom: 10px;
+	border: 1px solid #59371E;
+}
+
+header{
+	background: url("images/fondheader.png") no-repeat right bottom #4080ff;
+	background-size: 50%;
+	height: 100px;
+	border-radius: 10px 10px 0 0;
+	border-bottom: 2px #59371E solid;
+	padding: 10px;
+}
+
+h1{
+	margin: 0;
+}
+
+.content{
+	padding: 10px;
+}
+
+.content p{
+	text-align: center;
+}
+.content input[type="submit"]{
+	width: 300px;
+	height: 75px;
+	display: block;
+	margin: 0 auto;
+	font-family: 'Philosopher', sans-serif;
+	font-size: 2em;
+	color: #59371E;
+	background: #4080ff;
+	border-radius: 8px;
+}
+
+.content input[type="submit"]:hover{
+	background: #78A5FF;
+}
+
+.info{
+	background: #F3B37C;
+	border-radius: 10px;
+	border: 1px solid #59371E;
+	padding: 10px;
+	width: 50%;
+	min-width: 400px;
+	margin: 10px auto;
+}
+.info h2 {
+	margin: 0;
+}
+
+.info ul{
+	list-style-type: none;
+}
+.info ul li{
+
+	padding-left: 60px;
+	margin: 10px 0;
+	height: 50px;
+	display: flex;
+    align-items: center;
+}
+.info ul :first-child{
+	background: url("images/distance.png") no-repeat top left;
+}
+.info ul :first-child +li{
+	background: url("images/coin.png") no-repeat top left;
+}
+.info ul :first-child +li + li{
+	background: url("images/coin5.png") no-repeat top left;
+}
+.info ul :first-child +li + li + li{
+	background: url("images/coin10.png") no-repeat top left;
+}
+.info ul :first-child +li + li + li + li{
+	background: url("images/coinShield.png") no-repeat top left;
+}
+.info ul :last-child {
+	background: url("images/coinSwiftness.png") no-repeat top left;
+}
