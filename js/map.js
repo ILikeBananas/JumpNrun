@@ -14,9 +14,9 @@ function loadLevel(id) {
                 '   ' +
                 '   ' +
                 '   ' +
+                ' g ' +
                 ' c ' +
-                ' c ' +
-                ' c ' +
+                ' g ' +
                 '   ' +
                 '   ' +
                 '   ' +
@@ -28,9 +28,11 @@ function loadLevel(id) {
                 'SBS' +
                 'SBS' +
                 'SBS' +
+                'SBS' +
                 'sbs' +
+                'sGs' +
                 'sCs' +
-                'sCs' +
+                'sGs' +
                 'sbs';
             break;
         case 4:
@@ -39,11 +41,11 @@ function loadLevel(id) {
                 '   ' +
                 '   ' +
                 '   ' +
+                'g g' +
+                ' g ' +
                 'c c' +
-                ' c ' +
-                'c c' +
-                ' c ' +
-                'c c';
+                ' g ' +
+                'g g';
             break;
         case 5:
             level =
@@ -154,16 +156,16 @@ function loadLevel(id) {
         case 9:
             level =
                 'sBc' +
-                'sBc' +
-                ' Bc' +
-                ' Bc' +
-                ' Bc' +
+                'sBg' +
+                ' Bg' +
+                ' Bg' +
+                ' Bg' +
                 ' B ' +
                 ' BC' +
-                ' BC' +
-                '-BC' +
-                ' BC' +
-                ' BC' +
+                ' BG' +
+                '-BG' +
+                ' BG' +
+                ' BG' +
                 ' Bb' +
                 ' BB' +
                 '   ' +
@@ -178,7 +180,7 @@ function loadLevel(id) {
                 '   ' +
                 '   ' +
                 ' C ' +
-                ' C ' +
+                ' G ' +
                 ' b ' +
                 ' b ' +
                 '   ';
@@ -189,9 +191,9 @@ function loadLevel(id) {
                 ' B ' +
                 ' B ' +
                 ' B ' +
+                'gBg' +
                 'cBc' +
-                'cBc' +
-                'cBc' +
+                'gBg' +
                 ' B ' +
                 ' B ' +
                 ' B ' +
@@ -202,9 +204,9 @@ function loadLevel(id) {
                 '   ' +
                 '   ' +
                 '   ' +
-                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
-                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
-                'S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   S 1 S   ' +
+                'S g S   S g S   S g S   S g S   S g S   S g S   S g S   ' +
+                'S g S   S g S   S g S   S g S   S g S   S g S   S g S   ' +
+                'S g S   S g S   S g S   S g S   S g S   S g S   S g S   ' +
                 '   ' +
                 '   ' +
                 '   ' +
@@ -215,6 +217,7 @@ function loadLevel(id) {
                 'B^B' +
                 'B B' +
                 'S S';
+            break;
     }
     
     var endZ = caracter.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
@@ -225,50 +228,67 @@ function loadLevel(id) {
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
         var coinName =
-             rand.int(4) ? 'coin'        :
+             rand.int(0) ? 'coin'        :
              (rand.int(2) ? 'coin5'      :
              (rand.int(2) ? 'coin10'     :
              (rand.int(2) ? 'coinShield' : 'coinSwiftness')));
         
-        if (level[i] == 'b') {
-            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            
-        } else if (level[i] == 'B') {
-            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            boxes.push(createObject(x, 24, z, [models.box], -8,-8,-8, 8,8,8));
-            
-        } else if (level[i] == 's') {
-            spikes.push(createObject(x, 8, z, [models.spikes], -8,-8,-8, 8,-4,8));
-            
-        } else if (level[i] == 'S') {
-            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
-            
-        } else if (level[i] == 'c') {
-            coins.push(createObject(x, 8, z, [models[coinName]], -6,-6,-6, 6,6,6));
-            coins[coins.length-1].name = coinName;
-            
-        } else if (level[i] == 'C') {
-            boxes.push(createObject(x, 8, z, [models.box], -8,-8,-8, 8,8,8));
-            coins.push(createObject(x, 24, z, [models[coinName]], -6,-6,-6, 6,6,6));
-            coins[coins.length-1].name = coinName;
-            
-        } else if (level[i] == '1') {
-            coins.push(createObject(x, 8, z, [models.coin], -6,-6,-6, 6,6,6));
-            coins[coins.length-1].name = 'coin';
-            
-        } else if (level[i] == '^') {
-            coins.push(createObject(x, 8, z, [models.coinSwiftness], -6,-6,-6, 6,6,6));
-            coins[coins.length-1].name = 'coinSwiftness';
-            
-        } else if (level[i] == '-') {
-            boxes.push(createObject(x, 24, z, [models.box, models.arrow], -8,-8,-8, 8,8,8));
-            //decors.push(createObject(x, 24, z, [models.arrow]));
-            spikes.push(createObject(x, 8, z, [models.spikes], -8,2,-8, 8,8,8));
-            var spike = spikes[spikes.length-1];
-            spike.scale.y = 1.5;
-            spike.position.y -= 4;
-            spike.rotation.x = Math.PI;
+        switch (level[i]) {
+            case 1:
+                
+            case 'b': // Caisse
+                boxes.push(createObject(x, 8, z, [models.box], 16));
+                break;
+                
+            case 'B': // Deux caisses empilées
+                boxes.push(createObject(x, 8, z, [models.box], 16));
+                boxes.push(createObject(x, 24, z, [models.box], 16));
+                break;
+                
+            case 's': // Pique
+                spikes.push(createObject(x, 8, z, [models.spikes], -8,-8,-8, 8,-4,8));
+                break;
+                
+            case 'S': // Pique sur une caisse
+                boxes.push(createObject(x, 8, z, [models.box], 16));
+                spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
+                break;
+                
+            case 'c': // Pièce de valeur aléatoire
+                coins.push(createObject(x, 8, z, [models[coinName]], 12));
+                coins[coins.length-1].name = coinName;
+                break;
+                
+            case 'C': // Pièce de valeur aléatoire sur une caisse
+                boxes.push(createObject(x, 8, z, [models.box], 16));
+                coins.push(createObject(x, 24, z, [models[coinName]], 12));
+                coins[coins.length-1].name = coinName;
+                break;
+                
+            case 'g': // Pièce en or
+                coins.push(createObject(x, 8, z, [models.coin], 12));
+                coins[coins.length-1].name = 'coin';
+                break;
+                
+            case 'G': // Pièce en or sur une caisse
+                boxes.push(createObject(x, 8, z, [models.box], 16));
+                coins.push(createObject(x, 24, z, [models.coin], 12));
+                coins[coins.length-1].name = 'coin';
+                break;
+                
+            case '^': // Pièce donnant un boost
+                coins.push(createObject(x, 8, z, [models.coinSwiftness], 12));
+                coins[coins.length-1].name = 'coinSwiftness';
+                break;
+                
+            case '-': // Caisse, pique et flèche sous laquel il faut passer
+                boxes.push(createObject(x, 24, z, [models.box, models.arrow], 16));
+                spikes.push(createObject(x, 8, z, [models.spikes], -8,2,-8, 8,8,8));
+                var spike = spikes[spikes.length-1];
+                spike.scale.y = 1.5;
+                spike.position.y -= 4;
+                spike.rotation.x = Math.PI;
+                break;
         }
     }
     

@@ -99,9 +99,11 @@ function gameLoop() {
         }
         
         // Touche d'accroupissement appuyé
-        if (keys[16]) {
+        if (keys[16] && !keysOnce[16]) {
             squatTime = 1; // Se baisser pendant 1 seconde
             keysOnce[16] = true;
+        } else if (!keys[16]) {
+            keysOnce[16] = false;
         }
     }
     
@@ -341,8 +343,8 @@ function gameLoop() {
     // Affiche la jauge de bouclier
     ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
     ctx.fillRect(60, 20, shieldTime * 19.2 * (isSwiftness+1), 24);
-    
-    ctx.drawImage(images.interface, 0, 0);
+    var a = window.devicePixelRatio;
+    ctx.drawImage(images.interface, 0, 0, 256, 256);
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
     
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';

@@ -1,26 +1,46 @@
 <!DOCTYPE html>
-<html lang="fr">
-	
+<html>
 	<head>
-		<meta charset="UTF-8">
-		<title>Test en JavaScript</title>
-		<link rel="stylesheet" href="css/style.css" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Temple Run Like</title>
+		<link href='https://fonts.googleapis.com/css?family=Philosopher' rel='stylesheet' type='text/css'>
+		<!--<link href="normalize.css" rel="stylesheet" type="text/css" />-->
+		<link href="../css/style.css" rel="stylesheet" type="text/css" />
 	</head>
 	
 	<body>
-        <canvas id="canvas2d"></canvas>
-		<script type="text/javascript" src="vendors/three.min.js"></script>
-        <script type="text/javascript" src="vendors/OBJLoader.js"></script>
-        <script type="text/javascript" src="vendors/jquery.js"></script>
-		<script type="text/javascript" src="js/fonctions.js"></script>
-        <script type="text/javascript" src="js/mesh.js"></script>
-        <script type="text/javascript" src="js/collision.js"></script>
-        <script type="text/javascript" src="js/map.js"></script>
-        <script type="text/javascript" src="js/init.js"></script>
-        <script type="text/javascript" src="js/game.js"></script>
-        
-        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-        <script type="text/javascript" src="js/socket.js"></script>
-	</body>
+	<div class="contenaire">
+		<header>
+			<h1>Temple Run Like - Accueil</h1>
+		</header>
+		<nav>
+		</nav>
+		<div class="content">
+			<p>Eviter les obstacles et collecter le plus de pièces possible.</p>
+			
+			<form name="lancerJeu" action="game.html" >
+				<input type="submit" name="jouer" value="Jouer !" />
+			</form>
+			
+			<div class="info">
+				<h2>Information</h2>
+				<ul>
+					<li>Distance 1m :   1 point</li>
+					<li>Pièce jaune :  10 points</li>
+					<li>Pièce verte :  50 points</li>
+					<li>Pièce bleue : 100 points</li>
+					<li>Pièce rouge : Immunité pendant 10 secondes, chaque collision enlève 1 seconde </li>
+					<li>Pièce orange : Immunité pendant 5 secondes et vitesse augmenté.</li>
+				</ul>
+			</div> <!--/.info -->
+			
+		</div> <!--/.content -->
+		
+		<footer>
 	
+		</footer>
+		
+	</div> <!-- /.contenaire -->
+	</body>
 </html>

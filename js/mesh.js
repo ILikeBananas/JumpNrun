@@ -53,12 +53,21 @@ function createObject(x, y, z, tabMeshes, startX, startY, startZ, endX, endY, en
     
     object.castShadow = object.receiveShadow = true;
     
-    typeof startX !== 'undefined' ? object.startX = startX : false;
-    typeof startY !== 'undefined' ? object.startY = startY : false;
-    typeof startZ !== 'undefined' ? object.startZ = startZ : false;     
-    typeof endX !== 'undefined' ? object.endX = endX : false;
-    typeof endY !== 'undefined' ? object.endY = endY : false;
-    typeof endZ !== 'undefined' ? object.endZ = endZ : false; 
+    // Si le premier paramètre de la collition est défini mais pas le deuxième
+    if (typeof startX !== 'undefined' && typeof startY === 'undefined') {
+        
+        object.startX = object.startY = object.startZ = -startX / 2;
+        object.endX = object.endY = object.endZ = startX / 2;
+        
+    } else {
+        
+        typeof startX !== 'undefined' ? object.startX = startX : false;
+        typeof startY !== 'undefined' ? object.startY = startY : false;
+        typeof startZ !== 'undefined' ? object.startZ = startZ : false;
+        typeof endX !== 'undefined' ? object.endX = endX : false;
+        typeof endY !== 'undefined' ? object.endY = endY : false;
+        typeof endZ !== 'undefined' ? object.endZ = endZ : false;
+    }
     
     scene.add(object);
     return object;

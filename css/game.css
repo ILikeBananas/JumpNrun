@@ -1,0 +1,20 @@
+* {
+	box-sizing: border-box;
+    pointer-events: none;
+}
+
+html {
+    background: black;
+}
+
+body {
+	font-family: 'Arial';
+    margin: 0;
+    overflow: hidden;
+}
+
+#canvas2d {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
