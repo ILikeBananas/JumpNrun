@@ -1,3 +1,7 @@
+// ----- MODIFICATION DE L'OBJET "Mesh" ET "Group" -----
+// Auteur : Sébastien Chappuis
+
+
 // Début du masque en X
 THREE.Mesh.prototype.startX = 0;
 // Début du masque en Y
@@ -25,20 +29,8 @@ THREE.Group.prototype.endY = 0;
 THREE.Group.prototype.endZ = 0;
 
 
-// Modifie le masque de collision d'un objet
-function changeMask(obj, startX, startY, startZ, endX, endY, endZ) {
-    
-    obj.startX = startX;
-    obj.startY = startY;
-    obj.startZ = startZ;    
-    obj.endX = endX;
-    obj.endY = endY;
-    obj.endZ = endZ;
-}
-
-
-// Créer un objet et l'ajoute à la scène,
-// return l'objet créé
+// Créer un objet et l'ajoute à la scène avec les modèles 3D de "tabMeshes",
+// retourne l'objet créer
 function createObject(x, y, z, tabMeshes, startX, startY, startZ, endX, endY, endZ) {
     
     var object = new THREE.Mesh();
@@ -47,13 +39,11 @@ function createObject(x, y, z, tabMeshes, startX, startY, startZ, endX, endY, en
     // Pour chaque Mesh passé en paramètre
     for (var i = 0; i < tabMeshes.length; i++) {
         var mesh = tabMeshes[i];
-        mesh.castShadow = mesh.receiveShadow = true;
         object.add(mesh.clone());
     }
     
-    object.castShadow = object.receiveShadow = true;
-    
-    // Si le premier paramètre de la collition est défini mais pas le deuxième
+    // Si "startX" est défini mais pas "startY", on considère que
+    // "startX" équivaut à la largeur, hauteur et profondeur de l'objet
     if (typeof startX !== 'undefined' && typeof startY === 'undefined') {
         
         object.startX = object.startY = object.startZ = -startX / 2;
@@ -99,7 +89,7 @@ function collision(obj1, obj2, startX, startY, startZ, endX, endY, endZ) {
     var h2 = endY - startY;
     var d2 = endZ - startZ;
     
-    // Test la collision
+    // Test si la collision est vrai
     if (x1 < x2 + w2 &&
         x1 > x2 - w1 &&
         y1 < y2 + h2 &&
@@ -108,5 +98,6 @@ function collision(obj1, obj2, startX, startY, startZ, endX, endY, endZ) {
         z1 > z2 - d1) {
         return true;
     }
+    
     return false;
 }

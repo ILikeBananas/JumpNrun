@@ -1,4 +1,8 @@
-// Boucle du jeu
+// ----- BOUCLE DU JEU (COMPOSANT UNE FRAME) -----
+// Auteur : Sébastien Chappuis
+
+
+// Boucle du jeu (1 itération = 1 frame)
 function gameLoop() {
     
     requestAnimationFrame(gameLoop);
@@ -6,9 +10,7 @@ function gameLoop() {
     now = Date.now();
     delta = (now - lastTime) / 1000;
     fps = parseInt(1 / delta * 1) / 1;
-    if (delta > .1) {
-        delta = .1;
-    }
+    delta = Math.min(.1, delta);
     
     
     // Vitesse de chute augmentant avec le temps
@@ -19,7 +21,7 @@ function gameLoop() {
         fallSpeed = 256;
     }
     
-    caracter.children[5].material.opacity = flashOpacity;
+    character.children[5].material.opacity = flashOpacity;
     
     // Dissipe le flash
     if (flashOpacity > 0) {
@@ -31,10 +33,10 @@ function gameLoop() {
     
     // Modifie, si besoin, le matériel du bouclier
     if (shieldMaterial == 'basic') {
-        caracter.children[4].material = materials.shieldBasic;
+        character.children[4].material = materials.shieldBasic;
         
     } else if (shieldMaterial == 'boost') {
-        caracter.children[4].material = materials.shieldBoost;
+        character.children[4].material = materials.shieldBoost;
     }
     
     shieldMaterial = '';
@@ -43,155 +45,163 @@ function gameLoop() {
     if (shieldTime > 0) {
         shieldTime -= delta;
         var opacity = shieldTime >= 2 ? .5 : shieldTime / 4;
-        caracter.children[4].material.opacity = opacity;
+        character.children[4].material.opacity = opacity;
     } else {
-        caracter.children[4].material.opacity = 0;
+        character.children[4].material.opacity = 0;
     }
+    
+    // Si on a plus de bouclier
     if (shieldTime <= 0) {
         isSwiftness = false;
     }
     
     // Fait chuter/sauter le personnage
-    caracter.position.y -= fallSpeed * delta;
+    position.y -= fallSpeed * delta;
     
     // Diminue la durée de l'accroupissement
     if (squatTime > 0) {
         squatTime -= 1 * delta;
     }
-    if (squatTime < 0) {
-        squatTime = 0;
+    squatTime = Math.max(0, squatTime);
+    
+    
+    // Touche gauche appuyée
+    if (keys[65] && !keysOnce[65]) {
+        moveLeft();
+        keysOnce[65] = true;
+    } else if (!keys[65]) {
+        keysOnce[65] = false;
     }
     
-    // Si la camera est aligner verticalement, autorise les commandes
-    if (viewX == 0) {
-        
-        // Touche gauche appuyée
-        if (keys[65] && !keysOnce[65]) {
-            if (roadPath > 0) {
-                roadPath--;
-            }
-            keysOnce[65] = true;
-        } else if (!keys[65]) {
-            keysOnce[65] = false;
-        }
-
-        // Touche droite appuyée
-        if (keys[68] && !keysOnce[68]) {
-            if (roadPath < 2) {
-                roadPath++;
-            }
-            keysOnce[68] = true;
-        } else if (!keys[68]) {
-            keysOnce[68] = false;
-        }
-
-        // Touche de saut appuyée
-        if (keys[32] && !keysOnce[32]) {
-            if (onGround) {
-                fallSpeed = -JUMP_SPEED; // Saut
-                caracter.position.y = Math.ceil(caracter.position.y);
-                onGround = false;
-                squatTime = 0; // Ne se baisse plus
-            }
-            keysOnce[32] = true;
-        } else if (!keys[32]) {
-            keysOnce[32] = false;
-        }
-        
-        // Touche d'accroupissement appuyé
-        if (keys[16] && !keysOnce[16]) {
-            squatTime = 1; // Se baisser pendant 1 seconde
-            keysOnce[16] = true;
-        } else if (!keys[16]) {
-            keysOnce[16] = false;
-        }
+    // Touche droite appuyée
+    if (keys[68] && !keysOnce[68]) {
+        moveRight();
+        keysOnce[68] = true;
+    } else if (!keys[68]) {
+        keysOnce[68] = false;
     }
+    
+    // Touche de saut appuyée
+    if (keys[32] && !keysOnce[32]) {
+        jump();
+        keysOnce[32] = true;
+    } else if (!keys[32]) {
+        keysOnce[32] = false;
+    }
+    
+    // Touche d'accroupissement appuyé
+    if (keys[16] && !keysOnce[16]) {
+        squat();
+        keysOnce[16] = true;
+    } else if (!keys[16]) {
+        keysOnce[16] = false;
+    }
+    
     
     // Si on est baissé
     if (squatTime) {
-        if (coyote.position.y > -2) {
-            coyote.position.y -= 16 * delta;
+        
+        // Animation : se baisser
+        if (positionCoyote.y > -2) {
+            positionCoyote.y -= 16 * delta;
         }
-        if (coyote.position.y < -2) {
-            coyote.position.y = -2;
-        }
-        caracter.endY = 6;
+        positionCoyote.y = Math.max(-2, positionCoyote.y);
+        
+        character.endY = 6;
+        
     } else {
-        if (coyote.position.y < 1) {
-            coyote.position.y += 16 * delta;
+        
+        // Animation : se relever
+        if (positionCoyote.y < 1) {
+            positionCoyote.y += 16 * delta;
         }
-        if (coyote.position.y >= 1) {
-            coyote.position.y = 1;
-            caracter.endY = 8;
+        
+        // Si on est entièrement relevé, change le masque de colision en Y
+        if (positionCoyote.y >= 1) {
+            positionCoyote.y = 1;
+            character.endY = 8;
         }
     }
     
     onGround = false;
     
+    
     // Empêche le personnage à rentrer dans le sol
-    if (caracter.position.y <= 0) {
-        caracter.position.y = 0;
+    if (position.y <= 0) {
+        position.y = 0;
         
-        if (fallSpeed > 0) {
-            fallSpeed = 0;
-        }
+        fallSpeed = Math.min(0, fallSpeed);
+        
         onGround = true;
     }
     
-    // Déplacement du personnage (se déplace plus vite avec l'effet de boost)
-    speed = velocity + (isSwiftness*(shieldTime >= 2 ? 2 : shieldTime)*64);
-    caracter.position.z -= speed * delta;
+    
+    // Vitesse de déplacement du personnage avec l'effet de boost
+    speed = VELOCITY + (isSwiftness * (Math.min(2, shieldTime)) * 64);
+    position.z -= speed * delta;
+    
     
     // Déplace le sol pour qu'il reste dans la vue
-    if (camera.position.z < floor.position.z) {
+    while (camera.position.z < floor.position.z) {
         floor.position.z -= 64;
     }
     
+    
     // Charge un niveau
-    if (caracter.position.z < positionEndLevel + 800) {
+    while (position.z < positionNextLevel + VIEW_DISTANCE) {
         loadLevel(rand.int(1, NUMBER_LEVEL));
     }
     
+    
     // Charge un décor
-    if (caracter.position.z < positionNextDecor + 800) {
-        var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
-        var decorName = rand.int() ? 'cactus' : 'rock';
-        var index = decors.push(createObject(x, 0, camera.position.z - 896, [models[decorName]])) - 1;
-        if (decorName == 'rock') {
-            decors[index].scale.y *= rand.float(1, 2);
-        }
-        decors[index].rotation.y = rand.int(Math.PI);
+    while (position.z < positionNextDecor + VIEW_DISTANCE) {
         
-        positionNextDecor = caracter.position.z - 800 - rand.int(32, 128);
+        var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
+        var decorName = rand.int() ? 'cactus' : 'stone';
+        var index = decors.push(createObject(x, 0, positionNextDecor,
+                                             [models[decorName]])) - 1;
+        decors[index].name = decorName;
+        
+        // Si il s'agit d'une pierre, change de façon aléatoire sa taille en hauteur
+        if (decorName == 'stone') {
+            decors[index].scale.y *= rand.float(.5, 1.5);
+        }
+        
+        // Donne une rotation aléatoire au décor
+        decors[index].rotation.y = rand.float(2 * Math.PI);
+        
+        positionNextDecor -= rand.int(32, 128);
     }
     
     // Déplacement à gauche/droite
-    if (caracter.position.x - (roadPath-1) * 21 > 128 * delta ||
-        (roadPath-1) * 21 - caracter.position.x > 128 * delta) {
-        if (caracter.position.x > (roadPath-1) * 21) {
-            caracter.position.x -= 128 * delta;
+    if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * delta ||
+        roadPath * 21 - position.x > CHANGE_PATH_SPEED * delta) {
+        if (position.x > roadPath * 21) {
+            position.x -= CHANGE_PATH_SPEED * delta;
         } else {
-            caracter.position.x += 128 * delta;
+            position.x += CHANGE_PATH_SPEED * delta;
         }
     } else {
-        caracter.position.x -= caracter.position.x - (roadPath-1) * 21;
+        position.x -= position.x - roadPath * 21;
     }
+    
     
     // Pour chaque caisse
     for (var i = 0; i < boxes.length; i++) {
         
         var box = boxes[i];
         
-        // Si la caisse sort de l'écran
+        // Si la caisse sort de l'écran, l'enlève de la scène
         if (box.position.z >= camera.position.z + 16) {
             scene.remove(box);
+            delete boxes[i];
+            boxes.clean();
         }
-        
         // Si la caisse n'est pas éjectée
-        if (box.name == '') {
+        else if (box.name == '') {
             
             // Si fonce dans une caisse
-            if (collision(caracter, box, -8, -8, -8, 8, 6-delta*(fallSpeed > 0 ? fallSpeed : 0), 8)) {
+            if (collision(character, box, -8, -8, -8, 8, 6-delta*(fallSpeed > 0 ? fallSpeed : 0), 8)) {
                 // Si on n'a pas de bouclier
                 if (!shieldTime) {
                     reset();
@@ -218,11 +228,9 @@ function gameLoop() {
                     }
                 }
                 
-            } else if (collision(caracter, box)) {
-                caracter.position.y = box.position.y + 8;
-                if (fallSpeed > 0) {
-                    fallSpeed = 0;
-                }
+            } else if (collision(character, box)) {
+                position.y = box.position.y + 8;
+                fallSpeed = Math.min(0, fallSpeed);
                 onGround = true;
             }
             
@@ -234,6 +242,7 @@ function gameLoop() {
         }
     }
     
+    
     // Pour chaque pique
     for (var i = 0; i < spikes.length; i++) {
         
@@ -242,13 +251,14 @@ function gameLoop() {
         // Si le pique sort de l'écran
         if (spike.position.z >= camera.position.z + 16) {
             scene.remove(spike);
+            delete spikes[i];
+            spikes.clean();
         }
-        
         // Si le pique n'est pas éjecté
-        if (spike.name == '') {
+        else if (spike.name == '') {
             
             // Si on fonce dans des piques
-            if (collision(caracter, spike)) {
+            if (collision(character, spike)) {
                 
                 // Si on n'a pas de bouclier
                 if (!shieldTime) {
@@ -272,18 +282,27 @@ function gameLoop() {
         }
     }
     
+    
+    // Fait tourner toutes les pièces sur elles-même
+    coinsRotation += Math.PI * 1.25 * delta; 
+    
     // Pour chaque pièce
     for (var i = 0; i < coins.length; i++) {
         
-        if (coins[i].position.z >= camera.position.z + 16) {
-            scene.remove(coins[i]);
+        var coin = coins[i];
+        
+        // Si la pièce sort de l'écran
+        if (coin.position.z >= camera.position.z + 16) {
+            scene.remove(coin);
+            delete coins[i];
+            coins.clean();
             
         } else {
             
-            coins[i].rotation.y += 4 * delta;
+            coins[i].rotation.y = coinsRotation;
             
             // Si il y a une collision
-            if (collision(caracter, coins[i])) {
+            if (collision(character, coins[i])) {
                 
                 // Si la pièce est jaune/verte/bleue/rouge
                 if (coins[i].name == 'coin') {
@@ -307,20 +326,32 @@ function gameLoop() {
         }
     }
     
-    // Pour chaque décor, si il sort de l'écran
+    
+    // Pour chaque décor
     for (var i = 0; i < decors.length; i++) {
-        if (decors[i].position.z >= camera.position.z + 16) {
-            scene.remove(decors[i]);
+        
+        var decor = decors[i];
+        
+        // Si le décor sort de l'écran
+        if (camera.rotation.y == 0 && decor.position.z >= camera.position.z + 16) {
+            scene.remove(decor);
+            delete decors[i];
+            decors.clean();
         }
     }
     
-    distance = parseInt(caracter.position.z * -1 / 16);
+    
+    // Si le tunnel sors de l'écran, le replace devant
+    while (tunnel.position.z > camera.position.z + 2200) {
+        
+        tunnel.position.z -= rand.int(8000, 12000) + VIEW_DISTANCE;
+    }
+    
+    distance = parseInt(position.z * -1 / 16);
     score = distance + 10 * coinsCollect;
     
     // La durée du bouclier ne peut pas être négative
-    if (shieldTime < 0) {
-        shieldTime = 0;
-    }
+    shieldTime = Math.max(0, shieldTime);
     
     
     // Animation de départ
@@ -328,28 +359,41 @@ function gameLoop() {
     
     
     // Position de la caméra relative au personnage
-    camera.position.set(caracter.position.x + viewX,
-                        caracter.position.y + viewY,
-                        caracter.position.z + viewZ);
+    camera.position.set(position.x + viewX,
+                        position.y + viewY,
+                        position.z + viewZ);
+    
+    // Empêche la caméra d'être au dessus du tunnel
+    if (camera.position.y > 68 &&
+        camera.position.z <= tunnel.position.z + 8 &&
+        camera.position.z >= tunnel.position.z - 2048) {
+        
+        camera.position.y = 68;
+    }
     
     // Affiche le contenu à l'écran
     renderer.render(scene, camera);
     
+    
+    // Supprime le contenu du canvas 2D
+    ctx.clearRect(0, 0, width, height);
+    
     // Affiche le nombre d'image par seconde en haut à droite de l'écran
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font="32px Arial";
     ctx.textBaseline = 'top';
     
     // Affiche la jauge de bouclier
     ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
     ctx.fillRect(60, 20, shieldTime * 19.2 * (isSwiftness+1), 24);
-    var a = window.devicePixelRatio;
+    
     ctx.drawImage(images.interface, 0, 0, 256, 256);
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
     
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
     ctx.fillText(fps + ' fps', width - 20, 20, 400);
+    ctx.fillStyle = 'blue';
+    ctx.fillText(Math.round(width / height * 10000) / 10000, width - 20, 60, 400);
     
     ctx.fillStyle = 'rgba(0, 0, 0, .5)';
     ctx.textAlign = 'left';
@@ -366,12 +410,8 @@ function gameLoop() {
 // Réinitialise la partie
 function reset() {
     
-    /*
-    alert('Vous êtes mort.\n\n' +
-          'Distance parcouru : ' + distance + ' mètres\n' +
-          'Nombre de pièces collectées : ' + coinsCollect + '\n\n' +
-          'Score final : ' + score);
-          */
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, width, height);
     
     coinsCollect = 0;
     
@@ -395,14 +435,15 @@ function reset() {
     }
     decors = [];
     
-    caracter.position.set(0, 0, 0);
-    roadPath = 1;
+    position.set(0, 0, 0);
+    roadPath = 0;
     fallSpeed = 0;
     
     floor.position.z = 0;
+    tunnel.position.z = -rand.int(3000, 6000);
     
-    positionEndLevel = 0;
-    positionNextDecor = rand.int(64);
+    positionNextLevel = -400;
+    positionNextDecor = rand.int(64) + VIEW_DISTANCE;
 }
 
 
@@ -424,35 +465,27 @@ function beginningAnimation() {
     if (viewX > 0) {
         viewX -= delta * 16;
     }    
-    if (viewX < 0) {
-        viewX = 0;
-    }
+    viewX = Math.max(0, viewX);
     
     if (viewY < 40) {
         viewY += delta * 6;
     }    
-    if (viewY > 40) {
-        viewY = 40;
-    }
+    viewY = Math.min(40, viewY);
     
     if (viewZ < 40) {
         viewZ += delta * 32;
     }    
-    if (viewZ > 40) {
-        viewZ = 40;
-    }
+    viewZ = Math.min(40, viewZ);
     
-    if (camera.rotation.y > 0) {
-        camera.rotation.y -= delta;
+    var rotation = camera.rotation;
+    
+    if (rotation.y > 0) {
+        rotation.y -= delta
     }
-    if (camera.rotation.y < 0) {
-        camera.rotation.y = 0;
-    }
+    rotation.y = Math.max(0, rotation.y);
     
     if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
         camera.rotation.x -= delta * .5;
     }
-    if (camera.rotation.x < -Math.PI / 6) {
-        camera.rotation.x = -Math.PI / 6;
-    }
+    rotation.x = Math.max(-Math.PI / 6, rotation.x);
 }

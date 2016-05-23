@@ -1,3 +1,7 @@
+// ----- CHARGEMENT D'UN NIVEAU ALÉATOIRE -----
+// Auteur : Sébastien Chappuis
+
+
 // Charge un niveau
 function loadLevel(id) {
     
@@ -52,92 +56,90 @@ function loadLevel(id) {
 				'SbC' +
 				'bbb' +
 				'sss' +
-				'  c' +
+				'   ' +
 				'   ' +
 				'   ' +
 				'   ' +
 				'Csb' +
-				'Csb' +
+				'Gsb' +
 				'b  ' +
 				'b  ' +
 				'   ' +
 				'   ' +
 				'   ' +
-				'bcS' +
-				'scs' +
+				'bgS' +
+				'sgs' +
 				'   ' +
 				'   ' +
-				'c  ' +
-				'c  ' +
-				'css' +
+				'g  ' +
+				'g  ' +
+				'gss' +
 				' sb';
             break;
         case 6:
             level =
-                'css' +
-				'c  ' +
-				'   ' +
+				'CsG' +
 				'bsb' +
 				'bsb' +
 				'   ' +
 				'   ' +
-				'  c' +
-				'  c' +
 				'   ' +
-				' sb' +
-				'   ' +
-				'   ' +
-				'cbS' +
-				'c  ' +
+				'  g' +
+				'SSc' +
+				'  g' +
 				'   ' +
 				'   ' +
-				'bbS' +
-				'bbS' +
-				'bbS' +
-				' c ' +
+				'   ' +
+				'g  ' +
+				'cSS' +
+				'g  ' +
+				'   ' +
+				'   ' +
+				'   ' +
+				'SbS' +
+				'SGS' +
+				'SbS' +
+				'   ' +
 				' c ' +
 				'   ' +
 				'   ' +
 				'   ' +
 				'   ' +
 				'Cbs' +
-				'Cbs' +
+				'Gbs' +
 				'bb ' +
 				'   ' +
 				'   ' +
 				'   ' +
-				'sb ' +
-				'sb ' +
-				' cc';
+				'sbg' +
+				'sbc' +
+				'  g';
             break;
         case 7:
             level =
-				'cbS' +
+				'gbS' +
 				'c  ' +
 				'   ' +
 				'   ' +
 				'   ' +
-				' c ' +
-				'sbc' +
-				'sSc' +
 				'   ' +
+				'sbg' +
+				'sSg' +
 				'   ' +
-				'   ' +
-				'   ' +
-				'sss' +
 				'   ' +
 				'   ' +
 				'   ' +
 				'Bb ' +
 				'S s' +
-				'  c' +
-				'  c' +
-				' c ' +
+				'   ' +
+				'  g' +
+				'  g' +
+				' g ' +
 				's  ' +
-				' c ' +
-				'  c' +
-				' c ' +
-				'c  ' +
+				' g ' +
+				'  g' +
+				' g ' +
+				'g  ' +
 				'  s' +
 				'bss' +
 				'bss' +
@@ -182,8 +184,7 @@ function loadLevel(id) {
                 ' C ' +
                 ' G ' +
                 ' b ' +
-                ' b ' +
-                '   ';
+                ' b ';
             break;
         case 10:
             level =
@@ -220,7 +221,14 @@ function loadLevel(id) {
             break;
     }
     
-    var endZ = caracter.position.z - (16 * parseInt((level.length - 1) / 3)) - 928;
+    // Longueur du niveau
+    var levelLength = 16 * parseInt((level.length - 1) / 3);
+    
+    // Position Z de la fin du niveau actuel
+    var endZ = positionNextLevel - levelLength;
+    
+    // Position Z du début du prochain niveau
+    positionNextLevel -= levelLength + 144;    
     
     // Pour chaque caractère composant le niveau
     for (var i = 0; i < level.length; i++) {
@@ -228,15 +236,14 @@ function loadLevel(id) {
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
         var coinName =
-             rand.int(0) ? 'coin'        :
-             (rand.int(2) ? 'coin5'      :
-             (rand.int(2) ? 'coin10'     :
-             (rand.int(2) ? 'coinShield' : 'coinSwiftness')));
+             rand.int(4) ? 'coin5'       :
+             (rand.int(3) ? 'coin10'     :
+             (rand.int(3) ? 'coinShield' : 'coinSwiftness'));
         
         switch (level[i]) {
             case 1:
                 
-            case 'b': // Caisse
+            case 'b': // Caisse (box)
                 boxes.push(createObject(x, 8, z, [models.box], 16));
                 break;
                 
@@ -245,7 +252,7 @@ function loadLevel(id) {
                 boxes.push(createObject(x, 24, z, [models.box], 16));
                 break;
                 
-            case 's': // Pique
+            case 's': // Pique (spike)
                 spikes.push(createObject(x, 8, z, [models.spikes], -8,-8,-8, 8,-4,8));
                 break;
                 
@@ -254,7 +261,7 @@ function loadLevel(id) {
                 spikes.push(createObject(x, 24, z, [models.spikes], -8,-8,-8, 8,-4,8));
                 break;
                 
-            case 'c': // Pièce de valeur aléatoire
+            case 'c': // Pièce de valeur aléatoire (coin)
                 coins.push(createObject(x, 8, z, [models[coinName]], 12));
                 coins[coins.length-1].name = coinName;
                 break;
@@ -265,7 +272,7 @@ function loadLevel(id) {
                 coins[coins.length-1].name = coinName;
                 break;
                 
-            case 'g': // Pièce en or
+            case 'g': // Pièce en or (gold)
                 coins.push(createObject(x, 8, z, [models.coin], 12));
                 coins[coins.length-1].name = 'coin';
                 break;
@@ -291,6 +298,4 @@ function loadLevel(id) {
                 break;
         }
     }
-    
-    positionEndLevel = endZ;
 }

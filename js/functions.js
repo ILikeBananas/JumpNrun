@@ -1,3 +1,7 @@
+// ----- DIVERSES FONCTIONS POUVANT ÊTRE UTILE AU JEU -----
+// Auteur : Sébastien Chappuis
+
+
 // NAMESPACE "RAND"
 var rand = {
 	
@@ -91,4 +95,22 @@ var rand = {
 		return String.fromCharCode(96 - (32 * isUppercase)
 								   + rand.int(from, to));
 	}
+};
+
+
+
+// Supprime d'un tableau les éléments indéfinis
+Array.prototype.clean = function() {
+    
+    // Pour chaque élément du tableau
+    for (var i = 0; i < this.length; i++) {
+        
+        // Si la valeur est indéfini
+        if (this[i] == undefined) {         
+            this.splice(i, 1);
+            i--;
+        }
+    }
+    
+    return this;
 };
