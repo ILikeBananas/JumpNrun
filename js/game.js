@@ -21,6 +21,7 @@ function gameLoop() {
         fallSpeed = 256;
     }
     
+    // Met à jour l'opacité du flash
     character.children[5].material.opacity = flashOpacity;
     
     // Dissipe le flash
