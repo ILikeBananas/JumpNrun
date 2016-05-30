@@ -7,11 +7,10 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require("fs");
 var path = require("path");
-var colog = require("colog");
 var config = require("./config/config.json");
 
 server.listen(config.port);
-colog.success("server started " +  config.port);
+console.log("server started " +  config.port);
 
 // Static routes
 app.use("/js", express.static("js"));
