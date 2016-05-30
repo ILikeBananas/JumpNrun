@@ -1,7 +1,6 @@
 // ----- INITIATION DU JEU -----
 // Auteur : Sébastien Chappuis
 
-
 // --- Constantes ---
 
 // Nombre de niveaux

@@ -1,7 +1,6 @@
 // ----- BOUCLE DU JEU (COMPOSANT UNE FRAME) -----
 // Auteur : Sébastien Chappuis
 
-
 // Boucle du jeu (1 itération = 1 frame)
 function gameLoop() {
     
@@ -62,6 +61,9 @@ function gameLoop() {
     }
     squatTime = Math.max(0, squatTime);
     
+    
+    // Gestion de la Kinect (déplacement, saut, se baisser)
+    kinectManagement();
     
     
     // Touche gauche appuyée
@@ -225,6 +227,7 @@ function gameLoop() {
         
         camera.position.y = 68;
     }
+    
     
     
     // --- AFFICHAGE ---
