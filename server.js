@@ -20,6 +20,7 @@ app.use("/img", express.static("img"));
 app.use("/css", express.static("css"));
 app.use("/vendors", express.static("vendors"));
 app.use("/obj", express.static("obj"));
+app.use("/levels", express.static("levels"));
 
 // Set the view engine
 app.set("view engine", "jade");
