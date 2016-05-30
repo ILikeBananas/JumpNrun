@@ -13,7 +13,7 @@ const SKY_COLOR = '#80C0FF';
 // Vitesse des sauts
 const JUMP_SPEED = 128;
 // Vitesse de course
-const VELOCITY = 112;
+var VELOCITY = 112;
 // Vitesse de changement de chemin
 const CHANGE_PATH_SPEED = 128;
 
@@ -74,10 +74,6 @@ var viewZ = -60;
 var shieldTime = 0;
 // Si on a le bonus de boost de vitesse actif ou non
 var isSwiftness = false;
-// Matériel à charger pour le bouclier ('basic', 'boost' ou '' pour aucun changement)
-var shieldMaterial = false;
-// Opacité du flash lorsque l'on fonce dans un obstacle avec le bouclier
-var flashOpacity = 0;
 
 // Rotation des pièces en radians
 var coinsRotation = 0;
@@ -138,7 +134,6 @@ var textures = {
     rock: new THREE.TextureLoader().load('img/textures/rock.png'),
     fur: new THREE.TextureLoader().load('img/textures/fur.png'),
     skateboard: new THREE.TextureLoader().load('img/textures/skateboard.png'),
-    skateboardShadow: new THREE.TextureLoader().load('img/textures/skateboard_shadow.png'),
     box: new THREE.TextureLoader().load('img/textures/box.png'),
 };
 
@@ -149,7 +144,7 @@ textures.sand.wrapS = textures.sand.wrapT = THREE.RepeatWrapping;
 textures.sand.repeat.set(512, (2 * VIEW_DISTANCE + 256) / 16);
 
 textures.stone.wrapS = textures.stone.wrapT = THREE.RepeatWrapping;
-textures.stone.repeat.set(.002, .002);
+textures.stone.repeat.set(.001, .001);
 
 textures.cactus.wrapS = textures.cactus.wrapT = THREE.RepeatWrapping;
 textures.cactus.repeat.set(.25, .25);
@@ -160,8 +155,8 @@ textures.bricks.repeat.set(.00075, .00075);
 textures.rock.wrapS = textures.rock.wrapT = THREE.RepeatWrapping;
 textures.rock.repeat.set(.0002, .0002);
 
-textures.skateboard.wrapS = textures.skateboard.wrapT = THREE.RepeatWrapping;
-textures.skateboard.repeat.set(.0016, .0016);
+textures.skateboard.repeat.set(0.0016, 0.0016);
+textures.skateboard.offset.x = .231 * rand.int(3);
 
 
 // Liste des reflets
@@ -177,7 +172,7 @@ var reflexions = {
     citrine: new THREE.TextureLoader().load('img/env/citrine.png'),
 };
 
-// Pour chaque élément dans 'reflexions'
+// Pour chaque élément dans "reflexions"
 $.each(reflexions, function (index) {
     reflexions[index].mapping = THREE.SphericalReflectionMapping;
 });
@@ -190,7 +185,6 @@ var geometries = {
     sphere: new THREE.SphereBufferGeometry(16, 32, 32),
     path: new THREE.PlaneBufferGeometry(64, 2 * VIEW_DISTANCE + 256),
     ground: new THREE.PlaneBufferGeometry(8192, 2 * VIEW_DISTANCE + 256),
-    skateboardShadow: new THREE.PlaneBufferGeometry(4, 16),
 };
 
 
@@ -215,13 +209,18 @@ var materials = {
     shieldBoost: new THREE.MeshBasicMaterial({color: '#FFC080', envMap: reflexions.citrine}),
     flash:       new THREE.MeshBasicMaterial({color: '#FFFFFF', envMap: reflexions.dull}),
     skateboardPattern: new THREE.MeshBasicMaterial({map: textures.skateboard, envMap: reflexions.dull}),
-    skateboardShadow:  new THREE.MeshBasicMaterial({map: textures.skateboardShadow}),
     skateboardEdge:    new THREE.MeshBasicMaterial({color: '#404040'}),
 };
 
+// Permet au bouclier et au flash d'être transparent
 materials.shieldBasic.transparent =
     materials.shieldBoost.transparent =
     materials.flash.transparent = true;
+
+// Le bouclier et le flash sont par défaut invisibles
+materials.shieldBasic.opacity =
+    materials.shieldBoost.opacity =
+    materials.flash.opacity = 0;
 
 
 
@@ -241,8 +240,6 @@ $(window).resize(function () {
     renderer.setSize(width, height);
 });
 
-
-
 // Lorsque l'on appuie une touche
 $(document).keydown(function (e) {
     keys[e.which] = true;
@@ -254,7 +251,7 @@ $(document).keyup(function (e) {
 });
 
 // Lorsque l'on scroll
-$(document).scroll(function() {
+$(document).scroll(function () {
 	$(this).scrollLeft(0).scrollTop(0);
 });
 
@@ -268,7 +265,7 @@ function loadModel(fileName, material, modelName) {
     var loader = new THREE.OBJLoader();
     
     // Si on a pas défini de nom pour le modèle, reprend le nom du fichier
-    if (typeof modelName === 'undefined') {
+    if (modelName == undefined) {
         modelName = fileName;
     }
     
@@ -289,7 +286,7 @@ function loadModel(fileName, material, modelName) {
 
 // --- Chargement des modèles 3D et des formes géométriques ---
 
-loadModel('coyote', materials.fur);
+loadModel('coyote',             materials.fur);
 loadModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
 loadModel('skateboard_edge',    materials.skateboardEdge,    'skateboardEdge');
 loadModel('skateboard_wheels',  materials.iron,              'skateboardWheels');
@@ -306,14 +303,10 @@ loadModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
 loadModel('arrow',              materials.ruby);
 
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
-models['skateBoardShadow'] = new THREE.Mesh(geometries.skateboardShadow,
-                                            materials.skateboardShadow);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
-models.road.rotation.x = models.ground.rotation.x =
-    models.skateBoardShadow.rotation.x = -Math.PI / 2;
+models.road.rotation.x = models.ground.rotation.x = -Math.PI / 2;
 models.ground.position.y -= .05;
-models.skateBoardShadow.position.y -= .1;
 
 models['shield'] = new THREE.Mesh(geometries.sphere, materials.shieldBasic);
 models['flash'] = new THREE.Mesh(geometries.sphere, materials.flash);
@@ -325,14 +318,18 @@ models.flash.scale.set(.36, .71, .71);
 
 // --- Objets ---
 
-// Personnage jouable (avec le skateboard)
+// Personnage jouable
 var character;
-// Position du personnage jouable (avec le skateboard)
+// Position du personnage jouable
 var position;
-// Modèle du coyote uniquement
+// Coyote (sans le skateboard)
 var coyote;
-// Position du coyote uniquement
+// Position du coyote (sans le skateboard)
 var positionCoyote;
+// Bouclier du personnage
+var shield;
+// Flash du personnage
+var flash;
 // Sol (route et sable)
 var floor;
 // Tunnel
@@ -370,6 +367,8 @@ function waiting() {
         coyote = character.children[0];
         positionCoyote = coyote.position;
         position = character.position;
+        shield = character.children[4];
+        flash = character.children[5];
         
         floor = createObject(0, 0, 0, [models.road, models.ground]);
         
@@ -389,6 +388,7 @@ function isGameLoaded() {
     // Pour chaque élément du tableau des chargements, test qu'ils soient TOUS vrais
     for (var i = 0; i < loadings.length; i++) {
         
+        // Si il est faut, quitte la fonction
         if (!loadings[i]) {
             return false;
         }

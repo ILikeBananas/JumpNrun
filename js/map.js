@@ -236,9 +236,9 @@ function loadLevel(id) {
         var x = (i % 3 - 1) * 21;
         var z = endZ + parseInt(i / 3) * 16;
         var coinName =
-             rand.int(4) ? 'coin5'       :
-             (rand.int(3) ? 'coin10'     :
-             (rand.int(3) ? 'coinShield' : 'coinSwiftness'));
+             rand.int(4) ? 'coin5'      :
+            (rand.int(3) ? 'coin10'     :
+            (rand.int(3) ? 'coinShield' : 'coinSwiftness'));
         
         switch (level[i]) {
             case 1:
@@ -298,4 +298,25 @@ function loadLevel(id) {
                 break;
         }
     }
+}
+
+
+
+
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
 }

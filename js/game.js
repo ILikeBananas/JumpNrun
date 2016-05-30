@@ -17,27 +17,24 @@ function gameLoop() {
     fallSpeed += 384 * delta;
     
     // Limite la vitesse de chute
-    if (fallSpeed > 256) {
-        fallSpeed = 256;
+    if (fallSpeed > 512) {
+        fallSpeed = 512;
     }
-    
-    // Met à jour l'opacité du flash
-    character.children[5].material.opacity = flashOpacity;
     
     // Dissipe le flash
-    if (flashOpacity > 0) {
-        flashOpacity -= 2 * delta;
+    if (flash.material.opacity > 0) {
+        flash.material.opacity -= 2 * delta;
     }
-    if (flashOpacity < 0) {
-        flashOpacity = 0;
-    }
+    flash.material.opacity = Math.max(0, flash.material.opacity);
     
     // Modifie, si besoin, le matériel du bouclier
-    if (shieldMaterial == 'basic') {
-        character.children[4].material = materials.shieldBasic;
+    if (!isSwiftness && shield.name != 'basic') {
+        shield.name = 'basic';
+        shield.material = materials.shieldBasic;
         
-    } else if (shieldMaterial == 'boost') {
-        character.children[4].material = materials.shieldBoost;
+    } else if (isSwiftness && shield.name != 'boost') {
+        shield.name = 'boost';
+        shield.material = materials.shieldBoost;
     }
     
     shieldMaterial = '';
@@ -46,12 +43,12 @@ function gameLoop() {
     if (shieldTime > 0) {
         shieldTime -= delta;
         var opacity = shieldTime >= 2 ? .5 : shieldTime / 4;
-        character.children[4].material.opacity = opacity;
+        shield.material.opacity = opacity;
     } else {
-        character.children[4].material.opacity = 0;
+        shield.material.opacity = 0;
     }
     
-    // Si on a plus de bouclier
+    // Si on a plus de bouclier, enlève le boost
     if (shieldTime <= 0) {
         isSwiftness = false;
     }
@@ -64,6 +61,7 @@ function gameLoop() {
         squatTime -= 1 * delta;
     }
     squatTime = Math.max(0, squatTime);
+    
     
     
     // Touche gauche appuyée
@@ -155,9 +153,11 @@ function gameLoop() {
     
     
     // Charge un décor
-    while (position.z < positionNextDecor + VIEW_DISTANCE) {
+    while (position.z < positionNextDecor + VIEW_DISTANCE + 64) {
         
+        // Position X : 1 chance sur 2 que le décor apparait à gauche de la route
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
+        
         var decorName = rand.int() ? 'cactus' : 'stone';
         var index = decors.push(createObject(x, 0, positionNextDecor,
                                              [models[decorName]])) - 1;
@@ -174,178 +174,32 @@ function gameLoop() {
         positionNextDecor -= rand.int(32, 128);
     }
     
-    // Déplacement à gauche/droite
+    // Déplacement à gauche/droite du personnage
     if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * delta ||
         roadPath * 21 - position.x > CHANGE_PATH_SPEED * delta) {
+        
         if (position.x > roadPath * 21) {
             position.x -= CHANGE_PATH_SPEED * delta;
         } else {
             position.x += CHANGE_PATH_SPEED * delta;
         }
+        
     } else {
         position.x -= position.x - roadPath * 21;
     }
     
     
-    // Pour chaque caisse
-    for (var i = 0; i < boxes.length; i++) {
-        
-        var box = boxes[i];
-        
-        // Si la caisse sort de l'écran, l'enlève de la scène
-        if (box.position.z >= camera.position.z + 16) {
-            scene.remove(box);
-            delete boxes[i];
-            boxes.clean();
-        }
-        // Si la caisse n'est pas éjectée
-        else if (box.name == '') {
-            
-            // Si fonce dans une caisse
-            if (collision(character, box, -8, -8, -8, 8, 6-delta*(fallSpeed > 0 ? fallSpeed : 0), 8)) {
-                // Si on n'a pas de bouclier
-                if (!shieldTime) {
-                    reset();
-                } else {
-                    // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
-                    if (!isSwiftness) {
-                        shieldTime--;
-                        flashOpacity = 1;
-                    }
-                    box.name = 'ejected';
-                    box['ejectSpeed'] = 64 + speed;
-                    box['fallSpeed'] = -96;
-                    
-                    // Pour chaque piques
-                    for (var j = 0; j < spikes.length; j++) {
-                        
-                        if (box.position.x == spikes[j].position.x &&
-                            box.position.z == spikes[j].position.z) {
-                            
-                            spikes[j].name = 'ejected';
-                            spikes[j]['ejectSpeed'] = 64 + speed;
-                            spikes[j]['fallSpeed'] = -96;
-                        }
-                    }
-                }
-                
-            } else if (collision(character, box)) {
-                position.y = box.position.y + 8;
-                fallSpeed = Math.min(0, fallSpeed);
-                onGround = true;
-            }
-            
-        }
-        
-        // Si la caisse est éjectée
-        if (box.name == 'ejected') {
-            ejectObstacle(box);
-        }
-    }
-    
-    
-    // Pour chaque pique
-    for (var i = 0; i < spikes.length; i++) {
-        
-        var spike = spikes[i];
-        
-        // Si le pique sort de l'écran
-        if (spike.position.z >= camera.position.z + 16) {
-            scene.remove(spike);
-            delete spikes[i];
-            spikes.clean();
-        }
-        // Si le pique n'est pas éjecté
-        else if (spike.name == '') {
-            
-            // Si on fonce dans des piques
-            if (collision(character, spike)) {
-                
-                // Si on n'a pas de bouclier
-                if (!shieldTime) {
-                    reset();
-                } else {
-                    // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
-                    if (!isSwiftness) {
-                        shieldTime--;
-                        flashOpacity = 1;
-                    }
-                    spike.name = 'ejected';
-                    spike['ejectSpeed'] = 64 + speed;
-                    spike['fallSpeed'] = -96;
-                }
-            }
-            
-        }
-        
-        if (spike.name == 'ejected') {
-            ejectObstacle(spike);
-        }
-    }
-    
-    
-    // Fait tourner toutes les pièces sur elles-même
-    coinsRotation += Math.PI * 1.25 * delta; 
-    
-    // Pour chaque pièce
-    for (var i = 0; i < coins.length; i++) {
-        
-        var coin = coins[i];
-        
-        // Si la pièce sort de l'écran
-        if (coin.position.z >= camera.position.z + 16) {
-            scene.remove(coin);
-            delete coins[i];
-            coins.clean();
-            
-        } else {
-            
-            coins[i].rotation.y = coinsRotation;
-            
-            // Si il y a une collision
-            if (collision(character, coins[i])) {
-                
-                // Si la pièce est jaune/verte/bleue/rouge
-                if (coins[i].name == 'coin') {
-                    coinsCollect++;
-                } else if (coins[i].name == 'coin5') {
-                    coinsCollect += 5;
-                } else if (coins[i].name == 'coin10') {
-                    coinsCollect += 10;
-                } else if (coins[i].name == 'coinShield') {
-                    shieldTime = 10;
-                    isSwiftness = false;
-                    shieldMaterial = 'basic';
-                } else if (coins[i].name == 'coinSwiftness') {
-                    shieldTime = 5;
-                    isSwiftness = true;
-                    shieldMaterial = 'boost';
-                }
-                coins[i].position.y = -64;
-                scene.remove(coins[i]);
-            }
-        }
-    }
-    
-    
-    // Pour chaque décor
-    for (var i = 0; i < decors.length; i++) {
-        
-        var decor = decors[i];
-        
-        // Si le décor sort de l'écran
-        if (camera.rotation.y == 0 && decor.position.z >= camera.position.z + 16) {
-            scene.remove(decor);
-            delete decors[i];
-            decors.clean();
-        }
-    }
+    // Execute les tests pour les objets de la scène
+    forEachBox();
+    forEachSpike();
+    forEachCoin();
+    forEachDecor();
     
     
     // Si le tunnel sors de l'écran, le replace devant
     while (tunnel.position.z > camera.position.z + 2200) {
         
-        tunnel.position.z -= rand.int(8000, 12000) + VIEW_DISTANCE;
+        tunnel.position.z -= rand.int(Math.max(6000, VIEW_DISTANCE + 2200), 10000);
     }
     
     distance = parseInt(position.z * -1 / 16);
@@ -372,9 +226,11 @@ function gameLoop() {
         camera.position.y = 68;
     }
     
-    // Affiche le contenu à l'écran
-    renderer.render(scene, camera);
     
+    // --- AFFICHAGE ---
+    
+    // Affiche le contenu 3D à l'écran
+    renderer.render(scene, camera);
     
     // Supprime le contenu du canvas 2D
     ctx.clearRect(0, 0, width, height);
@@ -385,25 +241,27 @@ function gameLoop() {
     
     // Affiche la jauge de bouclier
     ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
-    ctx.fillRect(60, 20, shieldTime * 19.2 * (isSwiftness+1), 24);
+    ctx.fillRect(60, 20, Math.min(192, shieldTime * 19.2 * (isSwiftness+1)), 24);
     
     ctx.drawImage(images.interface, 0, 0, 256, 256);
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
     
+    /*TEMPORAIRE*/
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
     ctx.fillText(fps + ' fps', width - 20, 20, 400);
     ctx.fillStyle = 'blue';
     ctx.fillText(Math.round(width / height * 10000) / 10000, width - 20, 60, 400);
+    /*****/
     
-    ctx.fillStyle = 'rgba(0, 0, 0, .5)';
-    ctx.textAlign = 'left';
-    ctx.fillText('Distance : ' + (distance + 'm'), 62, 60);
-    ctx.fillText('Pièces : ' + (coinsCollect), 62, 100);
-    
-    ctx.fillStyle = 'white';
-    ctx.fillText('Distance : ' + (distance + 'm'), 60, 58);
-    ctx.fillText('Pièces : ' + (coinsCollect), 60, 98);
+    // Affichage de la distance et du nombre de pièces (avec une ombre au texte)
+    for (var i = 0; i <= 2; i += 2) {
+        
+        ctx.fillStyle = !i ? 'rgba(0, 0, 0, .5)' : 'white';
+        ctx.textAlign = 'left';
+        ctx.fillText('Distance : ' + (distance + 'm'), 62-i, 60-i);
+        ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 100-i);
+    }
     
     lastTime = now;
 }
@@ -449,7 +307,7 @@ function reset() {
 
 
 // Éjecte l'obstacle passé en paramètre
-function ejectObstacle(obj) {
+function moveEjectedObstacle(obj) {
     
     if (obj.position.z <= camera.position.z) {
         

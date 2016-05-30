@@ -8,12 +8,12 @@ var rand = {
 	// Retourne un nombre entier aléatoire >= à "min" et <= à "max"
 	int: function (min, max) {
 		
-        if (typeof min !== 'undefined' && typeof max === 'undefined') {
+        if (min != undefined && max == undefined) {
             max = min;
             min = 0;
         } else {
-            min = typeof min !== 'undefined' ?  min : 0;
-            max = typeof max !== 'undefined' ?  max : 1;
+            min = min != undefined ?  min : 0;
+            max = max != undefined ?  max : 1;
         }
 		
 		if (min > max) {
@@ -28,12 +28,12 @@ var rand = {
 	// Retourne un nombre aléatoire >= à "min" et < à "max"
 	float: function (min, max) {
 		
-		if (typeof min !== 'undefined' && typeof max === 'undefined') {
+		if (min != undefined && max == undefined) {
             max = min;
             min = 0;
         } else {
-            min = typeof min !== 'undefined' ?  min : 0;
-            max = typeof max !== 'undefined' ?  max : 1;
+            min = min != undefined ?  min : 0;
+            max = max != undefined ?  max : 1;
         }
 		
 		if (min > max) {
@@ -49,13 +49,13 @@ var rand = {
 						maxR, maxG, maxB,
 						separator) {
 		
-		minR = typeof minR !== 'undefined' ?  minR : 0;
-		minG = typeof minG !== 'undefined' ?  minG : 0;
-		minB = typeof minB !== 'undefined' ?  minB : 0;
-		maxR = typeof maxR !== 'undefined' ?  maxR : 255;
-		maxG = typeof maxG !== 'undefined' ?  maxG : 255;
-		maxB = typeof maxB !== 'undefined' ?  maxB : 255;
-		separator = typeof separator !== 'undefined' ?  separator : ',';
+		minR = minR != undefined ?  minR : 0;
+		minG = minG != undefined ?  minG : 0;
+		minB = minB != undefined ?  minB : 0;
+		maxR = maxR != undefined ?  maxR : 255;
+		maxG = maxG != undefined ?  maxG : 255;
+		maxB = maxB != undefined ?  maxB : 255;
+		separator = separator != undefined ?  separator : ',';
 		
 		return this.int(minR, maxR) + '' + separator
 			 + this.int(minG, maxG) + '' + separator
@@ -65,15 +65,15 @@ var rand = {
 	colorRGBA: function (minR, minG, minB, minA, maxR,
 						 maxG, maxB, maxA, separator) {
 		
-		minR = typeof minR !== 'undefined' ?  minR : 0;
-		minG = typeof minG !== 'undefined' ?  minG : 0;
-		minB = typeof minB !== 'undefined' ?  minB : 0;
-		minA = typeof minA !== 'undefined' ?  minA : 0;
-		maxR = typeof maxR !== 'undefined' ?  maxR : 255;
-		maxG = typeof maxG !== 'undefined' ?  maxG : 255;
-		maxB = typeof maxB !== 'undefined' ?  maxB : 255;
-		maxA = typeof maxA !== 'undefined' ?  maxA : 1;
-		separator = typeof separator !== 'undefined' ?  separator : ',';
+		minR = minR != undefined ?  minR : 0;
+		minG = minG != undefined ?  minG : 0;
+		minB = minB != undefined ?  minB : 0;
+		minA = minA != undefined ?  minA : 0;
+		maxR = maxR != undefined ?  maxR : 255;
+		maxG = maxG != undefined ?  maxG : 255;
+		maxB = maxB != undefined ?  maxB : 255;
+		maxA = maxA != undefined ?  maxA : 1;
+		separator = separator != undefined ?  separator : ',';
 		
 		return this.int(minR, maxR) + '' + separator
 			 + this.int(minG, maxG) + '' + separator
@@ -83,8 +83,8 @@ var rand = {
 	
 	letter: function (from, to, isUppercase) {
 		
-		from = typeof from !== 'undefined' ?  from :  1;
-		to   = typeof to   !== 'undefined' ?  to   : 26;
+		from = from != undefined ?  from :  1;
+		to   = to   != undefined ?  to   : 26;
 		
 		from = from <  1 ?  1 : from;
 		from = from > 26 ? 26 : from;
@@ -99,7 +99,7 @@ var rand = {
 
 
 
-// Supprime d'un tableau les éléments indéfinis
+// Supprime du tableau tous les éléments indéfinis
 Array.prototype.clean = function() {
     
     // Pour chaque élément du tableau
