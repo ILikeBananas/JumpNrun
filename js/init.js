@@ -5,7 +5,7 @@
 // --- Constantes ---
 
 // Nombre de niveaux
-const NUMBER_LEVEL = 11;
+const NUMBER_LEVEL = 5;
 // Distance de vue
 const VIEW_DISTANCE = 800;
 // Couleur du ciel

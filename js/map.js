@@ -5,6 +5,7 @@
 // Charge un niveau
 function loadLevel(id) {
     
+    /*
     var level = '';
     
     switch (id) {
@@ -220,6 +221,35 @@ function loadLevel(id) {
                 'S S';
             break;
     }
+    */
+    
+    var level = readTextFile('levels/' + rand.int(1, NUMBER_LEVEL) + '.txt');
+    
+    // Si le niveau n'a pas pu être chargé
+    if (!level) {
+        level = 'gcg';
+    }
+    
+    // Remplace les sauts de ligne par un seul caractère : \n
+    level = level.replace(/(\r\n|\r)/gm, '\n');
+    
+    // Remplace tous les retours à la ligne en fin de niveau
+    level = level.replace(/\n+$/g,'');
+    
+    // Sépare en plusieurs ligne le niveau
+    var lines = level.split('\n');
+    level = '';
+    
+    // Pour chaque ligne
+    for (var i = 0; i < lines.length; i++) {
+        
+        // Si une ligne à moins de 3 caractères, lui ajoute un/des espaces
+        while (lines[i].length < 3) {
+            lines[i] += ' ';
+        }
+        
+        level += lines[i];
+    }
     
     // Longueur du niveau
     var levelLength = 16 * parseInt((level.length - 1) / 3);
@@ -302,21 +332,16 @@ function loadLevel(id) {
 
 
 
-
-function readTextFile(file)
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
+// Lit un fichier, retourne le contenu du
+// fichier sous forme d'une chaîne de caractères
+function readTextFile(file) {
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', file, false);
+    xhr.send(null);
+    
+    if(xhr.status === 200 || xhr.status == 0) {
+        return xhr.responseText;
     }
-    rawFile.send(null);
+    
 }

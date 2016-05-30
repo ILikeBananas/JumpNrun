@@ -147,7 +147,7 @@ function gameLoop() {
     
     
     // Charge un niveau
-    while (position.z < positionNextLevel + VIEW_DISTANCE) {
+    while (position.z < positionNextLevel + VIEW_DISTANCE + 64) {
         loadLevel(rand.int(1, NUMBER_LEVEL));
     }
     
