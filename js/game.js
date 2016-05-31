@@ -12,13 +12,16 @@ function gameLoop() {
     delta = Math.min(.1, delta);
     
     
+    // Execute les tests pour les objets de la scène
+    forEachBox();
+    forEachSpike();
+    forEachCoin();
+    forEachDecor();
+    
+    
     // Vitesse de chute augmentant avec le temps
     fallSpeed += 384 * delta;
-    
-    // Limite la vitesse de chute
-    if (fallSpeed > 512) {
-        fallSpeed = 512;
-    }
+    fallSpeed = Math.min(384, fallSpeed);
     
     // Dissipe le flash
     if (character.flash.material.opacity > 0) {
@@ -60,10 +63,6 @@ function gameLoop() {
         squatTime -= 1 * delta;
     }
     squatTime = Math.max(0, squatTime);
-    
-    
-    // Gestion de la Kinect (déplacement, saut, se baisser)
-    kinectManagement();
     
     
     // Touche gauche appuyée
@@ -191,13 +190,6 @@ function gameLoop() {
     }
     
     
-    // Execute les tests pour les objets de la scène
-    forEachBox();
-    forEachSpike();
-    forEachCoin();
-    forEachDecor();
-    
-    
     // Si le tunnel sors de l'écran, le replace devant
     while (tunnel.position.z > camera.position.z + 2200) {
         
@@ -271,9 +263,6 @@ function gameLoop() {
 
 // Réinitialise la partie
 function reset() {
-    
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, width, height);
     
     coinsCollect = 0;
     
