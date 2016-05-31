@@ -4,7 +4,7 @@
 // --- Constantes ---
 
 // Nombre de niveaux
-const NUMBER_LEVEL = 5;
+const NUMBER_LEVEL = 7;
 // Distance de vue
 const VIEW_DISTANCE = 800;
 // Couleur du ciel
@@ -18,10 +18,8 @@ const CHANGE_PATH_SPEED = 128;
 
 // --- Variables globales ---
 
-// Maintenant
-var now = Date.now();
-// Temps lors de la dernière frame
-var lastTime = now;
+// Informations sur le jeu
+var lastTime = Date.now();
 // Secondes écoulée depuis la dernière image
 var delta = 0;
 // Images par secondes
@@ -40,12 +38,8 @@ var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
 var keysOnce = [];
 
-// Distance parcouru (1 bloc = 1 mètre)
-var distance = 0;
 // Nombre de pièces collectées
 var coinsCollect = 0;
-// Score obtenu
-var score = 0;
 // Chemin sur la route (-1 = gauche, 0 = millieu, 1 = droite)
 var roadPath = 0;
 // Vitesse du personnage, boost compris
@@ -319,16 +313,6 @@ models.flash.scale.set(.36, .71, .71);
 
 // Personnage jouable
 var character;
-// Position du personnage jouable
-var position;
-// Coyote (sans le skateboard)
-var coyote;
-// Position du coyote (sans le skateboard)
-var positionCoyote;
-// Bouclier du personnage
-var shield;
-// Flash du personnage
-var flash;
 // Sol (route et sable)
 var floor;
 // Tunnel
@@ -363,11 +347,11 @@ function waiting() {
                                            models.skateboardWheels,
                                            models.shield,
                                            models.flash], -3,0,-5, 3,8,5);
-        coyote = character.children[0];
-        positionCoyote = coyote.position;
+        
+        character['coyote'] = character.children[0];
+        character['shield'] = character.children[4];
+        character['flash'] = character.children[5];
         position = character.position;
-        shield = character.children[4];
-        flash = character.children[5];
         
         floor = createObject(0, 0, 0, [models.road, models.ground]);
         

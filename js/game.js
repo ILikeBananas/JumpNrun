@@ -6,7 +6,7 @@ function gameLoop() {
     
     requestAnimationFrame(gameLoop);
     
-    now = Date.now();
+    var now = Date.now();
     delta = (now - lastTime) / 1000;
     fps = parseInt(1 / delta * 1) / 1;
     delta = Math.min(.1, delta);
@@ -21,19 +21,19 @@ function gameLoop() {
     }
     
     // Dissipe le flash
-    if (flash.material.opacity > 0) {
-        flash.material.opacity -= 2 * delta;
+    if (character.flash.material.opacity > 0) {
+        character.flash.material.opacity -= 2 * delta;
     }
-    flash.material.opacity = Math.max(0, flash.material.opacity);
+    character.flash.material.opacity = Math.max(0, character.flash.material.opacity);
     
     // Modifie, si besoin, le matériel du bouclier
-    if (!isSwiftness && shield.name != 'basic') {
-        shield.name = 'basic';
-        shield.material = materials.shieldBasic;
+    if (!isSwiftness && character.shield.name != 'basic') {
+        character.shield.name = 'basic';
+        character.shield.material = materials.shieldBasic;
         
-    } else if (isSwiftness && shield.name != 'boost') {
-        shield.name = 'boost';
-        shield.material = materials.shieldBoost;
+    } else if (isSwiftness && character.shield.name != 'boost') {
+        character.shield.name = 'boost';
+        character.shield.material = materials.shieldBoost;
     }
     
     shieldMaterial = '';
@@ -42,9 +42,9 @@ function gameLoop() {
     if (shieldTime > 0) {
         shieldTime -= delta;
         var opacity = shieldTime >= 2 ? .5 : shieldTime / 4;
-        shield.material.opacity = opacity;
+        character.shield.material.opacity = opacity;
     } else {
-        shield.material.opacity = 0;
+        character.shield.material.opacity = 0;
     }
     
     // Si on a plus de bouclier, enlève le boost
@@ -103,23 +103,23 @@ function gameLoop() {
     if (squatTime) {
         
         // Animation : se baisser
-        if (positionCoyote.y > -2) {
-            positionCoyote.y -= 16 * delta;
+        if (character.coyote.position.y > -2) {
+            character.coyote.position.y -= 16 * delta;
         }
-        positionCoyote.y = Math.max(-2, positionCoyote.y);
+        character.coyote.position.y = Math.max(-2, character.coyote.position.y);
         
         character.endY = 6;
         
     } else {
         
         // Animation : se relever
-        if (positionCoyote.y < 1) {
-            positionCoyote.y += 16 * delta;
+        if (character.coyote.position.y < 1) {
+            character.coyote.position.y += 16 * delta;
         }
         
         // Si on est entièrement relevé, change le masque de colision en Y
-        if (positionCoyote.y >= 1) {
-            positionCoyote.y = 1;
+        if (character.coyote.position.y >= 1) {
+            character.coyote.position.y = 1;
             character.endY = 8;
         }
     }
@@ -262,7 +262,7 @@ function gameLoop() {
         
         ctx.fillStyle = !i ? 'rgba(0, 0, 0, .5)' : 'white';
         ctx.textAlign = 'left';
-        ctx.fillText('Distance : ' + (distance + 'm'), 62-i, 60-i);
+        ctx.fillText('Distance : ' + (getDistance() + 'm'), 62-i, 60-i);
         ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 100-i);
     }
     
@@ -308,17 +308,6 @@ function reset() {
     positionNextDecor = rand.int(64) + VIEW_DISTANCE;
 }
 
-
-// Éjecte l'obstacle passé en paramètre
-function moveEjectedObstacle(obj) {
-    
-    if (obj.position.z <= camera.position.z) {
-        
-        obj.position.y -= obj.fallSpeed * delta;
-        obj.fallSpeed += 384 * delta;
-        obj.position.z -= obj.ejectSpeed * delta;
-    }
-}
 
 
 // Animation de départ

@@ -227,13 +227,13 @@ function loadLevel(id) {
     
     // Si le niveau n'a pas pu être chargé
     if (!level) {
-        level = 'gcg';
+        level = 'GBB';
     }
     
     // Remplace les sauts de ligne par un seul caractère : \n
     level = level.replace(/(\r\n|\r)/gm, '\n');
     
-    // Remplace tous les retours à la ligne en fin de niveau
+    // Supprime tous les retours à la ligne en fin de niveau
     level = level.replace(/\n+$/g,'');
     
     // Sépare en plusieurs ligne le niveau
@@ -258,12 +258,16 @@ function loadLevel(id) {
     var endZ = positionNextLevel - levelLength;
     
     // Position Z du début du prochain niveau
-    positionNextLevel -= levelLength + 144;    
+    positionNextLevel -= levelLength + 144;
+    
+    // Si le niveau est inversé sur l'axe des X ou non
+    var isLevelRevert = rand.int();
     
     // Pour chaque caractère composant le niveau
     for (var i = 0; i < level.length; i++) {
         
         var x = (i % 3 - 1) * 21;
+        x = isLevelRevert ? -x : x;
         var z = endZ + parseInt(i / 3) * 16;
         var coinName =
              rand.int(4) ? 'coin5'      :
@@ -340,8 +344,9 @@ function readTextFile(file) {
     xhr.open('GET', file, false);
     xhr.send(null);
     
-    if(xhr.status === 200 || xhr.status == 0) {
+    if (xhr.status === 200 || xhr.status == 0) {
         return xhr.responseText;
+    } else {
+        return false;
     }
-    
 }

@@ -16,31 +16,7 @@ function forEachSpike() {
             delete spikes[i];
             spikes.clean();
         }
-        // Si le pique n'est pas éjecté
-        else if (spike.name == '') {
-            
-            // Si on fonce dans des piques
-            if (collision(character, spike)) {
-                
-                // Si on n'a pas de bouclier
-                if (!shieldTime) {
-                    reset();
-                } else {
-                    // Si il ne s'agit pas du boost de vitesse, affaibli le bouclier
-                    if (!isSwiftness) {
-                        shieldTime--;
-                        flash.material.opacity = 1;
-                    }
-                    spike.name = 'ejected';
-                    spike['ejectSpeed'] = 64 + speed;
-                    spike['fallSpeed'] = -96;
-                }
-            }
-            
-        }
         
-        if (spike.name == 'ejected') {
-            moveEjectedObstacle(spike);
-        }
+        collisionObstacle(spike, false, false);
     }
 }

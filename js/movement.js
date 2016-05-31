@@ -23,7 +23,7 @@ function jump() {
     
     if (viewX == 0 && onGround) {
         fallSpeed = -JUMP_SPEED; // Saut
-        position.y = Math.ceil(position.y);
+        position.y = Math.ceil(position.y / 2) * 2;
         onGround = false;
         squatTime = 0; // Ne se baisse plus
     }

@@ -4,7 +4,7 @@ SBS
 SBS
 SBS
 sbs
-sCs
 sGs
+sCs
 sGs
 sbs
