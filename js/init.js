@@ -253,7 +253,7 @@ $(document).scroll(function () {
 
 // Charge un modèle 3D au format obj/*.obj,
 // stock l'objet dans un tableau "models"
-function loadModel(fileName, material, modelName) {
+function loadFileModel(fileName, material, modelName) {
     
     var index = loadings.push(false) - 1;
     var loader = new THREE.OBJLoader();
@@ -283,27 +283,27 @@ function loadModel(fileName, material, modelName) {
 // Charge tous les niveaux
 for (var i = 1; i <= NUMBER_LEVEL; i++) {
     
-    loadLevel(i);
+    loadFileLevel(i);
 }
 
 
 // --- Chargement des modèles 3D et des formes géométriques ---
 
-loadModel('coyote',             materials.fur);
-loadModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
-loadModel('skateboard_edge',    materials.skateboardEdge,    'skateboardEdge');
-loadModel('skateboard_wheels',  materials.iron,              'skateboardWheels');
-loadModel('spikes',             materials.iron);
-loadModel('coin',               materials.gold);
-loadModel('coin_star_4',        materials.emerald,           'coin5');
-loadModel('coin_star_5',        materials.sapphire,          'coin10');
-loadModel('coin_shield',        materials.ruby,              'coinShield');
-loadModel('coin_lightning',     materials.citrine,           'coinSwiftness');
-loadModel('cactus',             materials.cactus);
-loadModel('stone',              materials.stone);
-loadModel('tunnel',             materials.bricks);
-loadModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
-loadModel('arrow',              materials.ruby);
+loadFileModel('coyote',             materials.fur);
+loadFileModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
+loadFileModel('skateboard_edge',    materials.skateboardEdge,    'skateboardEdge');
+loadFileModel('skateboard_wheels',  materials.iron,              'skateboardWheels');
+loadFileModel('spikes',             materials.iron);
+loadFileModel('coin',               materials.gold);
+loadFileModel('coin_star_4',        materials.emerald,           'coin5');
+loadFileModel('coin_star_5',        materials.sapphire,          'coin10');
+loadFileModel('coin_shield',        materials.ruby,              'coinShield');
+loadFileModel('coin_lightning',     materials.citrine,           'coinSwiftness');
+loadFileModel('cactus',             materials.cactus);
+loadFileModel('stone',              materials.stone);
+loadFileModel('tunnel',             materials.bricks);
+loadFileModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
+loadFileModel('arrow',              materials.ruby);
 
 models['box'] = new THREE.Mesh(geometries.cube, materials.box);
 models['road'] = new THREE.Mesh(geometries.path, materials.road);

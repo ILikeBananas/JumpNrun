@@ -24,7 +24,7 @@ function collisionObstacle(obstacle, canWalkOn, ejectSpike) {
             
             // Si on n'a pas de bouclier
             if (!shieldTime) {
-                executionGameLoop = false;
+                endGame();
                 
             } else {
                 

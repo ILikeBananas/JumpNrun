@@ -262,10 +262,6 @@ function gameLoop() {
         
         // Rapelle la fonction pour qu'elle s'execute la frame suivante
         requestAnimationFrame(gameLoop);
-        
-    } else {
-        
-        endGame();
     }
     
     lastTime = now;
