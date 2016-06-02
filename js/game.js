@@ -19,19 +19,19 @@ function gameLoop() {
         character.flash.material.opacity -= 2 * delta;
     }
     character.flash.material.opacity = Math.max(0, character.flash.material.opacity);
-    
+
     // Modifie, si besoin, le matériel du bouclier
     if (!isSwiftness && character.shield.name != 'basic') {
         character.shield.name = 'basic';
         character.shield.material = materials.shieldBasic;
-        
+
     } else if (isSwiftness && character.shield.name != 'boost') {
         character.shield.name = 'boost';
         character.shield.material = materials.shieldBoost;
     }
-    
+
     shieldMaterial = '';
-    
+
     // Diminue la durée du bouclier
     if (shieldTime > 0) {
         shieldTime -= delta;
@@ -40,15 +40,15 @@ function gameLoop() {
     } else {
         character.shield.material.opacity = 0;
     }
-    
+
     // Si on a plus de bouclier, enlève le boost
     if (shieldTime <= 0) {
         isSwiftness = false;
     }
-    
+
     // Fait chuter/sauter le personnage
     position.y -= fallSpeed * delta;
-    
+
     // Diminue la durée de l'accroupissement
     if (squatTime > 0) {
         squatTime -= 1 * delta;
@@ -63,7 +63,7 @@ function gameLoop() {
     } else if (!keys[65]) {
         keysOnce[65] = false;
     }
-    
+
     // Touche droite appuyée
     if (keys[68] && !keysOnce[68]) {
         moveRight();
@@ -71,7 +71,7 @@ function gameLoop() {
     } else if (!keys[68]) {
         keysOnce[68] = false;
     }
-    
+
     // Touche de saut appuyée
     if (keys[32] && !keysOnce[32]) {
         jump();
@@ -79,7 +79,7 @@ function gameLoop() {
     } else if (!keys[32]) {
         keysOnce[32] = false;
     }
-    
+
     // Touche d'accroupissement appuyé
     if (keys[16] && !keysOnce[16]) {
         squat();
@@ -87,46 +87,46 @@ function gameLoop() {
     } else if (!keys[16]) {
         keysOnce[16] = false;
     }
-    
-    
+
+
     // Si on est baissé
     if (squatTime) {
-        
+
         // Animation : se baisser
         if (character.coyote.position.y > -2) {
             character.coyote.position.y -= 16 * delta;
         }
         character.coyote.position.y = Math.max(-2, character.coyote.position.y);
-        
+
         character.endY = 6;
-        
+
     } else {
-        
+
         // Animation : se relever
         if (character.coyote.position.y < 1) {
             character.coyote.position.y += 16 * delta;
         }
-        
+
         // Si on est entièrement relevé, change le masque de colision en Y
         if (character.coyote.position.y >= 1) {
             character.coyote.position.y = 1;
             character.endY = 8;
         }
     }
-    
+
     onGround = false;
-    
-    
+
+
     // Empêche le personnage à rentrer dans le sol
     if (position.y <= 0) {
         position.y = 0;
-        
+
         fallSpeed = Math.min(0, fallSpeed);
-        
+
         onGround = true;
     }
-    
-    
+
+
     // Vitesse de déplacement du personnage avec l'effet de boost
     speed = VELOCITY + (isSwiftness * (Math.min(2, shieldTime)) * 64);
     position.z -= speed * delta;
@@ -158,40 +158,40 @@ function gameLoop() {
     while (position.z < positionNextLevel + VIEW_DISTANCE + 64) {
         createLevel(rand.int(1, NUMBER_LEVEL));
     }
-    
-    
+
+
     // Charge un décor
     while (position.z < positionNextDecor + VIEW_DISTANCE + 64) {
-        
+
         // Position X : 1 chance sur 2 que le décor apparait à gauche de la route
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
-        
+
         var decorName = rand.int() ? 'cactus' : 'stone';
         var index = decors.push(createObject(x, 0, positionNextDecor,
                                              [models[decorName]])) - 1;
         decors[index].name = decorName;
-        
+
         // Si il s'agit d'une pierre, change de façon aléatoire sa taille en hauteur
         if (decorName == 'stone') {
             decors[index].scale.y *= rand.float(.5, 1.5);
         }
-        
+
         // Donne une rotation aléatoire au décor
         decors[index].rotation.y = rand.float(2 * Math.PI);
-        
+
         positionNextDecor -= rand.int(32, 128);
     }
-    
+
     // Déplacement à gauche/droite du personnage
     if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * delta ||
         roadPath * 21 - position.x > CHANGE_PATH_SPEED * delta) {
-        
+
         if (position.x > roadPath * 21) {
             position.x -= CHANGE_PATH_SPEED * delta;
         } else {
             position.x += CHANGE_PATH_SPEED * delta;
         }
-        
+
     } else {
         position.x -= position.x - roadPath * 21;
     }
@@ -199,25 +199,25 @@ function gameLoop() {
     
     // Animation de départ
     beginningAnimation();
-    
-    
+
+
     // Position de la caméra relative au personnage
     camera.position.set(position.x + viewX,
                         position.y + viewY,
                         position.z + viewZ);
-    
+
     // Empêche la caméra d'être au dessus du tunnel
     if (camera.position.y > 68 &&
         camera.position.z <= tunnel.position.z + 8 &&
         camera.position.z >= tunnel.position.z - 2048) {
-        
+
         camera.position.y = 68;
     }
-    
-    
-    
+
+
+
     // --- AFFICHAGE ---
-    
+
     // Affiche le contenu 3D à l'écran
     renderer.render(scene, camera);
     
@@ -226,14 +226,14 @@ function gameLoop() {
     
     
     ctx.textBaseline = 'top';
-    
+
     // Affiche la jauge de bouclier
     ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
     ctx.fillRect(60, 20, Math.min(192, shieldTime * 19.2 * (isSwiftness+1)), 24);
-    
+
     ctx.drawImage(images.interface, 0, 0, 256, 256);
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
-    
+
     /*TEMPORAIRE*/
     ctx.font = '28px Arial';
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
@@ -277,29 +277,29 @@ function lost() {
 
 // Animation de départ
 function beginningAnimation() {
-    
+
     if (viewX > 0) {
         viewX -= delta * 16;
-    }    
+    }
     viewX = Math.max(0, viewX);
-    
+
     if (viewY < 40) {
         viewY += delta * 6;
-    }    
+    }
     viewY = Math.min(40, viewY);
-    
+
     if (viewZ < 40) {
         viewZ += delta * 32;
-    }    
+    }
     viewZ = Math.min(40, viewZ);
-    
+
     var rotation = camera.rotation;
-    
+
     if (rotation.y > 0) {
         rotation.y -= delta
     }
     rotation.y = Math.max(0, rotation.y);
-    
+
     if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
         camera.rotation.x -= delta * .5;
     }
