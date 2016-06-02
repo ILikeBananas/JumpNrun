@@ -2,8 +2,30 @@
 // Auteur : Sébastien Chappuis
 
 
+
+
+// Lit un fichier, retourne le contenu du
+// fichier sous forme d'une chaîne de caractères
+function loadLevel(idLevel) {
+    
+    var index = loadings.push(false) - 1;
+    
+    // Requête AJAX asynchrone chargant le niveau
+    var xhr = $.ajax('levels/' + idLevel + '.txt')
+        .done(function(level) {
+            levels[idLevel] = level;
+        })
+        .fail(function() {
+            levels[idLevel] = undefined;
+        })
+        .always(function() {
+            loadings[index] = true;
+    });
+}
+
+
 // Charge un niveau
-function loadLevel(id) {
+function createLevel(idLevel) {
     
     /*
     var level = '';
@@ -223,7 +245,7 @@ function loadLevel(id) {
     }
     */
     
-    var level = readTextFile('levels/' + rand.int(1, NUMBER_LEVEL) + '.txt');
+    var level = levels[idLevel];
     
     // Si le niveau n'a pas pu être chargé
     if (!level) {
@@ -331,22 +353,5 @@ function loadLevel(id) {
                 spike.rotation.x = Math.PI;
                 break;
         }
-    }
-}
-
-
-
-// Lit un fichier, retourne le contenu du
-// fichier sous forme d'une chaîne de caractères
-function readTextFile(file) {
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', file, false);
-    xhr.send(null);
-    
-    if (xhr.status === 200 || xhr.status == 0) {
-        return xhr.responseText;
-    } else {
-        return false;
     }
 }

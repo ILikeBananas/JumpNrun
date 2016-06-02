@@ -23,8 +23,8 @@ function collisionObstacle(obstacle, canWalkOn, ejectSpike) {
                       obstacle.endX, collisionEndY, obstacle.endZ)) {
             
             // Si on n'a pas de bouclier
-            if (!shieldTime) {console.log(fallSpeed + ', ' + (collisionEndY+8) + ' (' + character.position.y + ')');
-                reset();
+            if (!shieldTime) {
+                executionGameLoop = false;
                 
             } else {
                 

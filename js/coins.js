@@ -39,8 +39,9 @@ function forEachCoin() {
                 } else {
                     coinsCollect++;
                 }
-                coins[i].position.y = -64;
-                scene.remove(coins[i]);
+                scene.remove(coin);
+                delete coins[i];
+                coins.clean();
             }
         }
     }

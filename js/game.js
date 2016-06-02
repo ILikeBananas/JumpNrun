@@ -1,23 +1,14 @@
 // ----- BOUCLE DU JEU (COMPOSANT UNE FRAME) -----
 // Auteur : Sébastien Chappuis
 
+
 // Boucle du jeu (1 itération = 1 frame)
 function gameLoop() {
-    
-    requestAnimationFrame(gameLoop);
     
     var now = Date.now();
     delta = (now - lastTime) / 1000;
     fps = parseInt(1 / delta * 1) / 1;
     delta = Math.min(.1, delta);
-    
-    
-    // Execute les tests pour les objets de la scène
-    forEachBox();
-    forEachSpike();
-    forEachCoin();
-    forEachDecor();
-    
     
     // Vitesse de chute augmentant avec le temps
     fallSpeed += 384 * delta;
@@ -140,16 +131,32 @@ function gameLoop() {
     speed = VELOCITY + (isSwiftness * (Math.min(2, shieldTime)) * 64);
     position.z -= speed * delta;
     
+    // La durée du bouclier ne peut pas être négative
+    shieldTime = Math.max(0, shieldTime);
+    
+    
+    // Execute les tests pour les objets de la scène
+    forEachBox();
+    forEachSpike();
+    forEachCoin();
+    forEachDecor();
+    
     
     // Déplace le sol pour qu'il reste dans la vue
     while (camera.position.z < floor.position.z) {
         floor.position.z -= 64;
     }
     
+    // Si le tunnel sors de l'écran, le replace devant
+    while (tunnel.position.z > camera.position.z + 2200) {
+        
+        tunnel.position.z -= rand.int(Math.max(6000, VIEW_DISTANCE + 2200), 10000);
+    }
     
+        
     // Charge un niveau
     while (position.z < positionNextLevel + VIEW_DISTANCE + 64) {
-        loadLevel(rand.int(1, NUMBER_LEVEL));
+        createLevel(rand.int(1, NUMBER_LEVEL));
     }
     
     
@@ -190,19 +197,6 @@ function gameLoop() {
     }
     
     
-    // Si le tunnel sors de l'écran, le replace devant
-    while (tunnel.position.z > camera.position.z + 2200) {
-        
-        tunnel.position.z -= rand.int(Math.max(6000, VIEW_DISTANCE + 2200), 10000);
-    }
-    
-    distance = parseInt(position.z * -1 / 16);
-    score = distance + 10 * coinsCollect;
-    
-    // La durée du bouclier ne peut pas être négative
-    shieldTime = Math.max(0, shieldTime);
-    
-    
     // Animation de départ
     beginningAnimation();
     
@@ -227,11 +221,10 @@ function gameLoop() {
     // Affiche le contenu 3D à l'écran
     renderer.render(scene, camera);
     
-    // Supprime le contenu du canvas 2D
+    // Supprime le contenu du canvas 2D de la frame précédente
     ctx.clearRect(0, 0, width, height);
     
-    // Affiche le nombre d'image par seconde en haut à droite de l'écran
-    ctx.font="32px Arial";
+    
     ctx.textBaseline = 'top';
     
     // Affiche la jauge de bouclier
@@ -242,6 +235,7 @@ function gameLoop() {
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
     
     /*TEMPORAIRE*/
+    ctx.font = '28px Arial';
     ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
     ctx.fillText(fps + ' fps', width - 20, 20, 400);
@@ -249,52 +243,38 @@ function gameLoop() {
     ctx.fillText(Math.round(width / height * 10000) / 10000, width - 20, 60, 400);
     /*****/
     
-    // Affichage de la distance et du nombre de pièces (avec une ombre au texte)
+    // Affichage de la distance et du nombre de pièces (avec une ombre au texte
     for (var i = 0; i <= 2; i += 2) {
         
-        ctx.fillStyle = !i ? 'rgba(0, 0, 0, .5)' : 'white';
+        ctx.font = '32px Arial';
+        ctx.fillStyle = i ? 'white' : 'rgba(0, 0, 0, .5)';
         ctx.textAlign = 'left';
         ctx.fillText('Distance : ' + (getDistance() + 'm'), 62-i, 60-i);
         ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 100-i);
+        ctx.font = '40px Arial';
+        ctx.fillStyle = i ? '#FFFF80' : 'rgba(0, 0, 0, .5)';
+        ctx.fillText('Score : ' + (getScore()), 18-i, 140-i);
+    }
+    
+    
+    // Si la boucle doit contunuer à s'executer
+    if (executionGameLoop) {
+        
+        // Rapelle la fonction pour qu'elle s'execute la frame suivante
+        requestAnimationFrame(gameLoop);
+        
+    } else {
+        
+        endGame();
     }
     
     lastTime = now;
 }
 
 // Réinitialise la partie
-function reset() {
+function lost() {
     
-    coinsCollect = 0;
     
-    for (var i = 0; i < boxes.length; i++) {
-        scene.remove(boxes[i]);
-    }
-    boxes = [];
-    
-    for (var i = 0; i < spikes.length; i++) {
-        scene.remove(spikes[i]);
-    }
-    spikes = [];
-    
-    for (var i = 0; i < coins.length; i++) {
-        scene.remove(coins[i]);
-    }
-    coins = [];
-    
-    for (var i = 0; i < decors.length; i++) {
-        scene.remove(decors[i]);
-    }
-    decors = [];
-    
-    position.set(0, 0, 0);
-    roadPath = 0;
-    fallSpeed = 0;
-    
-    floor.position.z = 0;
-    tunnel.position.z = -rand.int(3000, 6000);
-    
-    positionNextLevel = -400;
-    positionNextDecor = rand.int(64) + VIEW_DISTANCE;
 }
 
 

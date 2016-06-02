@@ -1,6 +1,7 @@
 // ----- INITIATION DU JEU -----
 // Auteur : Sébastien Chappuis
 
+
 // --- Constantes ---
 
 // Nombre de niveaux
@@ -31,13 +32,17 @@ var height = window.innerHeight;
 
 // Tableau de booléens représentant les chargements terminés ou non
 var loadings = [];
-// Tableau contenant des modèles 3D chargés avec leur texture
+// Tableau contenant les modèles 3D chargés avec leur texture
 var models = [];
+// Tableau contenant les niveaux chargés
+var levels = [];
 // Tableau de booléens des touches appuyées
 var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
 var keysOnce = [];
 
+// Si la boucle du jeu ne doit plus être executée
+var executionGameLoop = true;
 // Nombre de pièces collectées
 var coinsCollect = 0;
 // Chemin sur la route (-1 = gauche, 0 = millieu, 1 = droite)
@@ -71,12 +76,6 @@ var isSwiftness = false;
 // Rotation des pièces en radians
 var coinsRotation = 0;
 
-// Canvas 2D
-var canvas;
-// Contexte du canvas 2D
-var ctx;
-
-
 // Liste des images (pour le canvas 2D)
 var images = {
     
@@ -90,11 +89,13 @@ images.iconShield.src = 'img/other/icon_shield.png';
 images.iconLightning.src = 'img/other/icon_lightning.png';
 
 
-// Canvas en 2 dimensions
-canvas = document.getElementById('canvas2d');
-canvas.width = width
-canvas.height = height
-ctx = canvas.getContext('2d');
+// Canvas 2D
+var canvas = document.getElementById('canvas2d');
+canvas.width = width;
+canvas.height = height;
+
+// Contexte du canvas 2D
+var ctx = canvas.getContext('2d');
 
 // Rendu
 var renderer = new THREE.WebGLRenderer({antialias: true});
@@ -274,6 +275,15 @@ function loadModel(fileName, material, modelName) {
         loadings[index] = true;
         models[modelName] = object;
     });
+}
+
+
+// --- Chargement des niveaux
+
+// Charge tous les niveaux
+for (var i = 1; i <= NUMBER_LEVEL; i++) {
+    
+    loadLevel(i);
 }
 
 
