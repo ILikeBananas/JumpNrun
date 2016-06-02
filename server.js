@@ -22,7 +22,7 @@ app.use("/obj", express.static("obj"));
 app.use("/levels", express.static("levels"));
 
 // Set the view engine
-app.set("view engine", "jade");
+app.set("view engine", "pug");
 app.set("views", "./views");
 // Routings
 app.get("/", (req, res) => {

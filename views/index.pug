@@ -6,26 +6,27 @@ html
     link(rel="stylesheet", href="css/game.css")
   body
     canvas(id="canvas2d")
+    // Externes javascript librairies
     script(type="text/javascript", src="vendors/three.min.js")
     script(type="text/javascript", src="vendors/OBJLoader.js")
-    script(type="text/javascript", src="vendors/zig.min.js")
+    script(type="text/javascript", src="http://cdn.zigfu.com/zigjs/zig.min.js")
     script(type="text/javascript", src="vendors/jquery.js")
+    script(src="https://cdn.socket.io/socket.io-1.4.5.js")
+    // Game
+    script(type="text/javascript", src="js/game.js")
     script(type="text/javascript", src="js/functions.js")
     script(type="text/javascript", src="js/getters.js")
     script(type="text/javascript", src="js/mesh.js")
     script(type="text/javascript", src="js/movement.js")
     script(type="text/javascript", src="js/obstacles.js")
-    
+    script(type="text/javascript", src="js/init.js")
+    // objects
     script(type="text/javascript", src="js/boxes.js")
     script(type="text/javascript", src="js/spikes.js")
     script(type="text/javascript", src="js/coins.js")
     script(type="text/javascript", src="js/decors.js")
-    
-    script(type="text/javascript", src="js/kinect.js")
     script(type="text/javascript", src="js/map.js")
-    script(type="text/javascript", src="js/init.js")
-    script(type="text/javascript", src="js/game.js")
-    script(src="https://cdn.socket.io/socket.io-1.4.5.js")
+    //  Kinect
+    script(type="text/javascript", src="js/kinect.js")
     script(type="text/javascript", src="js/socket.js")
-    
-    
+    // Highscore
