@@ -1,6 +1,5 @@
 * {
 	box-sizing: border-box;
-    pointer-events: none;
 }
 
 html {
@@ -15,6 +14,4 @@ body {
 
 #canvas2d {
     position: absolute;
-    left: 0;
-    right: 0;
 }

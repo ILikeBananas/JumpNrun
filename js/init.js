@@ -17,18 +17,13 @@ var VELOCITY = 112;
 // Vitesse de changement de chemin
 const CHANGE_PATH_SPEED = 128;
 
+
 // --- Variables globales ---
 
 // Informations sur le jeu
 var lastTime = Date.now();
 // Secondes écoulée depuis la dernière image
 var delta = 0;
-// Images par secondes
-var fps = 0;
-// Largeur de la fenêtre du jeu
-var width = window.innerWidth;
-// Hauteur de la fenêtre du jeu
-var height = window.innerHeight;
 
 // Tableau de booléens représentant les chargements terminés ou non
 var loadings = [];
@@ -47,8 +42,6 @@ var executionGameLoop = true;
 var coinsCollect = 0;
 // Chemin sur la route (-1 = gauche, 0 = millieu, 1 = droite)
 var roadPath = 0;
-// Vitesse du personnage, boost compris
-var speed = 0;
 // Vitesse du chute
 var fallSpeed = 0;
 // Si on est au sol ou non
@@ -91,8 +84,8 @@ images.iconLightning.src = 'img/other/icon_lightning.png';
 
 // Canvas 2D
 var canvas = document.getElementById('canvas2d');
-canvas.width = width;
-canvas.height = height;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 // Contexte du canvas 2D
 var ctx = canvas.getContext('2d');
@@ -102,13 +95,14 @@ var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setClearColor(SKY_COLOR);
 renderer.domElement.setAttribute('id', 'canvas3d');
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
+renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
 
 document.body.appendChild(renderer.domElement); // Créer le canvas
 
 // Caméra
-var camera = new THREE.PerspectiveCamera(70, width / height, 1, VIEW_DISTANCE);
+var camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight,
+                                         1, VIEW_DISTANCE);
 camera.rotation.set(0, Math.PI, 0);
 
 // Scène et brouillard
@@ -150,6 +144,7 @@ textures.rock.wrapS = textures.rock.wrapT = THREE.RepeatWrapping;
 textures.rock.repeat.set(.0002, .0002);
 
 textures.skateboard.repeat.set(0.0016, 0.0016);
+// Motif du skateboard défini aléatoirement
 textures.skateboard.offset.x = .231 * rand.int(3);
 
 
@@ -224,14 +219,14 @@ $(window).resize(function () {
     width = window.innerWidth;
     height = window.innerHeight;
     
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
     
-    camera.aspect = width / height;
+    camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
+    renderer.setSize(innerWidth, innerHeight);
 });
 
 // Lorsque l'on appuie une touche
@@ -248,7 +243,6 @@ $(document).keyup(function (e) {
 $(document).scroll(function () {
 	$(this).scrollLeft(0).scrollTop(0);
 });
-
 
 
 // Charge un modèle 3D au format obj/*.obj,
@@ -305,14 +299,14 @@ loadFileModel('tunnel',             materials.bricks);
 loadFileModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
 loadFileModel('arrow',              materials.ruby);
 
-models['box'] = new THREE.Mesh(geometries.cube, materials.box);
-models['road'] = new THREE.Mesh(geometries.path, materials.road);
+models['box']    = new THREE.Mesh(geometries.cube, materials.box);
+models['road']   = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
 models.road.rotation.x = models.ground.rotation.x = -Math.PI / 2;
 models.ground.position.y -= .05;
 
 models['shield'] = new THREE.Mesh(geometries.sphere, materials.shieldBasic);
-models['flash'] = new THREE.Mesh(geometries.sphere, materials.flash);
+models['flash']  = new THREE.Mesh(geometries.sphere, materials.flash);
 models.shield.position.y = models.flash.position.y = 8;
 
 models.shield.scale.set(.35, .7, .7);

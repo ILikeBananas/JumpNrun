@@ -35,7 +35,7 @@ function collisionObstacle(obstacle, canWalkOn, ejectSpike) {
                 }
                 
                 obstacle.name = 'ejected';
-                obstacle['ejectSpeed'] = 64 + speed;
+                obstacle['ejectSpeed'] = 64 + getCharacterSpeed();
                 obstacle['fallSpeed'] = -96;
                 
                 // Si on éjecte un pique avec
@@ -49,7 +49,7 @@ function collisionObstacle(obstacle, canWalkOn, ejectSpike) {
                             obstacle.position.z == spikes[j].position.z) {
                             
                             spikes[j].name = 'ejected';
-                            spikes[j]['ejectSpeed'] = 64 + speed;
+                            spikes[j]['ejectSpeed'] = 64 + getCharacterSpeed();
                             spikes[j]['fallSpeed'] = -96;
                         }
                     }

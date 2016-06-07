@@ -7,7 +7,6 @@ function gameLoop() {
     
     var now = Date.now();
     delta = (now - lastTime) / 1000;
-    fps = parseInt(1 / delta * 1) / 1;
     delta = Math.min(.1, delta);
     
     // Vitesse de chute augmentant avec le temps
@@ -56,38 +55,9 @@ function gameLoop() {
     squatTime = Math.max(0, squatTime);
     
     
-    // Touche gauche appuyée
-    if (keys[65] && !keysOnce[65]) {
-        moveLeft();
-        keysOnce[65] = true;
-    } else if (!keys[65]) {
-        keysOnce[65] = false;
-    }
-
-    // Touche droite appuyée
-    if (keys[68] && !keysOnce[68]) {
-        moveRight();
-        keysOnce[68] = true;
-    } else if (!keys[68]) {
-        keysOnce[68] = false;
-    }
-
-    // Touche de saut appuyée
-    if (keys[32] && !keysOnce[32]) {
-        jump();
-        keysOnce[32] = true;
-    } else if (!keys[32]) {
-        keysOnce[32] = false;
-    }
-
-    // Touche d'accroupissement appuyé
-    if (keys[16] && !keysOnce[16]) {
-        squat();
-        keysOnce[16] = true;
-    } else if (!keys[16]) {
-        keysOnce[16] = false;
-    }
-
+    // Test les commandes du clavier
+    testCommands();
+    
 
     // Si on est baissé
     if (squatTime) {
@@ -128,8 +98,7 @@ function gameLoop() {
 
 
     // Vitesse de déplacement du personnage avec l'effet de boost
-    speed = VELOCITY + (isSwiftness * (Math.min(2, shieldTime)) * 64);
-    position.z -= speed * delta;
+    position.z -= getCharacterSpeed() * delta;
     
     // La durée du bouclier ne peut pas être négative
     shieldTime = Math.max(0, shieldTime);
@@ -222,7 +191,7 @@ function gameLoop() {
     renderer.render(scene, camera);
     
     // Supprime le contenu du canvas 2D de la frame précédente
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
     
     
     ctx.textBaseline = 'top';
@@ -236,11 +205,11 @@ function gameLoop() {
 
     /*TEMPORAIRE*/
     ctx.font = '28px Arial';
-    ctx.fillStyle = fps < 50 ? 'red' : fps < 60 ? 'orange' : 'yellow';
+    ctx.fillStyle = getFps() < 50 ? 'red' : getFps() < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
-    ctx.fillText(fps + ' fps', width - 20, 20, 400);
+    ctx.fillText(getFps() + ' fps', innerWidth - 20, 20, 400);
     ctx.fillStyle = 'blue';
-    ctx.fillText(Math.round(width / height * 10000) / 10000, width - 20, 60, 400);
+    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 60, 400);
     /*****/
     
     // Affichage de la distance et du nombre de pièces (avec une ombre au texte
@@ -265,43 +234,4 @@ function gameLoop() {
     }
     
     lastTime = now;
-}
-
-// Réinitialise la partie
-function lost() {
-    
-    
-}
-
-
-
-// Animation de départ
-function beginningAnimation() {
-
-    if (viewX > 0) {
-        viewX -= delta * 16;
-    }
-    viewX = Math.max(0, viewX);
-
-    if (viewY < 40) {
-        viewY += delta * 6;
-    }
-    viewY = Math.min(40, viewY);
-
-    if (viewZ < 40) {
-        viewZ += delta * 32;
-    }
-    viewZ = Math.min(40, viewZ);
-
-    var rotation = camera.rotation;
-
-    if (rotation.y > 0) {
-        rotation.y -= delta
-    }
-    rotation.y = Math.max(0, rotation.y);
-
-    if (camera.rotation.y == 0 && camera.rotation.x > -Math.PI / 6) {
-        camera.rotation.x -= delta * .5;
-    }
-    rotation.x = Math.max(-Math.PI / 6, rotation.x);
 }

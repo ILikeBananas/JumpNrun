@@ -1,7 +1,6 @@
 // ----- LORS DE LA FIN DE LA PARTIE -----
 // Auteur : Sébastien Chappuis
 
-
 // Met fin à la partie, en affichant le score
 function endGame() {
     
