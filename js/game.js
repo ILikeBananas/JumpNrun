@@ -209,7 +209,7 @@ function gameLoop() {
     ctx.textAlign = 'right';
     ctx.fillText(getFps() + ' fps', innerWidth - 20, 45, 400);
     ctx.fillStyle = 'blue';
-    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 815, 400);
+    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 85, 400);
     /*****/
     
     // Affichage de la distance et du nombre de pièces (avec une ombre au texte
