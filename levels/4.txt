@@ -3,14 +3,7 @@ sBg
  Bg
  Bg
  Bg
-<<<<<<< HEAD
- 
- 
-=======
- B
- B
- B
->>>>>>> chapseb
+
  BC
  BG
 -BG

@@ -1,9 +1,6 @@
 bss
 bss
-<<<<<<< HEAD
-=======
-bss
->>>>>>> chapseb
+
 Gss
 bss
 bss

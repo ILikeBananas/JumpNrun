@@ -7,11 +7,7 @@
  
  B
  B
-<<<<<<< HEAD
- B
-=======
-gBg
->>>>>>> chapseb
+
 gBg
 gBg
 gBg
