@@ -36,7 +36,7 @@ var keys = [];
 // Tableau de booléens des touches qui viennent d'être appuyées
 var keysOnce = [];
 
-// Si la boucle du jeu ne doit plus être executée
+// Si la boucle du jeu doit plus être executée ou non
 var executionGameLoop = true;
 // Nombre de pièces collectées
 var coinsCollect = 0;

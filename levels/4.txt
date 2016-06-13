@@ -4,11 +4,15 @@ sBg
  Bg
  Bg
  B
+ B
+ B
  BC
  BG
 -BG
  BG
  BG
+ Bb
+ Bb
  Bb
  BB
 
@@ -19,10 +23,18 @@ Bss
 B
 B
 B
+B
+B
+B
+B
 
 
 
- C
  G
+ G
+ G
+ b
+ b
+ b
  b
  b

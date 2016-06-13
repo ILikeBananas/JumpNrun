@@ -5,9 +5,6 @@
  B
  B
  B
- B
- B
- B
 gBg
 gBg
 gBg
@@ -15,6 +12,9 @@ cBc
 gBg
 gBg
 gBg
+ B
+ B
+ B
  B
  B
  B
