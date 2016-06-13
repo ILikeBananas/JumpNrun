@@ -59,8 +59,11 @@ function createLevel(idLevel) {
     // Position Z de la fin du niveau actuel
     var endZ = positionNextLevel - levelLength;
     
+    // Espacement entre deux niveaux
+    var spacingLevels = 256;
+    
     // Position Z du début du prochain niveau
-    positionNextLevel -= levelLength + 144;
+    positionNextLevel -= levelLength + spacingLevels + 16;
     
     // Si le niveau est inversé sur l'axe des X ou non
     var isLevelRevert = rand.int();

@@ -2,9 +2,6 @@ bcb
 bbb
 SGS
 SBS
-SBS
-SBS
-SBS
 sbs
 sGs
 sCs

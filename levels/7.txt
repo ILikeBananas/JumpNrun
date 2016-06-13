@@ -1,6 +1,11 @@
 bss
 bss
+<<<<<<< HEAD
+=======
+bss
+>>>>>>> chapseb
 Gss
+bss
 bss
 bss
 
@@ -13,10 +18,13 @@ bss
  g
 
 
-ssb
+
+
+
 ssb
 ssb
 ssb
 ssG
+ssb
 ssb
 ssb
