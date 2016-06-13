@@ -194,7 +194,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     
     
-    ctx.textBaseline = 'top';
+    ctx.textBaseline = 'alphabetic';
 
     // Affiche la jauge de bouclier
     ctx.fillStyle = isSwiftness ? '#FF8000' : '#C00020';
@@ -207,9 +207,9 @@ function gameLoop() {
     ctx.font = '28px Arial';
     ctx.fillStyle = getFps() < 50 ? 'red' : getFps() < 60 ? 'orange' : 'yellow';
     ctx.textAlign = 'right';
-    ctx.fillText(getFps() + ' fps', innerWidth - 20, 20, 400);
+    ctx.fillText(getFps() + ' fps', innerWidth - 20, 45, 400);
     ctx.fillStyle = 'blue';
-    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 60, 400);
+    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 815, 400);
     /*****/
     
     // Affichage de la distance et du nombre de pièces (avec une ombre au texte
@@ -218,11 +218,11 @@ function gameLoop() {
         ctx.font = '32px Arial';
         ctx.fillStyle = i ? 'white' : 'rgba(0, 0, 0, .5)';
         ctx.textAlign = 'left';
-        ctx.fillText('Distance : ' + (getDistance() + 'm'), 62-i, 60-i);
-        ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 100-i);
+        ctx.fillText('Distance : ' + (getDistance() + 'm'), 62-i, 86-i);
+        ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 126-i);
         ctx.font = '40px Arial';
         ctx.fillStyle = i ? '#FFFF80' : 'rgba(0, 0, 0, .5)';
-        ctx.fillText('Score : ' + (getScore()), 18-i, 140-i);
+        ctx.fillText('Score : ' + (getScore()), 18-i, 170-i);
     }
     
     
