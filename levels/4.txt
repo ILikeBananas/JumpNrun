@@ -3,7 +3,8 @@ sBg
  Bg
  Bg
  Bg
- B
+ 
+ 
  BC
  BG
 -BG
