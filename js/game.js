@@ -150,7 +150,7 @@ function gameLoop() {
 
         positionNextDecor -= rand.int(32, 128);
     }
-
+    
     // Déplacement à gauche/droite du personnage
     if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * delta ||
         roadPath * 21 - position.x > CHANGE_PATH_SPEED * delta) {
