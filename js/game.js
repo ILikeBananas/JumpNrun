@@ -222,7 +222,7 @@ function gameLoop() {
         ctx.fillText('Pièces : ' + (coinsCollect), 62-i, 126-i);
         ctx.font = '40px Arial';
         ctx.fillStyle = i ? '#FFFF80' : 'rgba(0, 0, 0, .5)';
-        ctx.fillText('Score : ' + (getScore()), 18-i, 170-i);
+        ctx.fillText('Score : ' + (getScore()), 18-i, 172-i);
     }
     
     

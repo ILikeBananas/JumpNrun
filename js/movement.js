@@ -47,12 +47,14 @@ function jump() {
     }
 }
 
-// Fait s'accroupir le personnage
-function squat() {
+// Fait s'accroupir le personnage pendant une durée égale au paramètre
+function squat(timeSecond) {
+    
+    timeSecond = timeSecond === undefined ? .01 : timeSecond;
     
     // Si la vue est derrière le personnage
     if (viewX == 0) {
-        squatTime = 1; // Se baisser pendant 1 seconde
+        squatTime = Math.max(timeSecond, squatTime); // Se baisser pendant X seconde
         fallSpeed = 128; // Fait une charge au sol
     }
 }

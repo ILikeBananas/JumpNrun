@@ -30,7 +30,7 @@ function testCommands() {
 
     // Touche d'accroupissement appuyé
     if (keys[16] && !keysOnce[16]) {
-        squat();
+        squat(1);
         keysOnce[16] = true;
     } else if (!keys[16]) {
         keysOnce[16] = false;
