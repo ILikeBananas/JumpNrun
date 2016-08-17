@@ -29,7 +29,7 @@ function createLevel(idLevel) {
     
     // Si le niveau n'a pas pu être chargé
     if (!level) {
-        level = 'GBB';
+        level = 'cBBg s bs           ss';
     }
     
     // Remplace les sauts de ligne par un seul caractère : \n

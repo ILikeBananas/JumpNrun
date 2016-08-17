@@ -3,9 +3,7 @@ sBg
  Bg
  Bg
  Bg
- B
- B
- B
+
  BC
  BG
 -BG
