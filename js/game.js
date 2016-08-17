@@ -6,16 +6,16 @@
 function gameLoop() {
     
     var now = Date.now();
-    delta = (now - lastTime) / 1000;
-    delta = Math.min(.1, delta);
+    deltaTime = (now - lastTime) / 1000;
+    deltaTime = Math.min(.1, deltaTime);
     
     // Vitesse de chute augmentant avec le temps
-    fallSpeed += 384 * delta;
+    fallSpeed += 384 * deltaTime;
     fallSpeed = Math.min(384, fallSpeed);
     
     // Dissipe le flash
     if (character.flash.material.opacity > 0) {
-        character.flash.material.opacity -= 2 * delta;
+        character.flash.material.opacity -= 2 * deltaTime;
     }
     character.flash.material.opacity = Math.max(0, character.flash.material.opacity);
 
@@ -33,7 +33,7 @@ function gameLoop() {
 
     // Diminue la durée du bouclier
     if (shieldTime > 0) {
-        shieldTime -= delta;
+        shieldTime -= deltaTime;
         var opacity = shieldTime >= 2 ? .5 : shieldTime / 4;
         character.shield.material.opacity = opacity;
     } else {
@@ -46,11 +46,11 @@ function gameLoop() {
     }
 
     // Fait chuter/sauter le personnage
-    position.y -= fallSpeed * delta;
+    position.y -= fallSpeed * deltaTime;
 
     // Diminue la durée de l'accroupissement
     if (squatTime > 0) {
-        squatTime -= 1 * delta;
+        squatTime -= 1 * deltaTime;
     }
     squatTime = Math.max(0, squatTime);
     
@@ -64,7 +64,7 @@ function gameLoop() {
 
         // Animation : se baisser
         if (character.coyote.position.y > -2) {
-            character.coyote.position.y -= 16 * delta;
+            character.coyote.position.y -= 16 * deltaTime;
         }
         character.coyote.position.y = Math.max(-2, character.coyote.position.y);
 
@@ -74,7 +74,7 @@ function gameLoop() {
 
         // Animation : se relever
         if (character.coyote.position.y < 1) {
-            character.coyote.position.y += 16 * delta;
+            character.coyote.position.y += 16 * deltaTime;
         }
 
         // Si on est entièrement relevé, change le masque de colision en Y
@@ -98,7 +98,7 @@ function gameLoop() {
 
 
     // Vitesse de déplacement du personnage avec l'effet de boost
-    position.z -= getCharacterSpeed() * delta;
+    position.z -= getCharacterSpeed() * deltaTime;
     
     // La durée du bouclier ne peut pas être négative
     shieldTime = Math.max(0, shieldTime);
@@ -152,13 +152,13 @@ function gameLoop() {
     }
     
     // Déplacement à gauche/droite du personnage
-    if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * delta ||
-        roadPath * 21 - position.x > CHANGE_PATH_SPEED * delta) {
+    if (position.x - roadPath * 21 > CHANGE_PATH_SPEED * deltaTime ||
+        roadPath * 21 - position.x > CHANGE_PATH_SPEED * deltaTime) {
 
         if (position.x > roadPath * 21) {
-            position.x -= CHANGE_PATH_SPEED * delta;
+            position.x -= CHANGE_PATH_SPEED * deltaTime;
         } else {
-            position.x += CHANGE_PATH_SPEED * delta;
+            position.x += CHANGE_PATH_SPEED * deltaTime;
         }
 
     } else {

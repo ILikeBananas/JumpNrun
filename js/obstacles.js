@@ -15,7 +15,7 @@ function collisionObstacle(obstacle, canWalkOn, ejectSpike) {
         
         // Hauteur jusqu'à laquelle la collision est mortèle
         var collisionEndY = obstacle.endY - (canWalkOn ?
-                                             2 + delta * Math.max(0, fallSpeed)
+                                             2 + deltaTime * Math.max(0, fallSpeed)
                                              : 0);
         
         // Si fonce dans un obstacle
@@ -76,9 +76,9 @@ function moveEjectedObstacle(obj) {
     
     if (obj.position.z <= camera.position.z) {
         
-        obj.position.y -= obj.fallSpeed * delta;
-        obj.fallSpeed += 384 * delta;
+        obj.position.y -= obj.fallSpeed * deltaTime;
+        obj.fallSpeed += 384 * deltaTime;
         obj.fallSpeed = Math.min(444, obj.fallSpeed);
-        obj.position.z -= obj.ejectSpeed * delta;
+        obj.position.z -= obj.ejectSpeed * deltaTime;
     }
 }
