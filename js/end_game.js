@@ -7,6 +7,8 @@ function endGame() {
     executionGameLoop = false;
     
     $('canvas').remove();
+    
+    $('p').remove()
     $('body').append('<p style="color:white">Vous êtes mort !</p>')
              .append('<p style="color:white">Score : ' + getScore() + '</p>'); // TEMP
 }

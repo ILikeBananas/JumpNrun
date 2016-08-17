@@ -4,7 +4,7 @@
 // Execute pour chaque pièce
 function forEachCoin() {
     // Fait tourner toutes les pièces sur elles-même
-    coinsRotation += Math.PI * 1.25 * delta;
+    coinsRotation += Math.PI * 1.25 * deltaTime;
     
     // Pour chaque pièce
     for (var i = 0; i < coins.length; i++) {

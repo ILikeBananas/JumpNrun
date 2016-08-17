@@ -1,38 +1,23 @@
-sBc
-sBg
- Bg
- Bg
- Bg
-
- BC
- BG
--BG
- BG
- BG
- Bb
- Bb
- Bb
- BB
-
-
-
-
-Bss
-B
-B
-B
-B
-B
-B
-B
-
-
-
- G
- G
- G
- b
- b
- b
- b
- b
+SbS
+SbS
+SCS
+SbS
+SbS
+bGb
+bbb
+bbb
+bGb
+bbb
+bbb
+bGb
+bbb
+bbb
+GbG
+bbb
+bbb
+GbG
+bSb
+bSb
+GSG
+bSb
+bSb

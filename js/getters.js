@@ -18,7 +18,7 @@ function getScore() {
 // Récupère le nombre d'images par seconde
 function getFps() {
     
-    return parseInt(1 / delta);
+    return parseInt(1 / deltaTime);
 }
 
 

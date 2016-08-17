@@ -11,7 +11,7 @@ function forEachBox() {
         var box = boxes[i];
         
         // Si la caisse sort de l'écran, l'enlève de la scène
-        if (box.position.z >= camera.position.z + 16) {
+        if (box.position.z >= camera.position.z + 16 || box.position.y < -16) {
             scene.remove(box);
             delete boxes[i];
             boxes.clean();

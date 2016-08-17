@@ -5,9 +5,9 @@
 // --- Constantes ---
 
 // Nombre de niveaux
-const NUMBER_LEVEL = 7;
+const NUMBER_LEVEL = 12;
 // Distance de vue
-const VIEW_DISTANCE = 800;
+const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
 const SKY_COLOR = '#80C0FF';
 // Vitesse des sauts
@@ -23,7 +23,7 @@ const CHANGE_PATH_SPEED = 128;
 // Informations sur le jeu
 var lastTime = Date.now();
 // Secondes écoulée depuis la dernière image
-var delta = 0;
+var deltaTime = 0;
 
 // Tableau de booléens représentant les chargements terminés ou non
 var loadings = [];
