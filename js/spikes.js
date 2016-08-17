@@ -11,7 +11,7 @@ function forEachSpike() {
         var spike = spikes[i];
         
         // Si le pique sort de l'écran
-        if (spike.position.z >= camera.position.z + 16) {
+        if (spike.position.z >= camera.position.z + 16 || spike.position.y < -16) {
             scene.remove(spike);
             delete spikes[i];
             spikes.clean();

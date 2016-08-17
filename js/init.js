@@ -5,9 +5,9 @@
 // --- Constantes ---
 
 // Nombre de niveaux
-const NUMBER_LEVEL = 7;
+const NUMBER_LEVEL = 12;
 // Distance de vue
-const VIEW_DISTANCE = 800;
+const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
 const SKY_COLOR = '#80C0FF';
 // Vitesse des sauts
