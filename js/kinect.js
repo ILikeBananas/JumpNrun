@@ -3,8 +3,10 @@
 
 
 // Constantes
-const LIMIT_RIGHT = 200;
-const LIMIT_LEFT = -100;
+var LIMIT_RIGHT   = 0;
+var LIMIT_LEFT    = 0;
+var LIMIT_JUMP    = 0;
+var LIMIT_CROUCH  = 0;
 
 // Left Center Right detecion
 var radar = {
@@ -14,13 +16,13 @@ var radar = {
         var user = zigdata.users[userid];
         var pos = user.position;
         if(pos[0] > LIMIT_RIGHT) {
-          console.log("right");
+          //console.log("right");
           goToPath(1);
         } else if (pos[0] < LIMIT_LEFT) {
-          console.log("left");
+          //console.log("left");
           goToPath(-1);
         } else {
-          console.log("center");
+          //console.log("center");
           goToPath(0);
         }
       }
@@ -36,16 +38,25 @@ zig.addListener(radar);
 var engager = zig.EngageUsersWithSkeleton(1);
 engager.addEventListener('userengaged', function(user) {
   console.log('User engaged: ' + user.id);
-
+  LIMIT_LEFT = user.position[0] - 200;
+  LIMIT_RIGHT = user.position[0] + 200;
+  LIMIT_JUMP = user.skeleton[zig.Joint.Head].position[1] + 100;
+  LIMIT_CROUCH = user.skeleton[zig.Joint.Head].position[1] - 300;
+  /*
+  console.log("limit left : " + LIMIT_LEFT);
+  console.log("limit right : " + LIMIT_RIGHT);
+  console.log("limit jump : " + LIMIT_JUMP);
+  console.log("limit crouch : " + LIMIT_CROUCH);
+*/
   user.addEventListener('userupdate', function(user) {
     var headHight = user.skeleton[zig.Joint.Head].position[1];
-
-    if(headHight > 800){
+    //console.log(headHight);
+    if(headHight > LIMIT_JUMP){
       jump();
-      console.log("jump");
-    } else if (headHight < 0){
-      squat();
-      console.log("squat");
+      //console.log("jump");
+    } else if (headHight < LIMIT_CROUCH){
+      squat(0.5);
+      //console.log("squat");
     }
   });
 });
