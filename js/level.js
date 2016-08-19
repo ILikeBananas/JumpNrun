@@ -29,7 +29,7 @@ function createLevel(idLevel) {
     
     // Si le niveau n'a pas pu être chargé
     if (!level) {
-        level = '';
+        level = 'gcg';
     }
     
     // Remplace les sauts de ligne par un seul caractère : \n
@@ -40,8 +40,7 @@ function createLevel(idLevel) {
     
     // Sépare en plusieurs ligne le niveau
     var lines = level.split('\n');
-    level =
-		'ggg';
+    level = '';
     
     // Pour chaque ligne
     for (var i = 0; i < lines.length; i++) {
@@ -79,6 +78,10 @@ function createLevel(idLevel) {
              rand.int(4) ? 'coin5'      :
             (rand.int(3) ? 'coin10'     :
             (rand.int(3) ? 'coinShield' : 'coinSwiftness'));
+        
+        if (idLevel == 0 && (coinName == 'coinShield' || coinName == 'coinSwiftness')) {
+            coinName = 'coin10';
+        }
         
         switch (level[i]) {
             case 1:

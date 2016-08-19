@@ -275,7 +275,7 @@ function loadFileModel(fileName, material, modelName) {
 // --- Chargement des niveaux
 
 // Charge tous les niveaux
-for (var i = 1; i <= NUMBER_LEVEL; i++) {
+for (var i = 0; i <= NUMBER_LEVEL; i++) {
     
     loadFileLevel(i);
 }
@@ -361,6 +361,10 @@ function waiting() {
         
         tunnel = createObject(0, 0, -rand.int(3000, 6000),
                               [models.tunnel, models.tunnelMountain]);
+        
+        // Création du tutoriel
+        confirm('Voulez-vous lancer le tutoriel ?') && createLevel(0);
+        
         
         // Lancement de la boucle du jeu
         gameLoop();
