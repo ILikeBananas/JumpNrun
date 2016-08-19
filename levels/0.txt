@@ -1,71 +1,71 @@
    
-BGB  
+BGB
    
    
    
    
    
-g g  
+g g
    
    
- g   
+ g 
    
    
-c c  
+c c
    
    
- g   
+ g 
    
    
-g g  
+g g
    
    
-bss  
-bss  
-bss  
-bss  
-Gss  
-bss  
-bss  
-bss  
+bss
+bss
+bss
+bss
+Gss
+bss
+bss
+bss
    
    
    
    
    
-g    
+g  
    
    
- g   
+ g 
    
    
- c   
+ c 
    
    
- g   
+ g 
    
    
-  g  
+  g
    
    
-ssb  
-ssb  
-ssb  
-ssG  
-ssb  
-ssb  
-ssb  
+ssb
+ssb
+ssb
+ssG
+ssb
+ssb
+ssb
    
    
    
    
    
- c   
- g   
- c   
- g   
- g   
-B-B  
+ c 
+ g 
+ c 
+ g 
+ g 
+B-B
    
    
    
@@ -76,7 +76,7 @@ B-B
    
    
    
-sSS  
+sSS
    
    
    
@@ -87,16 +87,16 @@ sSS
    
    
    
- g   
- g   
- g   
- g   
- c   
- g   
- g   
- g   
- g   
-B-B  
+ g 
+ g 
+ g 
+ g 
+ c 
+ g 
+ g 
+ g 
+ g 
+B-B
    
    
    
@@ -107,7 +107,7 @@ B-B
    
    
    
-SSs  
+SSs
    
    
    
@@ -118,21 +118,21 @@ SSs
    
    
    
-SBS  
-SBS  
-SBS  
-sbs  
-sbs  
-sbs  
-sbs  
-sbs  
-sCs  
-sGs  
-sGs  
-sGs  
-sbs  
-sbs  
-sbs  
+SBS
+SBS
+SBS
+sbs
+sbs
+sbs
+sbs
+sbs
+sCs
+sGs
+sGs
+sGs
+sbs
+sbs
+sbs
    
    
    
@@ -143,26 +143,26 @@ sbs
    
    
    
--Bs  
- B   
- B   
- B   
- B   
-gBg  
-gBg  
-gBg  
-gBg  
-gBc  
-cBg  
-gBg  
-gBg  
-gBg  
-gBg  
- B   
- B   
- B   
- B   
-sB-  
+-Bs
+ B 
+ B 
+ B 
+ B 
+gBg
+gBg
+gBg
+gBg
+gBc
+cBg
+gBg
+gBg
+gBg
+gBg
+ B 
+ B 
+ B 
+ B 
+sB-
    
    
    
@@ -173,8 +173,8 @@ sB-
    
    
    
-bbb  
-GGG  
+bbb
+GGG
    
    
    
@@ -185,28 +185,28 @@ GGG
    
    
    
-  g  
-  g  
-  g  
- gg  
- gg  
- gc  
-gg   
-gg   
-gc   
-g    
-g    
-g    
+  g
+  g
+  g
+ gg
+ gg
+ gc
+gg 
+gg 
+gc 
+g  
+g  
+g  
    
    
    
    
-sss  
+sss
    
    
    
    
-gcg  
+gcg
    
    
    
@@ -218,9 +218,9 @@ sss
    
    
    
-Sb   
-SGb  
-bbb  
+Sb 
+SGb
+bbb
    
    
    
@@ -230,28 +230,28 @@ bbb
    
    
    
-b-b  
+b-b
    
    
-^    
+^  
    
    
    
    
- g   
- c   
+ g 
+ c 
    
    
-ss   
+ss 
    
    
    
    
    
    
-Cbb  
-bbb  
-bbs  
+Cbb
+bbb
+bbs
    
    
    
@@ -260,10 +260,10 @@ bbs
    
    
    
- C   
- b   
- b   
-g    
+ C 
+ b 
+ b 
+g  
    
    
    
@@ -272,19 +272,19 @@ g
    
    
    
-sg   
+sg 
    
    
    
    
-sss  
+sss
    
    
    
    
    
    
-sss 
+sss
    
    
    
@@ -293,39 +293,39 @@ sss
    
    
    
-  s  
+  s
    
    
    
    
    
- s   
+ s 
    
    
    
    
    
-g    
- g   
- c   
-  c  
-  g  
- g   
- g   
- g   
+g  
+ g 
+ c 
+  c
+  g
+ g 
+ g 
+ g 
    
    
    
    
    
-c    
-g    
+c  
+g  
    
    
    
    
    
- g   
+ g 
    
    
    
@@ -333,20 +333,20 @@ g
    
    
    
-  g  
+  g
    
    
    
    
- g   
- g   
+ g 
+ g 
    
    
    
    
    
     
-g    
+g  
    
    
    
