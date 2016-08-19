@@ -1,6 +1,5 @@
-// ----- EXECUTE DIFFÉRENTS TESTS POUR LA KINECT -----
+// ----- Detection de la kinect -----
 // Auteur :  Jonny Hofmann
-
 
 // Constantes
 var LIMIT_RIGHT   = 0;
@@ -8,7 +7,7 @@ var LIMIT_LEFT    = 0;
 var LIMIT_JUMP    = 0;
 var LIMIT_CROUCH  = 0;
 
-// Left Center Right detecion
+// Detection horizontale
 var radar = {
   ondataupdate: function (zigdata) {
     if (zigdata.users.length != 0){
@@ -34,20 +33,22 @@ var radar = {
 
 zig.addListener(radar);
 
-// Jump and crouch detection
+// Détection complet du corps
 var engager = zig.EngageUsersWithSkeleton(1);
 engager.addEventListener('userengaged', function(user) {
   console.log('User engaged: ' + user.id);
+
+  // Calibrage
   LIMIT_LEFT = user.position[0] - 200;
   LIMIT_RIGHT = user.position[0] + 200;
   LIMIT_JUMP = user.skeleton[zig.Joint.Head].position[1] + 100;
   LIMIT_CROUCH = user.skeleton[zig.Joint.Head].position[1] - 300;
-  /*
+
   console.log("limit left : " + LIMIT_LEFT);
   console.log("limit right : " + LIMIT_RIGHT);
   console.log("limit jump : " + LIMIT_JUMP);
   console.log("limit crouch : " + LIMIT_CROUCH);
-*/
+
   user.addEventListener('userupdate', function(user) {
     var headHight = user.skeleton[zig.Joint.Head].position[1];
     //console.log(headHight);
@@ -60,6 +61,7 @@ engager.addEventListener('userengaged', function(user) {
     }
   });
 });
+// Informe que le joueur est plus reconnu complétement
 engager.addEventListener('userdisengaged', function(user) {
   console.log('User disengaged: ' + user.id);
 });
