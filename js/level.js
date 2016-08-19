@@ -29,7 +29,7 @@ function createLevel(idLevel) {
     
     // Si le niveau n'a pas pu être chargé
     if (!level) {
-        level = 'cBBg s bs           ss';
+        level = '';
     }
     
     // Remplace les sauts de ligne par un seul caractère : \n
@@ -40,7 +40,8 @@ function createLevel(idLevel) {
     
     // Sépare en plusieurs ligne le niveau
     var lines = level.split('\n');
-    level = '';
+    level =
+		'ggg';
     
     // Pour chaque ligne
     for (var i = 0; i < lines.length; i++) {
