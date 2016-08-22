@@ -1,148 +1,3 @@
-   
-BGB
-   
-   
-   
-   
-   
-g g
-   
-   
- g 
-   
-   
-c c
-   
-   
- g 
-   
-   
-g g
-   
-   
-bss
-bss
-bss
-bss
-Gss
-bss
-bss
-bss
-   
-   
-   
-   
-   
-g  
-   
-   
- g 
-   
-   
- c 
-   
-   
- g 
-   
-   
-  g
-   
-   
-ssb
-ssb
-ssb
-ssG
-ssb
-ssb
-ssb
-   
-   
-   
-   
-   
- c 
- g 
- c 
- g 
- g 
-B-B
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-sSS
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
- g 
- g 
- g 
- g 
- c 
- g 
- g 
- g 
- g 
-B-B
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-SSs
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-SBS
-SBS
-SBS
-sbs
-sbs
-sbs
-sbs
-sbs
-sCs
-sGs
-sGs
-sGs
-sbs
-sbs
-sbs
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
 -Bs
  B 
  B 
@@ -163,7 +18,6 @@ gBg
  B 
  B 
 sB-
-   
    
    
    
@@ -221,7 +75,6 @@ sss
 Sb 
 SGb
 bbb
-   
    
    
    
