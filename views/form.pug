@@ -1,0 +1,22 @@
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Score
+    link(rel="stylesheet", href="css/form.css")
+    link(rel="icon" href="img/favicon.ico")
+  body
+    div(id="wrapper")
+      h1 Partie terminée !
+      h2(id="score") Votre score :
+      h3(id="distance") Distance parcourue :
+      h3(id="coins") Nombre de pièces obtenues :
+      dif(id="error")
+        label(for="name") Entrez votre nom :
+        input(id="name", type="text", maxlength="15")
+        input(id="send", type="button", value="valider")
+
+        script(src="https://cdn.socket.io/socket.io-1.4.5.js")  
+        script(type="text/javascript", src  ="vendors/jquery.js")
+        script(type="text/javascript", src  ="js/socket.js")
+        script(type="text/javascript", src  ="js/form.js")

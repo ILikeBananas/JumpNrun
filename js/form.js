@@ -11,26 +11,26 @@ $('#coins').append(parameters.coins);
 
 // Lorsque l'on clique sue "Valider"
 $('#send').click(function() {
-    
+
     // Données de l'utilisateur
     var user = {
-        
+
         name:     $('#name').val(),
         score:    parameters.score    |0,
         distance: parameters.distance |0,
         coins:    parameters.coins    |0,
     }
-    
+
     if (validationName(user)) {
-        alert(user);
-        document.location.href = 'index.html';
+        sendScore(user);
+        document.location.href = '/';
     }
 });
 
 
 // Retourne un tableaux contenant les paramètres de l'URL
 function getURLParameters() {
-    
+
     var params = {};
     var prmarr = window.location.search.split('&');
     for (var i = 0; i < prmarr.length; i++) {
@@ -47,10 +47,10 @@ function getURLParameters() {
 // Vérifie que les données à envoyer sont valides, si oui,
 // retourne vrai, si non, retourne false et affiche les erreurs
 function validationName(user) {
-    
+
     var errorElement = $('#error');
     var errorMessage = '';
-    
+
     if (user.name.length == '') {
         errorMessage = 'Veuillez entrer un nom !';
     } else if (user.name.length < 3) {
@@ -60,13 +60,13 @@ function validationName(user) {
     } else {
         errorMessage = '';
     }
-    
+
     if (errorMessage) {
         errorElement.css('display', 'block').html(errorMessage);
         console.warn(errorMessage);
         return false;
     }
-    
+
     errorElement.css('display', 'none').html('');
     return true;
 }

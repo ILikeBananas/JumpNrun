@@ -29,8 +29,12 @@ app.set("views", "./views");
 app.get("/", (req, res) => {
   res.render("index");
 });
-
-
+app.get("/newScore", (req, res) => {
+  res.render("form");
+});
+app.get("/game", (req, res) => {
+  res.render("game")
+});
 
 io.on("connection", (socket) => {
   console.log("Client connected");
