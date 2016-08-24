@@ -63,6 +63,8 @@ var viewY = 5;
 // Position Z de la camera relative au personnage
 var viewZ = -60;
 
+// Niveau actuelle
+var currentLevel = confirm('Voulez-vous lancer le tutoriel ?') ? 0 : 1;
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
 // Si on a le bonus de boost de vitesse actif ou non
@@ -391,10 +393,6 @@ function waiting() {
                               [models.tunnel, models.tunnelMountain]);
         
         models['sign'] = models.signEdge.add(models.poster);
-        
-        // Création du tutoriel
-        confirm('Voulez-vous lancer le tutoriel ?') && createLevel(0);
-        
         
         // Lancement de la boucle du jeu
         gameLoop();
