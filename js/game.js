@@ -129,7 +129,13 @@ function gameLoop() {
         
     // Charge un niveau
     while (position.z < positionNextLevel + VIEW_DISTANCE + 64) {
-        createLevel(rand.int(1, NUMBER_LEVEL));
+        
+        var levelToCreate = currentLevel <= NUMBER_LEVEL ? currentLevel :
+                                                           rand.int(1, NUMBER_LEVEL);
+        
+        createLevel(levelToCreate);
+        
+        currentLevel++;
     }
 
 
@@ -141,11 +147,11 @@ function gameLoop() {
 
         var decorName = '';
         
-        var random = rand.int(1, 21);
+        var random = rand.int(1, 61);
         
-        if (random <= 10) {
+        if (random <= 30) {
             decorName = 'cactus';
-        } else if (random <= 20) {
+        } else if (random <= 60) {
             decorName = 'stone';
         } else {
             decorName = 'sign';
