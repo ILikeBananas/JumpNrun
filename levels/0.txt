@@ -26,10 +26,8 @@ sB-
    
    
    
-   
 bbb
 GGG
-   
    
    
    
@@ -54,7 +52,6 @@ g
    
    
    
-   
 sss
    
    
@@ -75,7 +72,6 @@ sss
 Sb 
 SGb
 bbb
-   
    
    
    
