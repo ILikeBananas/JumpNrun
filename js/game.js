@@ -133,7 +133,6 @@ function gameLoop() {
         var levelToCreate = currentLevel <= NUMBER_LEVEL ? currentLevel :
                                                            rand.int(1, NUMBER_LEVEL);
         
-        console.info('>>>>> NIVEAU N°' + levelToCreate + ' CHARGÉE !');
         createLevel(levelToCreate);
         
         currentLevel++;
