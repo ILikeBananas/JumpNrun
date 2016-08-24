@@ -135,7 +135,18 @@ function gameLoop() {
         // Position X : 1 chance sur 2 que le décor apparait à gauche de la route
         var x = rand.int() ? rand.int(-768, -48) : rand.int(48, 768);
 
-        var decorName = rand.int() ? 'cactus' : 'stone';
+        var decorName = '';
+        
+        var random = rand.int(1, 100);
+        
+        if (random <= 45) {
+            decorName = 'cactus';
+        } else if (random <= 90) {
+            decorName = 'stone';
+        } else {
+            decorName = 'sign';
+        }
+        
         var index = decors.push(createObject(x, 0, positionNextDecor,
                                              [models[decorName]])) - 1;
         decors[index].name = decorName;
@@ -144,9 +155,19 @@ function gameLoop() {
         if (decorName == 'stone') {
             decors[index].scale.y *= rand.float(.5, 1.5);
         }
-
-        // Donne une rotation aléatoire au décor
-        decors[index].rotation.y = rand.float(2 * Math.PI);
+        
+        if (decorName == 'sign') {
+            // Positionne le panneau sur l'un des deux cotés de la route
+            decors[index].position.x = (rand.int()-.5) * 128;
+            
+            var poster = decors[index].children[0].children[2];
+            poster.material = materials.posters[rand.int(0,textures.posters.length-1)];
+            
+            
+        } else {
+            // Donne une rotation aléatoire au décor
+            decors[index].rotation.y = rand.float(2 * Math.PI);
+        }
 
         positionNextDecor -= rand.int(32, 128);
     }

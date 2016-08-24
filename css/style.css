@@ -34,6 +34,7 @@ h1{
 
 .content{
 	padding: 10px;
+
 }
 
 .content p{
@@ -56,11 +57,12 @@ h1{
 }
 
 .info{
+	display: inline-block;
 	background: #F3B37C;
 	border-radius: 10px;
 	border: 1px solid #59371E;
 	padding: 10px;
-	width: 50%;
+	width: 45%;
 	min-width: 400px;
 	margin: 10px auto;
 }
@@ -72,7 +74,6 @@ h1{
 	list-style-type: none;
 }
 .info ul li{
-
 	padding-left: 60px;
 	margin: 10px 0;
 	height: 50px;
@@ -97,3 +98,23 @@ h1{
 .info ul :last-child {
 	background: url("../img/index/coinSwiftness.png") no-repeat top left;
 }
+
+.scores{
+	float: right;
+	background: #F3B37C;
+	border-radius: 10px;
+	border: 1px solid #59371E;
+	padding: 10px;
+	width: 45%;
+	min-width: 400px;
+	margin: 10px auto;
+}
+
+.scores h2{
+	margin: 0;
+}
+
+footer{
+	clear:right;
+}
+

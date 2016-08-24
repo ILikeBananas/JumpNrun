@@ -6,6 +6,8 @@
 
 // Nombre de niveaux
 const NUMBER_LEVEL = 12;
+// Nombre d'affiches (décorations)
+const NUMBER_POSTER = 4;
 // Distance de vue
 const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
@@ -114,15 +116,15 @@ scene.fog = fog;
 // Liste des textures
 var textures = {
     
-    road: new THREE.TextureLoader().load('img/textures/road.png'),
-    sand: new THREE.TextureLoader().load('img/textures/sand.png'),
-    stone: new THREE.TextureLoader().load('img/textures/stone.png'),
+    road:   new THREE.TextureLoader().load('img/textures/road.png'),
+    sand:   new THREE.TextureLoader().load('img/textures/sand.png'),
+    stone:  new THREE.TextureLoader().load('img/textures/stone.png'),
     cactus: new THREE.TextureLoader().load('img/textures/cactus.png'),
     bricks: new THREE.TextureLoader().load('img/textures/bricks.png'),
-    rock: new THREE.TextureLoader().load('img/textures/rock.png'),
-    fur: new THREE.TextureLoader().load('img/textures/fur.png'),
+    rock:   new THREE.TextureLoader().load('img/textures/rock.png'),
+    fur:    new THREE.TextureLoader().load('img/textures/fur.png'),
     skateboard: new THREE.TextureLoader().load('img/textures/skateboard.png'),
-    box: new THREE.TextureLoader().load('img/textures/box.png'),
+    box:    new THREE.TextureLoader().load('img/textures/box.png'),
 };
 
 textures.road.wrapS = textures.road.wrapT = THREE.RepeatWrapping;
@@ -132,20 +134,31 @@ textures.sand.wrapS = textures.sand.wrapT = THREE.RepeatWrapping;
 textures.sand.repeat.set(512, (2 * VIEW_DISTANCE + 256) / 16);
 
 textures.stone.wrapS = textures.stone.wrapT = THREE.RepeatWrapping;
-textures.stone.repeat.set(.001, .001);
+textures.stone.repeat.set(1/1000, 1/1000);
 
 textures.cactus.wrapS = textures.cactus.wrapT = THREE.RepeatWrapping;
-textures.cactus.repeat.set(.25, .25);
+textures.cactus.repeat.set(1/4, 1/4);
 
 textures.bricks.wrapS = textures.bricks.wrapT = THREE.RepeatWrapping;
 textures.bricks.repeat.set(.00075, .00075);
 
 textures.rock.wrapS = textures.rock.wrapT = THREE.RepeatWrapping;
-textures.rock.repeat.set(.0002, .0002);
+textures.rock.repeat.set(1/5000, 1/5000);
 
-textures.skateboard.repeat.set(0.0016, 0.0016);
+textures.skateboard.repeat.set(1/625, 1/625);
 // Motif du skateboard défini aléatoirement
 textures.skateboard.offset.x = .231 * rand.int(3);
+
+
+// Liste des formes géométriques simples
+var geometries = {
+    
+    cube:   new THREE.BoxBufferGeometry(16, 16, 16),
+    sphere: new THREE.SphereBufferGeometry(16, 32, 32),
+    path:   new THREE.PlaneBufferGeometry(64, 2 * VIEW_DISTANCE + 256),
+    ground: new THREE.PlaneBufferGeometry(8192, 2 * VIEW_DISTANCE + 256),
+    poster: new THREE.PlaneBufferGeometry(32, 18),
+};
 
 
 // Liste des reflets
@@ -165,16 +178,6 @@ var reflexions = {
 $.each(reflexions, function (index) {
     reflexions[index].mapping = THREE.SphericalReflectionMapping;
 });
-
-
-// Liste des formes géométriques simples
-var geometries = {
-    
-    cube: new THREE.BoxBufferGeometry(16, 16, 16),
-    sphere: new THREE.SphereBufferGeometry(16, 32, 32),
-    path: new THREE.PlaneBufferGeometry(64, 2 * VIEW_DISTANCE + 256),
-    ground: new THREE.PlaneBufferGeometry(8192, 2 * VIEW_DISTANCE + 256),
-};
 
 
 // Liste des matériaux
@@ -211,6 +214,25 @@ materials.shieldBasic.opacity =
     materials.shieldBoost.opacity =
     materials.flash.opacity = 0;
 
+// Liste des textures des différentes affiches
+textures['posters'] = [];
+
+// Liste des matériaux des différentes affiches 
+materials['posters'] = [],
+
+(function () {
+    for (var i = 1; i <= NUMBER_POSTER; i++) {
+        
+        var texture = new THREE.TextureLoader().load('img/textures/posters/' + i + '.png');
+        
+        textures.posters.push(texture);
+        
+        materials.posters.push(new THREE.MeshBasicMaterial({
+            map: texture,
+            envMap: reflexions.dull,
+        }));
+    }
+})();
 
 
 // Lorsque l'on change la taille de la fenêtre
@@ -281,7 +303,7 @@ for (var i = 0; i <= NUMBER_LEVEL; i++) {
 }
 
 
-// --- Chargement des modèles 3D et des formes géométriques ---
+// --- Chargement des modèles 3D ---
 
 loadFileModel('coyote',             materials.fur);
 loadFileModel('skateboard_pattern', materials.skateboardPattern, 'skateboardPattern');
@@ -295,15 +317,21 @@ loadFileModel('coin_shield',        materials.ruby,              'coinShield');
 loadFileModel('coin_lightning',     materials.citrine,           'coinSwiftness');
 loadFileModel('cactus',             materials.cactus);
 loadFileModel('stone',              materials.stone);
+loadFileModel('sign_edge',           materials.iron,              'signEdge');
 loadFileModel('tunnel',             materials.bricks);
 loadFileModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
 loadFileModel('arrow',              materials.ruby);
+
+// Création des objets composés de plusieurs modèles
 
 models['box']    = new THREE.Mesh(geometries.cube, materials.box);
 models['road']   = new THREE.Mesh(geometries.path, materials.road);
 models['ground'] = new THREE.Mesh(geometries.ground, materials.sand);
 models.road.rotation.x = models.ground.rotation.x = -Math.PI / 2;
 models.ground.position.y -= .05;
+
+models['poster'] = new THREE.Mesh(geometries.poster, materials.posters[0]);
+models.poster.position.y = 29;
 
 models['shield'] = new THREE.Mesh(geometries.sphere, materials.shieldBasic);
 models['flash']  = new THREE.Mesh(geometries.sphere, materials.flash);
@@ -361,6 +389,8 @@ function waiting() {
         
         tunnel = createObject(0, 0, -rand.int(3000, 6000),
                               [models.tunnel, models.tunnelMountain]);
+        
+        models['sign'] = models.signEdge.add(models.poster);
         
         // Création du tutoriel
         confirm('Voulez-vous lancer le tutoriel ?') && createLevel(0);
