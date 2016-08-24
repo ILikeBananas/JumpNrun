@@ -6,9 +6,6 @@ function endGame() {
     
     executionGameLoop = false;
     
-    $('canvas').remove();
-    
-    $('p').remove()
-    $('body').append('<p style="color:white">Vous êtes mort !</p>')
-             .append('<p style="color:white">Score : ' + getScore() + '</p>'); // TEMP
+    ctx.fillStyle = 'rgba(0,0,0,.5)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }

@@ -110,6 +110,10 @@ function gameLoop() {
     forEachCoin();
     forEachDecor();
     
+    // Si on est mort, quitte la boucle du jeu
+    if (!executionGameLoop) {
+        return;
+    }
     
     // Déplace le sol pour qu'il reste dans la vue
     while (camera.position.z < floor.position.z) {
@@ -137,11 +141,11 @@ function gameLoop() {
 
         var decorName = '';
         
-        var random = rand.int(1, 100);
+        var random = rand.int(1, 21);
         
-        if (random <= 45) {
+        if (random <= 10) {
             decorName = 'cactus';
-        } else if (random <= 90) {
+        } else if (random <= 20) {
             decorName = 'stone';
         } else {
             decorName = 'sign';
@@ -246,13 +250,8 @@ function gameLoop() {
         ctx.fillText('Score : ' + (getScore()), 18-i, 172-i);
     }
     
-    
-    // Si la boucle doit contunuer à s'executer
-    if (executionGameLoop) {
-        
-        // Rapelle la fonction pour qu'elle s'execute la frame suivante
-        requestAnimationFrame(gameLoop);
-    }
+    // Rapelle la fonction pour qu'elle s'execute la frame suivante
+    requestAnimationFrame(gameLoop);
     
     lastTime = now;
 }

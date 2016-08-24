@@ -7,7 +7,7 @@
 // Nombre de niveaux
 const NUMBER_LEVEL = 12;
 // Nombre d'affiches (décorations)
-const NUMBER_POSTER = 4;
+const NUMBER_POSTER = 6;
 // Distance de vue
 const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
@@ -229,7 +229,7 @@ materials['posters'] = [],
         
         materials.posters.push(new THREE.MeshBasicMaterial({
             map: texture,
-            envMap: reflexions.dull,
+            envMap: reflexions.iron,
         }));
     }
 })();
