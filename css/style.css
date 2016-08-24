@@ -40,8 +40,13 @@ h1{
 
 }
 
+.content p, .content a{
+	text-align: center;
+}
 
-
+.liens{
+	text-align: center;
+}
 a{
 	text-decoration: none;
 	display: inline-block;
