@@ -1,3 +1,4 @@
+/*style page index*/
 *{
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -17,6 +18,8 @@ body{
 	border-radius: 10px;
 	padding-bottom: 10px;
 	border: 1px solid #59371E;
+	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
+	
 }
 
 header{
@@ -37,23 +40,17 @@ h1{
 
 }
 
-.content p{
-	text-align: center;
-}
-.content input[type="submit"]{
-	width: 300px;
-	height: 75px;
-	display: block;
-	margin: 0 auto;
-	font-family: 'Philosopher', sans-serif;
-	font-size: 2em;
-	color: #59371E;
-	background: #4080ff;
-	border-radius: 8px;
-}
 
-.content input[type="submit"]:hover{
-	background: #78A5FF;
+
+a{
+	text-decoration: none;
+	display: inline-block;
+    width: 200px;
+	min-width: 150px;
+    padding: 10px;
+    margin: 10px auto;
+	font-family: 'Philosopher', sans-serif; 
+    font-size: 2em; 
 }
 
 .info{
@@ -65,6 +62,7 @@ h1{
 	width: 45%;
 	min-width: 400px;
 	margin: 10px auto;
+	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
 }
 .info h2 {
 	margin: 0;
@@ -108,6 +106,7 @@ h1{
 	width: 45%;
 	min-width: 400px;
 	margin: 10px auto;
+	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
 }
 
 .scores h2{
@@ -118,3 +117,53 @@ footer{
 	clear:right;
 }
 
+/*style page newScore */
+#wrapper {
+	background: #F3B37C;
+	border-radius: 10px;
+	border: 1px solid #59371E;
+	padding: 10px;
+	width: 45%;
+	min-width: 400px;
+	margin: 10px auto;
+	text-align: center;
+	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
+}
+
+#error, label, input{
+    display: block;
+    margin: 0 auto;
+    width: 400px;
+    padding: 10px;
+    margin: 10px auto;
+    font-size: 1.05em;
+    text-align: center;
+}
+
+#error {
+    padding: 0;
+    font-size: 1.15em;
+    font-weight: bold;
+    color: #A00;
+}
+
+input, a{
+    border: 2px solid gray;
+    border-radius: 8px;
+}
+
+input:hover , a:hover{
+    border-color: #AAA;
+}
+
+#send, a {
+    background: -webkit-linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
+}
+
+#send:hover, a:hover {
+    background: -webkit-linear-gradient(white 40%, #F0F0F0 60%);
+}
+
+#send:active, a:hover {
+    background: -webkit-linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
+}
