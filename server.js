@@ -8,14 +8,15 @@ var io = require('socket.io')(server);
 var fs = require("fs");
 var path = require("path");
 var config = require("./config/config.json");
+var util = require("util");
 
 server.listen(config.port);
 console.log("server started " +  config.port);
 
 // Static routes
-app.use("/js", express.static("js"));
-app.use("/maps", express.static("maps"));
-app.use("/img", express.static("img"));
+app.use("/js",    express.static("js"));
+app.use("/maps",  express.static("maps"));
+app.use("/img",   express.static("img"));
 app.use("/css", express.static("css"));
 app.use("/vendors", express.static("vendors"));
 app.use("/obj", express.static("obj"));
@@ -28,7 +29,12 @@ app.set("views", "./views");
 app.get("/", (req, res) => {
   res.render("index");
 });
-io.on("connection", (data) => {
-  console.log("Client connected" + data);
-  io.emit("test", "test");
+
+
+
+io.on("connection", (socket) => {
+  console.log("Client connected");
+  socket.on("newScore", (user) => {
+    console.log("new score : " + user.score + " from : " + user.name + "\ndistance : " + user.distance + " coins : " + user.coins);
+  });
 });
