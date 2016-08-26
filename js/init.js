@@ -64,7 +64,7 @@ var viewY = 5;
 var viewZ = -60;
 
 // Niveau actuelle
-var currentLevel = confirm('Voulez-vous lancer le tutoriel ?') ? 0 : 1;
+var currentLevel = document.location.search == '?tuto' ? 0 : 1;
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
 // Si on a le bonus de boost de vitesse actif ou non
