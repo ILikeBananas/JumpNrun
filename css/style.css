@@ -8,7 +8,7 @@ body{
 	background: url("../img/index/sand.png");
 	color: #59371E;
 	font-family: 'Philosopher', sans-serif;
-	font-size: 1.2em;
+	font-size: 1.3em;
 }
 
 .contenaire{
@@ -37,6 +37,7 @@ h1{
 
 .content{
 	padding: 10px;
+	text-align: center;
 
 }
 
@@ -59,7 +60,7 @@ a{
     font-size: 2em; 
 }
 
-.info{
+.info, .scores{
 	display: inline-block;
 	background: #F3B37C;
 	border-radius: 10px;
@@ -67,10 +68,11 @@ a{
 	padding: 10px;
 	width: 45%;
 	min-width: 400px;
-	margin: 10px auto;
+	margin: 10px 10px;
 	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
+	text-align: left;
 }
-.info h2 {
+.info h2, .scores h2 {
 	margin: 0;
 }
 
@@ -80,7 +82,7 @@ a{
 .info ul li{
 	padding-left: 60px;
 	margin: 10px 0;
-	height: 50px;
+	height: 65px;
 	display: flex;
     align-items: center;
 }
@@ -102,27 +104,6 @@ a{
 .info ul :last-child {
 	background: url("../img/index/coinSwiftness.png") no-repeat top left;
 }
-
-.scores{
-	float: right;
-	background: #F3B37C;
-	border-radius: 10px;
-	border: 1px solid #59371E;
-	padding: 10px;
-	width: 45%;
-	min-width: 400px;
-	margin: 10px auto;
-	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
-}
-
-.scores h2{
-	margin: 0;
-}
-
-footer{
-	clear:right;
-}
-
 /*style page newScore */
 #wrapper {
 	background: #F3B37C;
@@ -139,7 +120,7 @@ footer{
 #error, label, input{
     display: block;
     margin: 0 auto;
-    width: 400px;
+    width: 350px;
     padding: 10px;
     margin: 10px auto;
     font-size: 1.05em;

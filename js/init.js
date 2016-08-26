@@ -5,7 +5,7 @@
 // --- Constantes ---
 
 // Nombre de niveaux
-const NUMBER_LEVEL = 12;
+const NUMBER_LEVEL = 13;
 // Nombre d'affiches (décorations)
 const NUMBER_POSTER = 6;
 // Distance de vue
