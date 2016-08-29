@@ -3,6 +3,7 @@ html
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title Score
+    link(href='https://fonts.googleapis.com/css?family=Philosopher', rel='stylesheet', type='text/css')
     link(rel="stylesheet", href="css/style.css")
     link(rel="icon" href="img/favicon.ico")
   body
@@ -11,12 +12,13 @@ html
       h2(id="score") Votre score : 
       h3(id="distance") Distance parcourue : 
       h3(id="coins") Nombre de pièces obtenues : 
-      dif(id="error")
-        label(for="name") Entrez votre nom : 
-        input(id="name", type="text", maxlength="15")
-        input(id="send", type="button", value="Valider")
+      span(id="error") 
+      label(for="name") Entrez votre nom : 
+      input(id="name", type="text", maxlength="15")
+      input(id="send", type="button", value="Valider")
+      a(href='/') Accueil
 
-        script(src="https://cdn.socket.io/socket.io-1.4.5.js")  
-        script(type="text/javascript", src  ="vendors/jquery.js")
-        script(type="text/javascript", src  ="js/socket.js")
-        script(type="text/javascript", src  ="js/form.js")
+      script(src="https://cdn.socket.io/socket.io-1.4.5.js")  
+      script(type="text/javascript", src  ="vendors/jquery.js")
+      script(type="text/javascript", src  ="js/socket.js")
+      script(type="text/javascript", src  ="js/form.js")

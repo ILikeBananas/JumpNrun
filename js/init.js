@@ -4,8 +4,11 @@
 
 // --- Constantes ---
 
+
+// Si c'est le tutoriel ou non
+const IS_TUTORIAL = document.location.search == '?tuto' ? true : false;
 // Nombre de niveaux
-const NUMBER_LEVEL = 12;
+const NUMBER_LEVEL = 13;
 // Nombre d'affiches (décorations)
 const NUMBER_POSTER = 6;
 // Distance de vue
@@ -64,7 +67,7 @@ var viewY = 5;
 var viewZ = -60;
 
 // Niveau actuelle
-var currentLevel = document.location.search == '?tuto' ? 0 : 1;
+var currentLevel = 1;
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
 // Si on a le bonus de boost de vitesse actif ou non
@@ -393,6 +396,11 @@ function waiting() {
                               [models.tunnel, models.tunnelMountain]);
         
         models['sign'] = models.signEdge.add(models.poster);
+        
+        // Lancement du niveau tutoriel, si besoin  
+        if (IS_TUTORIAL) {
+            createLevel(0);
+        }
         
         // Lancement de la boucle du jeu
         gameLoop();

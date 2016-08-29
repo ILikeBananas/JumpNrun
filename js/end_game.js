@@ -8,5 +8,10 @@ function endGame() {
 
     ctx.fillStyle = 'rgba(0,0,0,.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    document.location.href = 'newScore?score=' + getScore() + '&distance=' + getDistance() + '&coins=' + coinsCollect;
+    
+    if (IS_TUTORIAL) {
+        document.location.href = '/';
+    } else {
+        document.location.href = 'newScore?score=' + getScore() + '&distance=' + getDistance() + '&coins=' + coinsCollect;
+    }
 }

@@ -110,7 +110,12 @@ function gameLoop() {
     forEachCoin();
     forEachDecor();
     
-    // Si on est mort, quitte la boucle du jeu
+    // Si on à fini le tutoriel, quitte la partie
+    if (IS_TUTORIAL && position.z <= positionNextLevel) {
+        endGame();
+    }
+    
+    // Si la partie est terminée, quitte la boucle du jeu
     if (!executionGameLoop) {
         return;
     }
@@ -128,13 +133,12 @@ function gameLoop() {
     
         
     // Charge un niveau
-    while (position.z < positionNextLevel + VIEW_DISTANCE + 64) {
+    while (!IS_TUTORIAL && position.z < positionNextLevel + VIEW_DISTANCE + 64) {
         
         var levelToCreate = currentLevel <= NUMBER_LEVEL ? currentLevel :
                                                            rand.int(1, NUMBER_LEVEL);
         
         createLevel(levelToCreate);
-        
         currentLevel++;
     }
 
@@ -241,6 +245,10 @@ function gameLoop() {
     ctx.fillText(getFps() + ' fps', innerWidth - 20, 45, 400);
     ctx.fillStyle = 'blue';
     ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 85, 400);
+    if (IS_TUTORIAL) {
+    ctx.fillStyle = 'green';
+    ctx.fillText('TUTORIEL', innerWidth - 20, 125, 400);
+    }
     /*****/
     
     // Affichage de la distance et du nombre de pièces (avec une ombre au texte

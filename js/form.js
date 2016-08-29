@@ -24,6 +24,7 @@ $('#send').click(function() {
     if (validationName(user)) {
         sendScore(user);
         document.location.href = '/';
+        $('#send').prop('disabled', true);
     }
 });
 

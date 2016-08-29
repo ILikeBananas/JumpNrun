@@ -11,7 +11,7 @@ function getDistance() {
 // parcourue et du nombre de pièces collectées
 function getScore() {
     
-    return parseInt(getDistance() / 10) + coinsCollect;
+    return parseInt(getDistance() / 5) + coinsCollect;
 }
 
 
