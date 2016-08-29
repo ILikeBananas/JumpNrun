@@ -72,6 +72,7 @@ h1{
 	margin: 10px 10px;
 	box-shadow: 2px 2px 12px rgba(0,0,0,.5);
 	text-align: left;
+	vertical-align: top;
 }
 .info h2, .scores h2 {
 	margin: 0;
