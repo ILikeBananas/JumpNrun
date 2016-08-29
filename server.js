@@ -10,6 +10,7 @@ var path =      require("path");
 var jsonFile =  require("jsonfile");
 var config =    require("./config/config.json");
 var util =      require("util");
+var score =     require("./scores.js");
 
 server.listen(config.port);
 console.log("server started " +  config.port);
@@ -29,6 +30,7 @@ app.set("views", "./views");
 // Routings
 app.get("/", (req, res) => {
   res.render("index");
+  console.log(score.getScore());
 });
 app.get("/newScore", (req, res) => {
   res.render("form");
@@ -42,5 +44,6 @@ io.on("connection", (socket) => {
   console.log("Client connected");
   socket.on("newScore", (user) => {
     console.log("new score : " + user.score + " from : " + user.name + "\ndistance : " + user.distance + " coins : " + user.coins);
+    score.addScore(user);
   });
 });
