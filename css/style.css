@@ -38,6 +38,7 @@ h1{
 .content{
 	padding: 10px;
 	text-align: center;
+
 }
 
 .content p, .content a{
@@ -48,7 +49,7 @@ h1{
 	text-align: center;
 
 }
-.liens a, #wrapper a{
+.liens a, .wrapper a{
 	text-decoration: none;
 	display: inline-block;
     width: 350px;
@@ -117,7 +118,7 @@ h1{
 	background-color: red;
 }
 
-#wrapper {
+.wrapper {
 	background: #f6c9a3;
 	border-radius: 10px;
 	border: 1px solid #472c18;
@@ -146,26 +147,26 @@ h1{
     color: #A00;
 }
 
-input, .liens a, #wrapper a{
+input, .liens a, .wrapper a{
     border: 2px solid gray;
     border-radius: 8px;
 }
 
-input:hover , .liens a:hover, #wrapper a{
+input:hover , .liens a:hover, .wrapper a{
     border-color: #AAA;
 }
 
-#send, .liens a, #wrapper a{
+#send, .liens a, .wrapper a{
     background: -webkit-linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
-	background: linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
+    background: linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
 }
 
-#send:hover, .liens a:hover, #wrapper a  {
+#send:hover, .liens a:hover, .wrapper a  {
     background: -webkit-linear-gradient(white 40%, #F0F0F0 60%);
-	background: linear-gradient(white 40%, #F0F0F0 60%);
+    background: linear-gradient(white 40%, #F0F0F0 60%);
 }
 
-#send:active, .liens a:hover, #wrapper a {
+#send:active, .liens a:hover, .wrapper a {
     background: -webkit-linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
-	background: linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
+    background: linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
 }
