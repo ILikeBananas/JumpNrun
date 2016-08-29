@@ -145,12 +145,15 @@ input:hover , a:hover{
 
 #send, a {
     background: -webkit-linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
+    background: linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
 }
 
 #send:hover, a:hover {
     background: -webkit-linear-gradient(white 40%, #F0F0F0 60%);
+    background: linear-gradient(white 40%, #F0F0F0 60%);
 }
 
 #send:active, a:hover {
     background: -webkit-linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
+    background: linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
 }
