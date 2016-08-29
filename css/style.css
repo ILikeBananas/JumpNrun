@@ -49,10 +49,10 @@ h1{
 	text-align: center;
 
 }
-a{
+.liens a, .wrapper a{
 	text-decoration: none;
 	display: inline-block;
-    width: 200px;
+    width: 350px;
 	min-width: 150px;
     padding: 10px;
     margin: 10px 10px;
@@ -105,8 +105,20 @@ a{
 .info ul :last-child {
 	background: url("../img/index/coinSwiftness.png") no-repeat top left;
 }
-/*style page newScore */
-#wrapper {
+
+#mycursor {
+	position: fixed;
+	display : none;
+	width : 40px;
+	height : 40px;
+	background-color : blue;
+}
+ 
+#mycursor.pushed {
+	background-color: red;
+}
+
+.wrapper {
 	background: #f6c9a3;
 	border-radius: 10px;
 	border: 1px solid #472c18;
@@ -135,23 +147,23 @@ a{
     color: #A00;
 }
 
-input, a{
+input, .liens a, .wrapper a{
     border: 2px solid gray;
     border-radius: 8px;
 }
 
-input:hover , a:hover{
+input:hover , .liens a:hover, .wrapper a{
     border-color: #AAA;
 }
 
-#send, a {
+#send, .liens a, .wrapper a{
     background: -webkit-linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
 }
 
-#send:hover, a:hover {
+#send:hover, .liens a:hover, .wrapper a  {
     background: -webkit-linear-gradient(white 40%, #F0F0F0 60%);
 }
 
-#send:active, a:hover {
+#send:active, .liens a:hover, .wrapper a {
     background: -webkit-linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
 }
