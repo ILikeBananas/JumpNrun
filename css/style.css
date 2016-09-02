@@ -107,17 +107,29 @@ h1{
 	background: url("../img/index/coinSwiftness.png") no-repeat top left;
 }
 
-#mycursor {
-	position: fixed;
-	display : none;
-	width : 40px;
-	height : 40px;
-	background-color : blue;
+table{
+	width: 100%;
 }
- 
-#mycursor.pushed {
-	background-color: red;
+
+table, table td, table th {
+	border: #472c18 1px solid;
+	border-collapse: collapse;
+	padding: 5px;
+	color: #472c18;
+	font-size: 1.1em;
+	text-align: center;
 }
+
+table tr:nth-child(odd) {
+	background: #d2935d;
+	color: #472c18;
+}
+table tr:nth-child(even) {
+	background: #f6c9a3;
+	color: #472c18;
+}
+
+
 
 .wrapper {
 	background: #f6c9a3;
