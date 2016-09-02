@@ -23,6 +23,7 @@ app.use("/css",     express.static("css"));
 app.use("/vendors", express.static("vendors"));
 app.use("/obj",     express.static("obj"));
 app.use("/levels",  express.static("levels"));
+app.use("/scoresList", express.static("scores.json"));
 
 // Set the view engine
 app.set("view engine", "pug");
