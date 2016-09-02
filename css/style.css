@@ -61,7 +61,7 @@ h1{
 	color: #472c18;
 }
 
-.info, .scores{
+.info, #scores{
 	display: inline-block;
 	background: #f6c9a3;
 	border-radius: 10px;
@@ -74,7 +74,7 @@ h1{
 	text-align: left;
 	vertical-align: top;
 }
-.info h2, .scores h2 {
+.info h2, #scores h2 {
 	margin: 0;
 }
 

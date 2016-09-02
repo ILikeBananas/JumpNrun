@@ -26,7 +26,15 @@ html
             li Pi&egrave;ce bleue : 100 points
             li Pi&egrave;ce rouge : Immunit&eacute; pendant 10 secondes, chaque collision enl&egrave;ve 1 seconde
             li Pi&egrave;ce orange : Immunit&eacute; pendant 5 secondes et vitesse augment&eacute;.
-        .scores
+        #scores
           h2 Les 10 meilleurs scores
-          ul
+          table
+            tr
+              th Nom
+              th Score
+              th Distance
+              th Pièces
+              
       footer
+    script(type="text/javascript", src  ="vendors/jquery.js")
+    script(type="text/javascript", src  ="js/display_scores.js")
