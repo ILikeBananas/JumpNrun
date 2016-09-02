@@ -7,7 +7,9 @@ var scores = {};
 // Charge le fichier "scores.json"
 $.ajax('scoresList')
     .done(function(file) {
+        
         scores = file.scores;
+          
         console.log('Fichier contenant les scores chargé avec succès,\n' +
                     'Nombre d\'éléments : ' + scores.length);
     displayScores();

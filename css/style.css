@@ -132,6 +132,11 @@ table tr:nth-child(even) {
 	color: #472c18;
 }
 
+table tr td:first-child {
+    max-width: 185px;
+    overflow: hidden;
+}
+
 
 
 .wrapper {
