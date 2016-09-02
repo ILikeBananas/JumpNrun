@@ -12,14 +12,13 @@ html
       h2(id="score") Votre score : 
       h3(id="distance") Distance parcourue : 
       h3(id="coins") Nombre de pièces obtenues : 
-      span(id="error")
-      form
-         label(for="name") Entrez votre nom : 
-         input(id="name", type="text", maxlength="15")
-         input(id="send", type="submit", value="Valider")
+      span(id="error") 
+      label(for="name") Entrez votre nom : 
+      input(id="name", type="text", maxlength="15")
+      input(id="send", type="button", value="Valider")
       a(href='/') Accueil
 
       script(src="https://cdn.socket.io/socket.io-1.4.5.js")  
-      script(type="text/javascript", src  ="vendors/jquery.js")
-      script(type="text/javascript", src  ="js/socket.js")
-      script(type="text/javascript", src  ="js/form.js")
+      script(type="text/javascript", src="vendors/jquery.js")
+      script(type="text/javascript", src="js/socket.js")
+      script(type="text/javascript", src="js/form.js")
