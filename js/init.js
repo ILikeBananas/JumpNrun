@@ -10,7 +10,7 @@ const IS_TUTORIAL = document.location.search == '?tuto' ? true : false;
 // Nombre de niveaux
 const NUMBER_LEVEL = 13;
 // Nombre d'affiches (décorations)
-const NUMBER_POSTER = 6;
+const NUMBER_POSTER = 7;
 // Distance de vue
 const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
@@ -223,12 +223,16 @@ materials.shieldBasic.opacity =
 textures['posters'] = [];
 
 // Liste des matériaux des différentes affiches 
-materials['posters'] = [],
+materials['posters'] = [];
 
+
+// Chargement des affiches
 (function () {
     for (var i = 1; i <= NUMBER_POSTER; i++) {
         
         var texture = new THREE.TextureLoader().load('img/textures/posters/' + i + '.png');
+        texture.repeat.set(1,9/16);
+        texture.offset.y = 0;
         
         textures.posters.push(texture);
         
