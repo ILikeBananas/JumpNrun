@@ -22,11 +22,11 @@ exports.getScore = () => {
   jsonFile.readFile("scores.json", (err, score)=>{
 
     // chantier en cours
-  })
+  });
 }
 
 // Sort by score
 // @Param object with score
 function sortByScore(a, b) {
-  return a.score < b.score;
+  return b.score - a.score;
 }
