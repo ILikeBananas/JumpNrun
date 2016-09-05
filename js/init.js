@@ -16,7 +16,9 @@ const VIEW_DISTANCE = 75 * 16; // 75 caisses de distance
 // Couleur du ciel
 const SKY_COLOR = '#80C0FF';
 // Vitesse des sauts
-const JUMP_SPEED = 128;
+const JUMP_SPEED = 116;
+// Vitesse de chute des objets
+const GRAVITY = 300;
 // Vitesse de course
 var VELOCITY = 112;
 // Vitesse de changement de chemin
@@ -75,6 +77,13 @@ var isSwiftness = false;
 
 // Rotation des pièces en radians
 var coinsRotation = 0;
+
+
+// Changement du titre de l'onglet lors du tutoriel
+if (IS_TUTORIAL) {
+    $('title').text('Tutoriel - Wild Coyote');
+}
+
 
 // Liste des images (pour le canvas 2D)
 var images = {
@@ -404,6 +413,7 @@ function waiting() {
         // Lancement du niveau tutoriel, si besoin  
         if (IS_TUTORIAL) {
             createLevel(0);
+            tunnel.position.z = positionNextLevel + 128;
         }
         
         // Lancement de la boucle du jeu

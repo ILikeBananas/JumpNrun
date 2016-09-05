@@ -77,8 +77,8 @@ function moveEjectedObstacle(obj) {
     if (obj.position.z <= camera.position.z) {
         
         obj.position.y -= obj.fallSpeed * deltaTime;
-        obj.fallSpeed += 384 * deltaTime;
-        obj.fallSpeed = Math.min(444, obj.fallSpeed);
+        obj.fallSpeed += GRAVITY * deltaTime;
+        obj.fallSpeed = Math.min(640, obj.fallSpeed);
         obj.position.z -= obj.ejectSpeed * deltaTime;
     }
 }

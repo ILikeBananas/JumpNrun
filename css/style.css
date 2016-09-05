@@ -2,6 +2,7 @@
 *{
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
+    outline: none;
 }
 
 body{
@@ -12,7 +13,7 @@ body{
 }
 
 .contenaire{
-	background-color: #d2935d;
+	background-color: rgba(210,147,93,.5);
 	width: 80%;
 	margin: 0 auto;
 	border-radius: 10px;
@@ -63,7 +64,7 @@ h1{
 
 .info, #scores{
 	display: inline-block;
-	background: #f6c9a3;
+	background: rgba(246,201,163,.67);
 	border-radius: 10px;
 	border: 1px solid #472c18;
 	padding: 10px;
@@ -140,7 +141,7 @@ table tr td:first-child {
 
 
 .wrapper {
-	background: #f6c9a3;
+	background: rgba(246,201,163,.67);
 	border-radius: 10px;
 	border: 1px solid #472c18;
 	padding: 10px;

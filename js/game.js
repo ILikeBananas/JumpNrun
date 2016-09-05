@@ -10,8 +10,8 @@ function gameLoop() {
     deltaTime = Math.min(.1, deltaTime);
     
     // Vitesse de chute augmentant avec le temps
-    fallSpeed += 384 * deltaTime;
-    fallSpeed = Math.min(384, fallSpeed);
+    fallSpeed += GRAVITY * deltaTime;
+    fallSpeed = Math.min(640, fallSpeed);
     
     // Dissipe le flash
     if (character.flash.material.opacity > 0) {
