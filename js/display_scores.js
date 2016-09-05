@@ -24,13 +24,16 @@ $.ajax('scoresList')
 function displayScores() {
     for (var i = 0; i < Math.min(10, scores.length); i++) {
         
+        // Créer une ligne et la stock dans "tr"
         var tr = $('#scores').children('table').append('<tr>').children('tbody').children('tr');
         tr = $($(tr)[tr.length - 1]);
         
+        // Créer les quatre cases de la ligne (nom, score, distance, pièces)
         for (var j = 0; j < 4; j++) {
             tr.append('<td></td>');
         }
         
+        // Ajoute dans chacune des cases la donnée correspondante
         $(tr.children('td')[0]).text(scores[i].name);
         $(tr.children('td')[1]).text(scores[i].score);
         $(tr.children('td')[2]).text(scores[i].distance);
