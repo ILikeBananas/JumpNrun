@@ -8,19 +8,26 @@ BGB
    
    
    
+   
+   
 g g
    
    
+   
  g 
+   
    
    
 c c
    
    
+   
  g 
    
    
+   
 g g
+   
    
    
 bss
@@ -38,19 +45,26 @@ bss
    
    
    
+   
+   
 g  
    
    
+   
  g 
+   
    
    
  c 
    
    
+   
  g 
    
    
+   
   g
+   
    
    
 ssb
@@ -60,6 +74,8 @@ ssG
 ssb
 ssb
 ssb
+   
+   
    
    
    

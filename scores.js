@@ -22,7 +22,7 @@ exports.getScore = () => {
   jsonFile.readFile("scores.json", (err, score)=>{
 
     // chantier en cours
-  })
+  });
 }
 
 // Sort by score
