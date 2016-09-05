@@ -1,82 +1,10 @@
 {
   "scores": [
     {
-      "name": "<p>SUCH WOW</p>",
-      "score": 1507,
-      "distance": 2716,
-      "coins": 964
-    },
-    {
-      "name": "123",
-      "score": 999,
-      "distance": 97,
-      "coins": 22
-    },
-    {
-      "name": "lkjrdfscs",
-      "score": 179,
-      "distance": 354,
-      "coins": 109
-    },
-    {
-      "name": "<p>Test</p>",
-      "score": 81,
-      "distance": 150,
-      "coins": 51
-    },
-    {
-      "name": "<p>123</p>",
-      "score": 74,
-      "distance": 141,
-      "coins": 46
-    },
-    {
-      "name": "MMMMMMMMMMMMMMM",
-      "score": 74,
-      "distance": 141,
-      "coins": 46
-    },
-    {
-      "name": "abcdef",
-      "score": 41,
-      "distance": 97,
-      "coins": 22
-    },
-    {
-      "name": "ABC",
-      "score": 39,
-      "distance": 97,
-      "coins": 20
-    },
-    {
-      "name": "ABC",
-      "score": 39,
-      "distance": 97,
-      "coins": 20
-    },
-    {
-      "name": "abcdef",
-      "score": 39,
-      "distance": 97,
-      "coins": 20
-    },
-    {
-      "name": "FEDEFRGTFD",
-      "score": 33,
-      "distance": 103,
-      "coins": 23
-    },
-    {
-      "name": "JEAN",
-      "score": 14,
-      "distance": 125,
-      "coins": 2
-    },
-    {
-      "name": "jnhbv",
-      "score": 9,
-      "distance": 97,
-      "coins": 0
+      "name": "Débutant",
+      "score": 32,
+      "distance": 114,
+      "coins": 10
     }
   ]
 }
