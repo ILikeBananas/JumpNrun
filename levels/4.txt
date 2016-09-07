@@ -48,13 +48,13 @@ bss
    
    
 g  
-   
-   
-   
  g 
-   
-   
-   
+  g
+ g 
+g 
+g  
+ g 
+  g
  c 
    
    
@@ -68,19 +68,19 @@ g
   
   
    
-ssb
+ssG
 ssb
 ssb
 ssG
 ssb
+ssG
 ssb
-ssb
    
    
-   
-   
+  g
   
   
+g 
    
    
    
