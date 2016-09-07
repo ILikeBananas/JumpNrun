@@ -137,8 +137,12 @@ table tr:nth-child(even) {
 }
 
 table tr td:first-child {
-    max-width: 185px;
+    max-width: 250px;
     overflow: hidden;
+}
+
+table tr td:first-child img {
+    float: left;
 }
 
 table tr td img {
