@@ -22,6 +22,13 @@ $.ajax('scoresList')
 
 // Affiche le score
 function displayScores() {
+    
+    // Tri les scores si ils ne serrait pas dans le bonne ordre dans le fichier JSON
+    scores = scores.sort(function sortByScore(a, b) {
+        return b.score - a.score;
+    });
+    
+    // Pour chaque score
     for (var i = 0; i < Math.min(10, scores.length); i++) {
         
         // Créer une ligne et la stock dans "tr"
@@ -30,13 +37,21 @@ function displayScores() {
         
         // Créer les quatre cases de la ligne (nom, score, distance, pièces)
         for (var j = 0; j < 4; j++) {
-            tr.append('<td></td>');
+            tr.append('<td><span></span></td>');
         }
         
         // Ajoute dans chacune des cases la donnée correspondante
-        $(tr.children('td')[0]).text(scores[i].name);
-        $(tr.children('td')[1]).text(scores[i].score);
-        $(tr.children('td')[2]).text(scores[i].distance);
-        $(tr.children('td')[3]).text(scores[i].coins);
+        var name = $(tr.children('td')[0]).children('span').text(scores[i].name);
+        $(tr.children('td')[1]).children('span').text(scores[i].score);
+        $(tr.children('td')[2]).children('span').text(scores[i].distance);
+        $(tr.children('td')[3]).children('span').text(scores[i].coins);
+        
+        if (i < 3) {
+            
+            var medalName = i == 0 ? 'gold' : (i == 1 ? 'silver' : 'bronze');
+            
+            name.text(' ' + name.text());
+            $('<img src="/img/index/medals/' + medalName + '.png" />').insertBefore(name);
+        }
     }
 }
