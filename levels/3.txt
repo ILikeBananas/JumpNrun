@@ -16,21 +16,34 @@ gg
  g 
 ggg
    
+g
+   
+   
 
-
+   
+   
   
-
-  
+ g
+ 
+   
+   
    
    
  c 
 g b
 bSS
-bSS
-bbS
-bbS
-bCS
+GSS
+GbS
+GbS
+GCS
+GGb
+GGb
+GGb
 bGb
+bGb
+bCb
+bGb
+SGb
 SGb
 SGb
 bbb
@@ -41,12 +54,13 @@ bbb
 
 
 
+g
    
    
    
    
    
 b b
-   
+ g  
    
    

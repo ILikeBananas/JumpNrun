@@ -1,7 +1,7 @@
 B-B
 
 
-
+ g
 
 
 
@@ -10,7 +10,7 @@ B-B
 
 
  
- 
+ g
  
  
 Ggg
@@ -23,14 +23,14 @@ Bbb
 Bbb
 bbb
 G
+G
 b
 b
-b
+
+ g
 
 
-
-
-
+ g
 
 
 
@@ -41,7 +41,7 @@ b g
 b g
 b
 b
-b
+G
 b
 b
 bB-
