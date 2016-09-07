@@ -19,13 +19,13 @@ cg
   
    
   g
- gg
 
- g
+
+
  gc
 
 gg 
-g 
+ 
 g  
    
   
@@ -36,17 +36,22 @@ g
    
    
 g 
- g
-g
-cg 
+ c
+
+ 
 
   g
   
+  
  g
+ 
+ 
  
 g 
 
+
  g
+ 
  
   g
    
