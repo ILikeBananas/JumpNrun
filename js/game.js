@@ -237,19 +237,6 @@ function gameLoop() {
 
     ctx.drawImage(images.interface, 0, 0, 256, 256);
     ctx.drawImage(isSwiftness ? images.iconLightning : images.iconShield, 16, 16);
-
-    /*TEMPORAIRE*/
-    ctx.font = '28px Arial';
-    ctx.fillStyle = getFps() < 50 ? 'red' : getFps() < 60 ? 'orange' : 'yellow';
-    ctx.textAlign = 'right';
-    ctx.fillText(getFps() + ' fps', innerWidth - 20, 45, 400);
-    ctx.fillStyle = 'blue';
-    ctx.fillText(Math.round(innerWidth / innerHeight * 10000) / 10000, innerWidth - 20, 85, 400);
-    if (IS_TUTORIAL) {
-    ctx.fillStyle = 'green';
-    ctx.fillText('TUTORIEL', innerWidth - 20, 125, 400);
-    }
-    /*****/
     
     // Affichage de la distance et du nombre de pièces (avec une ombre au texte
     for (var i = 0; i <= 2; i += 2) {

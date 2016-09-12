@@ -186,21 +186,21 @@ input, .liens a, .wrapper a{
     border-radius: 8px;
 }
 
-input:hover , .liens a:hover, .wrapper a{
+input:hover , .liens a:hover, .wrapper a:hover {
     border-color: #AAA;
 }
 
-#send, .liens a, .wrapper a{
+#send, .liens a, .wrapper a {
     background: -webkit-linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
     background: linear-gradient(#F0F0F0 40%, #E0E0E0 60%);
 }
 
-#send:hover, .liens a:hover, .wrapper a  {
+#send:hover, .liens a:hover, .wrapper a:hover {
     background: -webkit-linear-gradient(white 40%, #F0F0F0 60%);
     background: linear-gradient(white 40%, #F0F0F0 60%);
 }
 
-#send:active, .liens a:hover, .wrapper a {
+#send:active, .liens a:active, .wrapper a:active {
     background: -webkit-linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
     background: linear-gradient(#E0E0E0 40%, #C8C8C8 60%);
 }
