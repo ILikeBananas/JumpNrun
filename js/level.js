@@ -60,7 +60,7 @@ function createLevel(idLevel) {
     var endZ = positionNextLevel - levelLength;
     
     // Espacement entre deux niveaux
-    var spacingLevels = 256;
+    var spacingLevels = 384;
     
     // Position Z du début du prochain niveau
     positionNextLevel -= levelLength + spacingLevels + 16;

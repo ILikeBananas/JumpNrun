@@ -2,6 +2,9 @@ B-B
 
 
  g
+ g
+ g
+
 
 
 
@@ -13,6 +16,8 @@ B-B
  g
  
  
+
+
 Ggg
 G g
 b
@@ -22,10 +27,15 @@ Bss
 Bbb
 Bbb
 bbb
+bbb
+bbb
 G
 G
 b
 b
+
+
+
 
  g
 
@@ -36,6 +46,7 @@ b
 
 
 bss
+b
 b
 b g
 b g
