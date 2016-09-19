@@ -1,0 +1,17 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+    background: black;
+}
+
+body {
+	font-family: 'Arial';
+    margin: 0;
+    overflow: hidden;
+}
+
+#canvas2d {
+    position: absolute;
+}

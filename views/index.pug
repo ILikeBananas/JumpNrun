@@ -1,0 +1,56 @@
+﻿doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title Accueil - Wild Coyote
+    link(href='css/style.css', rel='stylesheet', type='text/css')
+  body
+    .contenaire
+      header
+        h1 Wild Coyote - Accueil
+      nav
+      .content
+        p Evites les obstacles et collectes le plus de pi&egrave;ces possible.
+
+        .liens
+          a(href='Game?tuto') Tuto
+          a(href='Game') Jouer
+        .info
+          h2 Information
+          table
+            tr
+               td Distance 5m
+               td 1 point
+            tr
+               td Pièce Jaune
+               td 1 point
+            tr
+               td Pièce Verte
+               td 5 points
+            tr
+               td Pièce Bleue
+               td 10 points
+            tr
+               td Bouclier Rouge
+               td
+                 p 10 secondes
+                 p 1 collision = - 1 seconde
+            tr
+               td Bouclier Or
+               td
+                 p 5 secondes
+                 p Vitesse augmentée
+        #scores
+          h2 Les 10 meilleurs scores
+          table
+            tr
+              th Nom
+              th Score
+              th Distance
+              th Pièces
+
+      footer
+    script(type="text/javascript", src = "vendors/socket.io-1.4.5.js")
+    script(type="text/javascript", src = "vendors/jquery.js")
+    script(type="text/javascript", src = "js/display_scores.js")
