@@ -1,10 +1,9 @@
-doctype html
+﻿doctype html
 html
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title Accueil - Wild Coyote
-    link(href='https://fonts.googleapis.com/css?family=Philosopher', rel='stylesheet', type='text/css')
     link(href='css/style.css', rel='stylesheet', type='text/css')
   body
     .contenaire
@@ -12,20 +11,36 @@ html
         h1 Wild Coyote - Accueil
       nav
       .content
-        p Eviter les obstacles et collecter le plus de pi&egrave;ces possible.
+        p Evites les obstacles et collectes le plus de pi&egrave;ces possible.
 
         .liens
           a(href='Game?tuto') Tuto
           a(href='Game') Jouer
         .info
           h2 Information
-          ul
-            li Distance 5m : 1 point
-            li Pi&egrave;ce jaune : 1 point
-            li Pi&egrave;ce verte : 5 points
-            li Pi&egrave;ce bleue : 10 points
-            li Pi&egrave;ce rouge : Immunit&eacute; pendant 10 secondes, chaque collision enl&egrave;ve 1 seconde.
-            li Pi&egrave;ce orange : Immunit&eacute; pendant 5 secondes et vitesse augment&eacute;.
+          table
+            tr
+               td Distance 5m
+               td 1 point
+            tr
+               td Pièce Jaune
+               td 1 point
+            tr
+               td Pièce Verte
+               td 5 points
+            tr
+               td Pièce Bleue
+               td 10 points
+            tr
+               td Bouclier Rouge
+               td
+                 p 10 secondes
+                 p 1 collision = - 1 seconde
+            tr
+               td Bouclier Or
+               td
+                 p 5 secondes
+                 p Vitesse augmentée
         #scores
           h2 Les 10 meilleurs scores
           table
@@ -39,5 +54,3 @@ html
     script(type="text/javascript", src = "vendors/socket.io-1.4.5.js")
     script(type="text/javascript", src = "vendors/jquery.js")
     script(type="text/javascript", src = "js/display_scores.js")
-    script(type="text/javascript", src="http://cdn.zigfu.com/zigjs/zig.min.js")
-    script(type="text/javascript", src = "js/kinectMenu.js")
