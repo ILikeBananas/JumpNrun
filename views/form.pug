@@ -16,7 +16,8 @@ html
       label(for="name") Entrez votre nom : 
       input(id="name", type="text", maxlength="15")
       input(id="send", type="button", value="Valider")
-      a(href='/') Accueil
+      div(class="liens")
+        a(href='/') Accueil
 
       script(type="text/javascript", src="vendors/socket.io-1.4.5.js")  
       script(type="text/javascript", src="vendors/jquery.js")

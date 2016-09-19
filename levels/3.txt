@@ -1,35 +1,39 @@
+ g
 
 
-   
-   
-   
-   
-   
-   
-   
+
+ g
+
+
+
+ g
+
+
+
+
 bGb
 bbS
 bbb
-g  
-gg 
- c 
- g 
-ggg
-   
 g
-   
-   
+gg
+ c
+ g
+ggg
 
-   
-   
+g
+
+
+
+
+
   
  g
  
-   
-   
-   
-   
- c 
+
+
+
+
+ c
 g b
 bSS
 GSS
@@ -47,20 +51,18 @@ SGb
 SGb
 SGb
 bbb
-   
-   
-^  
+
+
+^
 
 
 
 
 g
-   
-   
-   
-   
-   
+
+
+
+
+
 b b
- g  
-   
-   
+ g
