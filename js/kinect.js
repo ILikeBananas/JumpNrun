@@ -39,8 +39,8 @@ engager.addEventListener('userengaged', function(user) {
   console.log('User engaged: ' + user.id);
 
   // Calibrage
-  LIMIT_LEFT = user.position[0] - 200;
-  LIMIT_RIGHT = user.position[0] + 200;
+  LIMIT_LEFT = user.position[0] - 300;
+  LIMIT_RIGHT = user.position[0] + 300;
   LIMIT_JUMP = user.skeleton[zig.Joint.Head].position[1] + 100;
   LIMIT_CROUCH = user.skeleton[zig.Joint.Head].position[1] - 300;
 

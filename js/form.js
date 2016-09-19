@@ -4,13 +4,31 @@
 
 var parameters = getURLParameters();
 
-$('#score').append(parameters.score);
-$('#distance').append(parameters.distance + ' mètres');
-$('#coins').append(parameters.coins);
+$('#score').append(' ' + parameters.score);
+$('#distance').append(' ' + parameters.distance + ' mètres');
+$('#coins').append(' ' + parameters.coins);
 
 
 // Lorsque l'on clique sue "Valider"
 $('#send').click(function() {
+    send();
+});
+
+
+// Lorsque l'on presse la touche [Enter] sur le champ texte
+$('#name').keydown(function(e) {
+
+    // Test qu'il s'agit bien de la touche [Enter] (13)
+    if (e.keyCode == 13) {
+        send();
+    } else if (e.keyCode == 27) {
+        document.location.href = '/';
+    }
+});
+
+
+// Vérifie et envoie les données
+function send() {
 
     // Données de l'utilisateur
     var user = {
@@ -26,7 +44,7 @@ $('#send').click(function() {
         document.location.href = '/';
         $('#send').prop('disabled', true);
     }
-});
+}
 
 
 // Retourne un tableaux contenant les paramètres de l'URL

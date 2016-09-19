@@ -68,7 +68,7 @@ var viewY = 5;
 // Position Z de la camera relative au personnage
 var viewZ = -60;
 
-// Niveau actuelle
+// Niveau actuel
 var currentLevel = 1;
 // Temps restant avant que le bouclier se dissipe
 var shieldTime = 0;
@@ -87,15 +87,21 @@ if (IS_TUTORIAL) {
 
 // Liste des images (pour le canvas 2D)
 var images = {
-    
+
     interface: new Image(),
+    bar: new Image(),
     iconShield: new Image(),
     iconLightning: new Image(),
+    iconHeart: new Image(),
+    iconHeartEmpty: new Image(),
 }
 
 images.interface.src = 'img/other/interface.png';
+images.bar.src = 'img/other/bar.png';
 images.iconShield.src = 'img/other/icon_shield.png';
 images.iconLightning.src = 'img/other/icon_lightning.png';
+images.iconHeart.src = 'img/other/icon_heart.png';
+images.iconHeartEmpty.src = 'img/other/icon_heart_empty.png';
 
 
 // Canvas 2D
@@ -129,7 +135,7 @@ scene.fog = fog;
 
 // Liste des textures
 var textures = {
-    
+
     road:   new THREE.TextureLoader().load('img/textures/road.png'),
     sand:   new THREE.TextureLoader().load('img/textures/sand.png'),
     stone:  new THREE.TextureLoader().load('img/textures/stone.png'),
@@ -166,7 +172,7 @@ textures.skateboard.offset.x = .231 * rand.int(3);
 
 // Liste des formes géométriques simples
 var geometries = {
-    
+
     cube:   new THREE.BoxBufferGeometry(16, 16, 16),
     sphere: new THREE.SphereBufferGeometry(16, 32, 32),
     path:   new THREE.PlaneBufferGeometry(64, 2 * VIEW_DISTANCE + 256),
@@ -177,7 +183,7 @@ var geometries = {
 
 // Liste des reflets
 var reflexions = {
-    
+
     test: new THREE.TextureLoader().load('img/env/test.png'),
     dull: new THREE.TextureLoader().load('img/env/dull.png'),
     iron: new THREE.TextureLoader().load('img/env/iron.png'),
@@ -196,7 +202,7 @@ $.each(reflexions, function (index) {
 
 // Liste des matériaux
 var materials = {
-    
+
     road:        new THREE.MeshBasicMaterial({map: textures.road}),
     sand:        new THREE.MeshBasicMaterial({map: textures.sand}),
     stone:       new THREE.MeshBasicMaterial({map: textures.stone,  envMap: reflexions.dull}),
@@ -231,20 +237,20 @@ materials.shieldBasic.opacity =
 // Liste des textures des différentes affiches
 textures['posters'] = [];
 
-// Liste des matériaux des différentes affiches 
+// Liste des matériaux des différentes affiches
 materials['posters'] = [];
 
 
 // Chargement des affiches
 (function () {
     for (var i = 1; i <= NUMBER_POSTER; i++) {
-        
+
         var texture = new THREE.TextureLoader().load('img/textures/posters/' + i + '.png');
         texture.repeat.set(1,9/16);
         texture.offset.y = 0;
-        
+
         textures.posters.push(texture);
-        
+
         materials.posters.push(new THREE.MeshBasicMaterial({
             map: texture,
             envMap: reflexions.iron,
@@ -255,16 +261,16 @@ materials['posters'] = [];
 
 // Lorsque l'on change la taille de la fenêtre
 $(window).resize(function () {
-    
+
     width = window.innerWidth;
     height = window.innerHeight;
-    
+
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    
+
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    
+
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(innerWidth, innerHeight);
 });
@@ -288,24 +294,24 @@ $(document).scroll(function () {
 // Charge un modèle 3D au format obj/*.obj,
 // stock l'objet dans un tableau "models"
 function loadFileModel(fileName, material, modelName) {
-    
+
     var index = loadings.push(false) - 1;
     var loader = new THREE.OBJLoader();
-    
+
     // Si on a pas défini de nom pour le modèle, reprend le nom du fichier
     if (modelName == undefined) {
         modelName = fileName;
     }
-    
+
     // Chargement du modèle
     loader.load('obj/' + fileName + '.obj', function (object) {
-        
+
         object.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
                 child.material = material;
             }
         });
-        
+
         loadings[index] = true;
         models[modelName] = object;
     });
@@ -316,7 +322,7 @@ function loadFileModel(fileName, material, modelName) {
 
 // Charge tous les niveaux
 for (var i = 0; i <= NUMBER_LEVEL; i++) {
-    
+
     loadFileLevel(i);
 }
 
@@ -335,7 +341,7 @@ loadFileModel('coin_shield',        materials.ruby,              'coinShield');
 loadFileModel('coin_lightning',     materials.citrine,           'coinSwiftness');
 loadFileModel('cactus',             materials.cactus);
 loadFileModel('stone',              materials.stone);
-loadFileModel('sign_edge',           materials.iron,              'signEdge');
+loadFileModel('sign_edge',          materials.iron,              'signEdge');
 loadFileModel('tunnel',             materials.bricks);
 loadFileModel('tunnel_mountain',    materials.rock,              'tunnelMountain');
 loadFileModel('arrow',              materials.ruby);
@@ -382,14 +388,14 @@ var interval = setInterval(waiting, 10);
 
 // Tant que le jeu n'est pas chargé, attend...
 function waiting() {
-    
+
     // Si le jeu est chargé
     if (isGameLoaded()) {
-        
+
         clearInterval(interval);
-        
+
         // --- Application des modèles à certains objets ---
-        
+
         models.coyote.position.y += 1;
         character = createObject(0, 0, 0, [models.coyote,
                                            models.skateboardPattern,
@@ -397,25 +403,25 @@ function waiting() {
                                            models.skateboardWheels,
                                            models.shield,
                                            models.flash], -3,0,-5, 3,8,5);
-        
+
         character['coyote'] = character.children[0];
         character['shield'] = character.children[4];
         character['flash'] = character.children[5];
         position = character.position;
-        
+
         floor = createObject(0, 0, 0, [models.road, models.ground]);
-        
+
         tunnel = createObject(0, 0, -rand.int(3000, 6000),
                               [models.tunnel, models.tunnelMountain]);
-        
+
         models['sign'] = models.signEdge.add(models.poster);
-        
-        // Lancement du niveau tutoriel, si besoin  
+
+        // Lancement du niveau tutoriel, si besoin
         if (IS_TUTORIAL) {
             createLevel(0);
             tunnel.position.z = positionNextLevel + 128;
         }
-        
+
         // Lancement de la boucle du jeu
         gameLoop();
     }
@@ -425,15 +431,15 @@ function waiting() {
 // Test si le jeu est chargé ou non,
 // retourne vrai si c'est le cas, sinon faux
 function isGameLoaded() {
-    
+
     // Pour chaque élément du tableau des chargements, test qu'ils soient TOUS vrais
     for (var i = 0; i < loadings.length; i++) {
-        
+
         // Si il est faut, quitte la fonction
         if (!loadings[i]) {
             return false;
         }
     }
-    
+
     return true;
 }
